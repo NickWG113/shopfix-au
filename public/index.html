@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopFix AU</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">ShopFix <span>AU</span></div>
+    <form id="check-form" class="check-form">
+      <input id="domain" name="domain" type="text" inputmode="url" autocomplete="off"
+             placeholder="Paste an Australian Shopify store, e.g. example.com.au" required>
+      <button type="submit" id="check-btn">Check store</button>
+    </form>
+  </header>
+
+  <main id="app" class="layout">
+    <aside class="panel" id="panel">
+      <section id="intro" class="card intro">
+        <h1>Find what's costing an Aussie Shopify store sales — and try the fix live.</h1>
+        <ol>
+          <li>Paste a store address above.</li>
+          <li>See what an Australian shopper would miss.</li>
+          <li>Switch fixes on, or describe your own change, and watch the real page update.</li>
+        </ol>
+        <p class="muted">Reads only public pages. Nothing changes on the store unless you publish to a store you own.</p>
+      </section>
+
+      <section id="store-card" class="card" hidden></section>
+
+      <section id="checks-card" class="card" hidden>
+        <h2>What we found</h2>
+        <ul id="checks" class="checks"></ul>
+      </section>
+
+      <section id="ai-card" class="card" hidden>
+        <h2>Describe a change</h2>
+        <form id="ai-form">
+          <textarea id="ai-request" rows="3" placeholder="e.g. Make the Add to cart button green and bigger"></textarea>
+          <button type="submit" id="ai-btn">Apply to preview</button>
+        </form>
+        <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
+      </section>
+
+      <section id="changes-card" class="card" hidden>
+        <h2>Changes in this preview</h2>
+        <ul id="changes" class="changes"></ul>
+        <div id="publish-box" class="publish" hidden>
+          <button id="publish-btn" class="primary">Publish to <span id="publish-store"></span></button>
+          <button id="undo-btn" class="ghost">Undo published changes</button>
+          <p id="publish-msg" class="muted"></p>
+        </div>
+        <details class="code">
+          <summary>Show the code</summary>
+          <pre id="code"></pre>
+        </details>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Before or after">
+          <button data-mode="after" class="on">After</button>
+          <button data-mode="before">Before</button>
+        </div>
+        <div class="seg" role="group" aria-label="Screen size">
+          <button data-size="desktop" class="on">Desktop</button>
+          <button data-size="phone">Phone</button>
+        </div>
+        <label class="toggle"><input type="checkbox" id="highlight" checked> Outline changes</label>
+        <label class="toggle" title="Turn off if a store's page jumps away or looks broken in the preview"><input type="checkbox" id="scripts" checked> Theme scripts</label>
+        <div class="path">
+          <button id="go-home" title="Home page">Home</button>
+          <button id="go-product" title="A product page">Product</button>
+          <code id="path">/</code>
+        </div>
+      </div>
+      <div class="frame-wrap" id="frame-wrap">
+        <div id="empty" class="empty">The store's page will appear here.</div>
+        <iframe id="frame" title="Store preview" sandbox="allow-scripts" hidden></iframe>
+        <div id="loading" class="loading" hidden>Loading…</div>
+      </div>
+      <div id="toast" class="toast" role="status" hidden></div>
+    </section>
+  </main>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

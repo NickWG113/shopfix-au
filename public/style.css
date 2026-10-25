@@ -1,0 +1,120 @@
+:root {
+  --bg: #f6f5f1;
+  --card: #ffffff;
+  --ink: #1b1c1a;
+  --muted: #6b6d68;
+  --line: #e4e2db;
+  --accent: #0f5c43;
+  --accent-ink: #ffffff;
+  --pass: #0f7b52;
+  --fail: #c2410c;
+  --unknown: #8a8a83;
+  --radius: 10px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141513; --card: #1d1e1c; --ink: #ecebe6; --muted: #a3a49e;
+    --line: #33342f; --accent: #3fbf8f; --accent-ink: #0b1f17;
+    --pass: #4cc58f; --fail: #f08a4b; --unknown: #8e8f88;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); display: flex; flex-direction: column; }
+button { font: inherit; cursor: pointer; }
+h1 { font-size: 20px; line-height: 1.3; margin: 0 0 12px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+.muted { color: var(--muted); font-size: 13px; }
+
+.top {
+  display: flex; align-items: center; gap: 20px; padding: 12px 20px;
+  background: var(--card); border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 800; font-size: 18px; white-space: nowrap; }
+.brand span { color: var(--accent); }
+.check-form { display: flex; gap: 8px; flex: 1; max-width: 720px; }
+.check-form input {
+  flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+  font: inherit; background: var(--bg); color: var(--ink);
+}
+.check-form button, .primary, #ai-btn {
+  border: 0; border-radius: 8px; padding: 10px 16px; background: var(--accent); color: var(--accent-ink); font-weight: 600;
+}
+button:disabled { opacity: .55; cursor: progress; }
+
+.layout { flex: 1; display: grid; grid-template-columns: 380px 1fr; min-height: 0; }
+.panel { overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid var(--line); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+.intro ol { padding-left: 20px; margin: 0 0 10px; line-height: 1.6; }
+
+.store-name { font-weight: 700; font-size: 16px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 12px; padding: 3px 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); }
+.tag.warn { color: var(--fail); border-color: currentColor; }
+
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.check { border-left: 3px solid var(--unknown); padding: 2px 0 2px 10px; }
+.check.pass { border-color: var(--pass); }
+.check.fail { border-color: var(--fail); }
+.check .t { font-weight: 600; font-size: 14px; display: flex; gap: 6px; align-items: baseline; }
+.check .s { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.check.pass .s { color: var(--pass); } .check.fail .s { color: var(--fail); } .check.unknown .s { color: var(--unknown); }
+.check p { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.fix { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.fix label { display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; }
+.fix input[type=text] {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 13px;
+  background: var(--bg); color: var(--ink);
+}
+.fix .note { font-size: 12px; color: var(--muted); }
+
+#ai-form { display: flex; flex-direction: column; gap: 8px; }
+#ai-form textarea {
+  width: 100%; resize: vertical; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit;
+  background: var(--bg); color: var(--ink);
+}
+.changes { list-style: none; padding: 0; margin: 0 0 10px; display: flex; flex-direction: column; gap: 8px; }
+.changes li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+.changes li span { flex: 1; }
+.changes li em { display: block; color: var(--fail); font-style: normal; font-size: 12px; margin-top: 2px; }
+.changes button { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; padding: 2px 8px; font-size: 12px; }
+.publish { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.ghost { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 8px; padding: 8px 14px; }
+.code summary { font-size: 13px; color: var(--muted); cursor: pointer; }
+.code pre { max-height: 260px; overflow: auto; font-size: 11px; background: var(--bg); padding: 8px; border-radius: 6px; white-space: pre-wrap; word-break: break-all; }
+
+.stage { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--card); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--ink); padding: 6px 12px; font-size: 13px; }
+.seg button.on { background: var(--ink); color: var(--card); }
+.toggle { font-size: 13px; display: flex; gap: 6px; align-items: center; }
+.path { display: flex; gap: 6px; align-items: center; margin-left: auto; min-width: 0; }
+.path button { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 6px; padding: 4px 10px; font-size: 12px; }
+.path code { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; }
+
+.frame-wrap { flex: 1; position: relative; display: flex; justify-content: center; background: repeating-conic-gradient(var(--bg) 0 25%, var(--card) 0 50%) 0 0/24px 24px; min-height: 0; }
+.frame-wrap iframe { width: 100%; height: 100%; border: 0; background: #fff; position: relative; z-index: 1; }
+/* The next version loads underneath the current one rather than hidden:
+   browsers pause drawing in hidden frames, so it would appear blank on swap. */
+.frame-wrap iframe.loading-frame { position: absolute; top: 0; z-index: 0; pointer-events: none; }
+.frame-wrap.phone iframe { width: 390px; max-width: 100%; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.empty { align-self: center; color: var(--muted); }
+.loading {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--card); padding: 6px 14px; border-radius: 99px; font-size: 13px;
+}
+.toast {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); max-width: 90%;
+  background: var(--ink); color: var(--card); padding: 10px 16px; border-radius: 8px; font-size: 14px; box-shadow: 0 6px 24px rgba(0,0,0,.2);
+}
+.toast.error { background: var(--fail); color: #fff; }
+
+@media (max-width: 860px) {
+  .top { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 16px; }
+  .layout { grid-template-columns: 1fr; grid-template-rows: auto 70vh; }
+  .panel { border-right: 0; border-bottom: 1px solid var(--line); padding: 12px 16px; overflow: visible; }
+  .path { margin-left: 0; }
+}
