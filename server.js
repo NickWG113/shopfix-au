@@ -17,7 +17,10 @@ dotenv.config({ path: path.join(here, ".env"), quiet: true });
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
-app.use(express.static(path.join(here, "public")));
+// Three pages: / (home), /dashboard (the owner's view of one store) and
+// /preview (try changes on the store's real page, then approve them).
+// `extensions` lets /dashboard find dashboard.html without a route each.
+app.use(express.static(path.join(here, "public"), { extensions: ["html"] }));
 
 // Errors we raise on purpose are written for the person using the app;
 // anything else gets a generic line and the detail goes to the console.
@@ -112,7 +115,7 @@ app.post("/api/undo", (_req, res) =>
 
 const port = Number(process.env.PORT) || 3010;
 app.listen(port, () => {
-  console.log(`ShopFix AU running at http://localhost:${port}`);
+  console.log(`QuickLift running at http://localhost:${port}`);
   if (!process.env.ANTHROPIC_API_KEY) console.log("  (no ANTHROPIC_API_KEY: AI changes are off)");
   if (!publishConfigured()) console.log("  (no SHOPIFY_STORE/SHOPIFY_ADMIN_TOKEN: Publish is off, preview still works)");
 });

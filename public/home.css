@@ -1,0 +1,2402 @@
+/*
+ * The home page, "Red pen" (8 Oct 2026). Loaded by app/routes/_index.tsx
+ * only. Everything is under .rp so nothing here reaches the app's pages.
+ *
+ * Two colours do two jobs and never swap: green is Avery (buttons, links,
+ * "Live"), red is only ever the pen (underlines, rings, margin notes). A red
+ * button would read as an error; a green mark would read as Avery approving.
+ *
+ * The marked-up pictures have fixed widths on purpose: a mark has to stay on
+ * the exact spot it marks, which a fluid picture cannot promise. Below 720px
+ * the margin notes leave the margin and sit under the picture instead.
+ */
+
+.rp {
+  --rp-bg: #f7f7fb;
+  --rp-ink: #171916;
+  --rp-ink-2: #2d2f2b;
+  --rp-muted: #5b5d57;
+  --rp-line: #e2e0d8;
+  --rp-line-2: #ecebe5;
+  --rp-chip: #efeee8;
+  --rp-brand: #3b2fc9;
+  --rp-brand-dark: #2a2194;
+  --rp-pen: #c2410c;
+  --rp-display: "Funnel Display", "Geist", system-ui, sans-serif;
+  --rp-sans: "Funnel Sans", "Geist", system-ui, sans-serif;
+  --rp-hand: "Caveat", "Segoe Print", cursive;
+
+  background: var(--rp-bg);
+  color: var(--rp-ink);
+  font-family: var(--rp-sans);
+  -webkit-font-smoothing: antialiased;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+main.home:has(> .rp) {
+  background: #f7f7fb;
+}
+
+/* The pen's notes hang out to the right of their pictures, so between the
+   phone and desktop layouts one can reach past the window's edge. Clipped
+   here rather than letting the whole page scroll sideways. (This was the
+   old home page's rule in app.css, removed with the rest of its styles on
+   9 Oct 2026; the page still relied on it.) */
+main.home {
+  overflow-x: clip;
+}
+
+/*
+ * Dark mode (round 17, 9 Oct 2026): the page stays light. The marked-up
+ * pictures are white cards with a red pen on paper, and each mark is drawn
+ * against that paper; a dark version of every card, phone and note is a
+ * redesign, not a fix. So the page keeps its own light palette (the --rp-*
+ * tokens above, which no dark-mode rule touches) and must never pick up
+ * the site's tokens, which do turn dark. Two things made sure of that:
+ * `color-scheme: light`, so the browser draws the fields, caret and
+ * autofill light too; and paragraphs take the page's ink (below) rather
+ * than app.css's `p { color: var(--muted) }`, whose dark value (#9aa39c)
+ * is about 2.4:1 on this paper. The site header and footer still follow
+ * the visitor's setting, as on every other public page.
+ */
+.rp {
+  color-scheme: light;
+}
+
+/* Below every class rule here by weight (one class, and earlier in the
+   file), so a paragraph with its own colour keeps it; a paragraph with
+   none gets the page's ink, not the site's muted grey. */
+.rp :where(p) {
+  color: inherit;
+}
+
+.rp a {
+  color: var(--rp-brand);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.rp a:hover {
+  color: var(--rp-brand-dark);
+}
+
+/* Every focus ring on the page is solid green, 6:1 on the paper and on
+   the white cards: WCAG 1.4.11 asks 3:1 of a focus indicator. */
+.rp a:focus-visible {
+  outline: 2px solid var(--rp-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.rp h1,
+.rp h2,
+.rp h3 {
+  color: var(--rp-ink);
+}
+
+/* ---- Type ---- */
+
+.rp-kicker {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--rp-muted);
+}
+
+.rp-h1 {
+  margin: 18px 0 0;
+  font-family: var(--rp-display);
+  font-weight: 600;
+  font-size: clamp(50px, 6vw, 86px);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.rp-h2 {
+  margin: 12px 0 0;
+  font-family: var(--rp-display);
+  font-weight: 600;
+  font-size: clamp(36px, 4.4vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.rp-h2--small {
+  font-size: clamp(32px, 3.6vw, 48px);
+  line-height: 1.04;
+}
+
+.rp-lede {
+  margin: 32px 0 0;
+  max-width: 520px;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--rp-ink-2);
+}
+
+.rp-sub {
+  margin: 20px 0 0;
+  max-width: 600px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--rp-ink-2);
+}
+
+.rp-sub--side {
+  margin: 0;
+  max-width: 400px;
+  font-size: 17px;
+  color: var(--rp-muted);
+}
+
+.rp-fine {
+  margin: 14px 0 0;
+  font-size: 15px;
+}
+
+.rp-fine a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.rp-fine--center {
+  text-align: center;
+}
+
+.rp-caption {
+  margin: 20px 0 0;
+  max-width: 640px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--rp-muted);
+}
+
+.rp-caption--center {
+  max-width: 400px;
+  text-align: center;
+}
+
+.rp-caption--below-note {
+  margin-top: 62px;
+}
+
+/* ---- The pen ---- */
+
+.rp-ul {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.rp-ul-line {
+  position: absolute;
+  left: -1%;
+  bottom: -0.16em;
+  width: 103%;
+  height: 0.2em;
+  min-height: 9px;
+  overflow: visible;
+}
+
+.rp-ul-line path,
+.rp-ring path,
+.rp-shot-ring path,
+.rp-arrow path,
+.rp-bracket path {
+  fill: none;
+  stroke: var(--rp-pen);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rp-note {
+  font-family: var(--rp-hand);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--rp-pen);
+  white-space: nowrap;
+}
+
+.rp-note--inline {
+  display: inline-block;
+  font-size: 25px;
+  transform: rotate(-2deg);
+}
+
+.rp-arrow {
+  position: absolute;
+  overflow: visible;
+}
+
+/* ---- Scan box ---- */
+
+.rp-scan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 36px 0 0;
+  max-width: 560px;
+}
+
+.rp-close .rp-scan {
+  margin: 40px auto 0;
+  max-width: 580px;
+}
+
+.rp-field {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: stretch;
+  /* 3.5:1 on the paper (WCAG 1.4.11): a white field on near-white paper is
+     told apart by its edge alone. #cfccc2 was 1.5:1 (round 17, 9 Oct 2026;
+     the old home page's box was held to this by accessibility-round11). */
+  border: 1px solid #85837a;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+/* A solid ring, 3px with the border: the pale 0.22 tint it was is under
+   2:1 on the paper, too faint to show where the cursor went. */
+.rp-field:focus-within {
+  border-color: var(--rp-brand);
+  box-shadow: 0 0 0 2px var(--rp-brand);
+}
+
+.rp-field-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 2px 0 18px;
+  font-size: 16px;
+  color: var(--rp-muted);
+}
+
+.rp-field-input {
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+  border: 0;
+  background: transparent;
+  padding: 0 14px 0 2px;
+  font-family: var(--rp-sans);
+  font-size: 16px;
+  color: var(--rp-ink);
+  border-radius: 14px;
+}
+
+.rp-field-input::placeholder {
+  color: #6a6c66;
+}
+
+.rp-field-input:focus {
+  outline: none;
+}
+
+.rp-btn {
+  min-height: 58px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--rp-brand);
+  color: #ffffff;
+  font-family: var(--rp-sans);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rp-btn:hover {
+  background: var(--rp-brand-dark);
+}
+
+/* Solid, with a gap of paper between it and the button, so it reads as a
+   ring and not as a thicker button. It was 40% green, about 1.9:1. */
+.rp-btn:focus-visible {
+  outline: 3px solid var(--rp-brand);
+  outline-offset: 2px;
+}
+
+/* ---- Hero ---- */
+
+/* The card's column never goes below 540px: the card is 300px and its two
+   margin notes reach about 110px out either side. A purely proportional
+   column was 460px wide just above 1100px, and "No social proof?" ran off
+   the right edge of the screen there. */
+.rp-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(540px, 0.92fr);
+  gap: 56px;
+  align-items: center;
+  padding: 56px 0 16px;
+}
+
+.rp-hero-fig {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The marked-up product card. 300px wide so the ring sits on the one dot
+   and the arrows land where they point. */
+.rp-card-wrap {
+  position: relative;
+  width: 300px;
+}
+
+.rp-card {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 24px;
+  color: #151515;
+  box-shadow: 0 30px 60px -40px rgba(23, 25, 22, 0.35);
+}
+
+.rp-card-img {
+  display: block;
+  width: 260px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.rp-card-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10px;
+  margin-top: 12px;
+}
+
+.rp-card-dot {
+  position: relative;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #151515;
+}
+
+.rp-ring {
+  position: absolute;
+  left: -17px;
+  top: -12px;
+  width: 42px;
+  height: 31px;
+  overflow: visible;
+}
+
+.rp-card-title {
+  margin-top: 16px;
+  font-family: var(--rp-display);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.rp-card-price {
+  margin-top: 4px;
+  font-size: 16px;
+  color: #3d3f3a;
+}
+
+.rp-card-gap {
+  height: 14px;
+}
+
+.rp-card-buy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 46px;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #151515;
+  color: #ffffff;
+  font-family: var(--rp-sans);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.rp-card-buy:focus-visible {
+  outline: 2px solid var(--rp-brand);
+  outline-offset: 3px;
+}
+
+/* Looks exactly as it did at rest and on hover (Nick, 11 Oct: "keep the
+   button how it was"); only a click shows anything: the shop's own "it
+   worked", in green, since this is the shop's button and not Avery's pen. */
+.rp-card-buy--added {
+  background: var(--rp-brand);
+}
+
+.rp-card-buy-tick path {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rp-card-line {
+  height: 7px;
+  margin-top: 12px;
+  border-radius: 4px;
+  background: var(--rp-line-2);
+}
+
+.rp-card-line + .rp-card-line {
+  margin-top: 8px;
+}
+
+.rp-note--photo {
+  position: absolute;
+  right: calc(100% + 18px);
+  top: 262px;
+  text-align: right;
+  transform: rotate(-3deg);
+}
+
+.rp-arrow--photo {
+  left: calc(100% + 4px);
+  top: 22px;
+  width: 150px;
+  height: 40px;
+}
+
+.rp-note--proof {
+  position: absolute;
+  left: calc(100% + 22px);
+  top: 300px;
+  transform: rotate(2deg);
+}
+
+.rp-arrow--proof {
+  right: calc(100% + 2px);
+  top: 38px;
+  width: 64px;
+  height: 40px;
+}
+
+/* ---- Sections ---- */
+
+.rp-section {
+  padding-top: 128px;
+}
+
+.rp-head {
+  max-width: 760px;
+}
+
+.rp-head--row {
+  max-width: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.rp-head--row .rp-h2 {
+  margin: 0;
+  max-width: 720px;
+}
+
+.rp-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+  margin-top: 56px;
+}
+
+.rp-section > .rp-split:first-child {
+  margin-top: 0;
+}
+
+.rp-split--center {
+  align-items: center;
+}
+
+/* ---- "What Avery noticed" ---- */
+
+.rp-notes-fig {
+  margin: 0;
+}
+
+.rp-panel {
+  position: relative;
+  max-width: 520px;
+  padding: 8px 24px 12px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+}
+
+.rp-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 14px;
+  border-bottom: 1px solid var(--rp-line-2);
+}
+
+.rp-panel-title {
+  font-family: var(--rp-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.rp-panel-sub {
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--rp-muted);
+}
+
+/* The severity word exactly as the dashboard shows it (SeverityWord in
+   components/ui.tsx, `.status` and `.sev` in app.css): the word in ink, a
+   coloured dot before it, red for High, amber for Medium, grey for Low
+   (Nick, 11 Oct: "mirror what the actual product does"). The light-mode
+   values of the app's own tokens, since this page stays light. The one
+   place on the page red is not the pen: it is the product's own colour for
+   High, and the dot is small and sits beside the word, not on the page. */
+.rp-sev {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--rp-ink);
+  white-space: nowrap;
+}
+
+.rp-sev-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.rp-sev--high .rp-sev-dot {
+  background: #b4232a;
+}
+
+.rp-sev--medium .rp-sev-dot {
+  background: #b07a10;
+}
+
+.rp-sev--low .rp-sev-dot {
+  background: #8a918b;
+}
+
+.rp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--rp-chip);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #3d3f3a;
+}
+
+.rp-pill rect {
+  fill: none;
+  stroke: #3d3f3a;
+  stroke-width: 1.3;
+}
+
+.rp-noticed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rp-noticed li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rp-line-2);
+}
+
+/* The hover tint is its own rounded box, reaching 12px past the text and
+   chip on each side, so the tint never runs straight into the black High
+   chip or the row's text (Nick, 11 Oct). Behind the row's content through
+   `isolation`, so it needs no z-index on what it sits under. */
+.rp-noticed li {
+  position: relative;
+  isolation: isolate;
+}
+
+.rp-noticed li::before {
+  content: "";
+  position: absolute;
+  inset: 4px -12px;
+  z-index: -1;
+  border-radius: 12px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.rp-noticed li:last-child {
+  border-bottom: 0;
+}
+
+.rp-noticed-where {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--rp-muted);
+}
+
+.rp-noticed-what {
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.rp-chip {
+  flex: none;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--rp-chip);
+  font-size: 12px;
+  font-weight: 600;
+  color: #33352f;
+}
+
+.rp-chip--live {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--rp-brand);
+  color: var(--rp-brand);
+}
+
+.rp-note--panel {
+  position: absolute;
+  right: -8px;
+  bottom: -46px;
+  font-size: 27px;
+  transform: rotate(-2deg);
+}
+
+/* ---- The reviews fix, in the approval screen's frame ---- */
+
+.rp-shot-fig {
+  margin: 0;
+  max-width: 520px;
+}
+
+/* Over the right half of the screenshot, where the line it points at is. */
+.rp-note--shot {
+  margin: 0 0 12px;
+  text-align: right;
+  font-size: 27px;
+  transform: rotate(-2deg);
+}
+
+/* Framed as a screen, so it reads as a screenshot of the app and not as
+   part of this page. */
+.rp-shot {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rp-line);
+  border-radius: 14px;
+  background: #f5f5f3;
+  box-shadow: 0 30px 60px -36px rgba(23, 25, 22, 0.35);
+}
+
+.rp-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* On the top row's ratings, measured off the picture (x 650-1015,
+   y 788-810 of 1122 by 1348), kept off the prices just below.
+   Percentages keep it there at every width. */
+.rp-shot-ring {
+  position: absolute;
+  left: 56.2%;
+  top: 57.9%;
+  width: 36.4%;
+  height: 3%;
+  overflow: visible;
+}
+
+/* ---- Four stages ---- */
+
+.rp-stages {
+  list-style: none;
+  margin: 40px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+/* Each stage is five rows: heading, note above, card, note below, words.
+   Subgrid lines those rows up across all four (Nick, 11 Oct: the cards sat
+   at different heights and the words under them at different levels, which
+   made the row hard to read across). Every card stretches to the tallest. */
+.rp-stages > li {
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+.rp-stages > li > .rp-obj {
+  height: 100%;
+}
+
+.rp-stage-h {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--rp-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.rp-stage-h span {
+  font-family: var(--rp-sans);
+  font-size: 13px;
+  color: var(--rp-muted);
+}
+
+.rp-margin {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.rp-obj {
+  min-height: 196px;
+  box-sizing: border-box;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 16px;
+}
+
+.rp-obj--green {
+  background: #efedfc;
+  border-color: #d6d1f5;
+}
+
+.rp-obj-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.rp-obj-row:first-child {
+  margin-top: 0;
+}
+
+.rp-obj-meta {
+  font-size: 12.5px;
+  color: var(--rp-muted);
+}
+
+.rp-obj-meta--strong {
+  font-weight: 600;
+}
+
+.rp-obj-title {
+  margin-top: 14px;
+  font-family: var(--rp-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+
+.rp-obj-title--small {
+  margin-top: 12px;
+  font-family: var(--rp-sans);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.rp-obj-title .rp-ul {
+  white-space: normal;
+}
+
+.rp-obj-title .rp-ul-line {
+  height: 8px;
+  bottom: -6px;
+}
+
+.rp-obj-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rp-line-2);
+  font-size: 13px;
+  color: var(--rp-muted);
+}
+
+.rp-obj-foot--text {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #3d3f3a;
+}
+
+.rp-obj-link {
+  color: var(--rp-brand);
+  font-weight: 600;
+}
+
+.rp-obj-ok {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: #221b5c;
+}
+
+.rp-check {
+  flex: none;
+  margin-top: 2px;
+}
+
+.rp-check path {
+  fill: none;
+  stroke: var(--rp-brand);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* "Open preview on your site", in stage 02: the same button as Approve,
+   with the pen's ring around it. */
+.rp-obj-button-wrap {
+  position: relative;
+  display: inline-block;
+  margin-top: 18px;
+}
+
+.rp-obj-ring {
+  position: absolute;
+  left: -7%;
+  top: -24%;
+  width: 114%;
+  height: 152%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.rp-obj-ring path {
+  fill: none;
+  stroke: var(--rp-pen);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rp-obj-small {
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #4a4470;
+}
+
+.rp-obj-body {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--rp-ink-2);
+}
+
+.rp-obj-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+/* A green outline at rest that fills from the left on hover (Nick, 11
+   Oct: "really pop when I hover"). The fill is a background the width of
+   nothing, grown to the whole button, so the words can turn white in step
+   with it. Green on white is 6:1, white on green the same. On a phone,
+   which cannot hover, it stays an outline: still plainly a button. */
+.rp-obj-approve {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 16px;
+  border: 2px solid var(--rp-brand);
+  border-radius: 10px;
+  background: linear-gradient(var(--rp-brand), var(--rp-brand)) no-repeat left / 0% 100%;
+  background-color: #ffffff;
+  color: var(--rp-brand);
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-size 0.32s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.rp-obj-discard {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+/* Discard underlines itself on hover, drawn from the left. (Undo is
+   underlined already.) */
+.rp-obj-discard {
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0% 1.5px;
+  transition: background-size 0.25s ease;
+}
+
+.rp-obj-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--rp-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--rp-brand);
+}
+
+.rp-obj-undo {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3d3f3a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Styled on the class itself (round 17): only stage 01's words come
+   straight after the card; in 02 to 04 a margin note sits between, so a
+   rule written as `.rp-obj + .rp-stage-text` left three of the four in the
+   site's grey at the site's size. Only the gap depends on the neighbour. */
+.rp-stage-text {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--rp-ink-2);
+}
+
+.rp-obj + .rp-stage-text {
+  margin-top: 18px;
+}
+
+.rp-dashes {
+  height: 8px;
+  margin-top: 18px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(90deg, #e6e4dd 0 10px, transparent 10px 16px);
+}
+
+.rp-dashes + .rp-note {
+  margin-top: 16px;
+}
+
+/* ---- Ground rules ---- */
+
+.rp-rules {
+  display: grid;
+  gap: 22px;
+  max-width: 480px;
+  margin-top: 32px;
+}
+
+.rp-rules h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.rp-rules p {
+  margin: 4px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--rp-muted);
+}
+
+.rp-map-fig {
+  margin: 0;
+}
+
+.rp-map {
+  position: relative;
+  max-width: 380px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+}
+
+.rp-map-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rp-muted);
+}
+
+.rp-map-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.rp-map-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rp-line-2);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.rp-map-list li:last-child {
+  border-bottom: 0;
+}
+
+.rp-map-list--locked li {
+  border-bottom: 0;
+  padding: 10px 0;
+  font-weight: 400;
+  color: #4a4c47;
+}
+
+.rp-lock rect,
+.rp-lock path {
+  fill: none;
+  stroke: #4a4c47;
+  stroke-width: 1.4;
+}
+
+.rp-map-locked {
+  position: relative;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #1d1f1c;
+}
+
+.rp-bracket {
+  position: absolute;
+  right: -34px;
+  top: 36px;
+  width: 18px;
+  height: calc(100% - 44px);
+  overflow: visible;
+}
+
+.rp-note--locked {
+  position: absolute;
+  left: calc(100% + 50px);
+  top: 96px;
+  font-size: 30px;
+  transform: rotate(-4deg);
+}
+
+/* ---- A/B test comparison ---- */
+
+.rp-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.rp-pair .rp-obj-row {
+  margin-top: 14px;
+}
+
+.rp-pair .rp-obj-title--small .rp-ul {
+  white-space: normal;
+}
+
+/* ---- Platforms and pricing ---- */
+
+.rp-platforms {
+  margin-top: 28px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+}
+
+.rp-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rp-tile-solid,
+.rp-tile-dashed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+/* The builders' marks (PlatformLogo). Their colours are set here, not
+   left to app.css, because app.css lightens them for dark mode and this
+   page stays light: Shopify's dark-mode green is 2:1 on these white
+   tiles. The same values as app.css's light ones, each 3:1 or more. */
+.rp .platform-logo {
+  display: block;
+  flex: none;
+  color: var(--rp-ink);
+}
+
+.rp .platform-logo--shopify {
+  color: #5e8e3e;
+}
+
+.rp .platform-logo--wordpress {
+  color: #21759b;
+}
+
+.rp .platform-logo--woocommerce {
+  color: #96588a;
+}
+
+.rp .platform-logo--webflow {
+  color: #146ef5;
+}
+
+.rp .platform-logo--other {
+  color: var(--rp-muted);
+}
+
+.rp-tile-solid {
+  border: 1px solid var(--rp-brand);
+  font-weight: 600;
+}
+
+.rp-tile-dashed {
+  border: 1px dashed #bdbab0;
+  font-weight: 500;
+  color: #3d3f3a;
+}
+
+.rp-platforms-later {
+  position: relative;
+  margin-top: 22px;
+}
+
+.rp-note--later {
+  position: absolute;
+  right: 4px;
+  top: -12px;
+  font-size: 26px;
+  transform: rotate(-3deg);
+}
+
+.rp-platforms-note {
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--rp-muted);
+}
+
+.rp-price {
+  padding: 36px 32px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+}
+
+.rp-price .rp-h2 {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.rp-price-row {
+  margin-top: 28px;
+  padding: 18px 0;
+  border-top: 1px solid var(--rp-line-2);
+}
+
+.rp-price-row + .rp-price-row {
+  margin-top: 0;
+}
+
+.rp-price-row--last {
+  border-bottom: 1px solid var(--rp-line-2);
+}
+
+.rp-price-row h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.rp-price-row p {
+  margin: 4px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #3d3f3a;
+}
+
+.rp-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---- Questions ---- */
+
+.rp-faq {
+  margin: 0;
+}
+
+.rp-faq > div {
+  position: relative;
+  padding: 20px 0 20px 30px;
+  border-top: 1px solid var(--rp-line);
+}
+
+.rp-faq > div:last-child {
+  border-bottom: 1px solid var(--rp-line);
+}
+
+/* The question mark in the margin, in pen. */
+.rp-faq > div::before {
+  content: "?";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  font-family: var(--rp-hand);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--rp-pen);
+}
+
+.rp-faq dt {
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.rp-faq dd {
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--rp-ink-2);
+}
+
+/* ---- Closing ---- */
+
+.rp-close {
+  margin-top: 136px;
+  padding: 72px 0 88px;
+  border-top: 1px solid var(--rp-line);
+  text-align: center;
+}
+
+.rp-close-title {
+  margin: 0 auto;
+  max-width: 820px;
+  font-size: clamp(40px, 5.4vw, 74px);
+  line-height: 0.98;
+}
+
+.rp-close .rp-scan {
+  text-align: left;
+}
+
+/* ---- The tile ratings example: Now / With the fix (11 Oct) ---- */
+
+/* One page at a time, each a window onto the same screenshot. The window
+   is 500 by 856 of the 1122 by 1348 picture, so the picture is 224.4% of
+   the window's width, and each side is moved into place by its own offset
+   (in _index.tsx's TileReviewsCompare).
+
+   856 is the height Nick accepted on 11 Oct (the card had been too long).
+   On the shop page it shows the first row of tiles whole, buttons and all,
+   and ends partway down the second row's photos on both sides, so neither
+   side needs anything whited out. */
+.rp-cmp {
+  padding: 18px 18px 0;
+}
+
+.rp-cmp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rp-cmp-title {
+  font-family: var(--rp-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+/* Drawn like the Phone / Computer switch on the real approval screen. */
+.rp-cmp-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: #e8e8e3;
+  border: 1px solid #dddcd5;
+}
+
+.rp-cmp-toggle button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #4d4f49;
+  font-family: var(--rp-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.rp-cmp-toggle button[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--rp-ink);
+  box-shadow: 0 1px 3px rgba(23, 25, 22, 0.14);
+}
+
+.rp-cmp-toggle button[aria-pressed="true"]:last-child {
+  color: var(--rp-brand);
+}
+
+.rp-cmp-toggle button:focus-visible,
+.rp-play button:focus-visible {
+  outline: 2px solid var(--rp-brand);
+  outline-offset: 2px;
+}
+
+.rp-cmp-phone {
+  position: relative;
+  width: min(300px, 100%);
+  aspect-ratio: 500 / 856;
+  margin: 18px auto 0;
+  overflow: hidden;
+  border: 1px solid #dddcd5;
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  background: #ffffff;
+}
+
+.rp-cmp-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: opacity 0.28s ease;
+}
+
+.rp-cmp .rp-cmp-layer img {
+  position: absolute;
+  top: calc(-240% / 8.56);
+  width: 224.4%;
+  max-width: none;
+  height: auto;
+}
+
+.rp-cmp-layer--now img {
+  left: -8.4%;
+}
+
+.rp-cmp-layer--fix img {
+  left: -116.4%;
+}
+
+.rp-cmp[data-side="now"] .rp-cmp-layer--fix {
+  opacity: 0;
+}
+
+/* On "Now" there are no ratings for the note to point at, so it steps back. */
+.rp-shot-fig .rp-note--shot {
+  transition: opacity 0.28s ease;
+}
+
+.rp-shot-fig[data-side="now"] .rp-note--shot {
+  opacity: 0.45;
+}
+
+/* "Now" needs no white-out: unlike the product page, nothing on it is cut
+   through a line of text at the window's edge. */
+
+/* The top row's ratings in the window: x 68-433, y 548-570 of 500 by 856;
+   the ring is x 45-475, y 540-581, short so it stays off the prices
+   at y 596. */
+.rp-cmp .rp-shot-ring {
+  left: 9%;
+  top: calc(540% / 8.56);
+  width: 86%;
+  height: calc(41% / 8.56);
+}
+
+/* ---- One change, start to finish (11 Oct) ---- */
+
+.rp-play {
+  margin-top: 56px;
+  padding: 26px 28px 32px;
+  border-radius: 24px;
+  background: #efede6;
+}
+
+.rp-play-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rp-play-hint {
+  margin: 4px 0 0;
+  font-size: 15px;
+  color: var(--rp-ink-2);
+}
+
+.rp-play-toggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--rp-line);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--rp-ink);
+  font-family: var(--rp-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rp-play-toggle svg {
+  fill: currentColor;
+}
+
+.rp-play-steps {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rp-play-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 2px 0;
+  border: 0;
+  background: none;
+  color: var(--rp-muted);
+  font-family: var(--rp-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+
+.rp-play-step[aria-current="step"],
+.rp-play-step:hover {
+  color: var(--rp-ink);
+}
+
+.rp-play-step-n {
+  font-family: var(--rp-sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--rp-muted);
+}
+
+.rp-play-bar {
+  flex-basis: 100%;
+  position: relative;
+  height: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dcdad2;
+}
+
+.rp-play-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--rp-brand);
+}
+
+/* Paused, the step you are on is simply marked; running, it fills over the
+   step's five seconds (PLAY_STEP_MS in _index.tsx). */
+.rp-play-step[aria-current="step"] .rp-play-fill {
+  transform: scaleX(1);
+}
+
+.rp-play--running .rp-play-step[aria-current="step"] .rp-play-fill {
+  animation: rp-fill 5s linear both;
+}
+
+@keyframes rp-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.rp-play-stage {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.rp-play-card-wrap {
+  position: relative;
+}
+
+.rp-play-card {
+  position: relative;
+}
+
+.rp-play-flag {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 1;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(23, 25, 22, 0.16);
+}
+
+.rp-play-flag--preview {
+  color: #221b5c;
+  background: #efedfc;
+  border: 1px solid #d6d1f5;
+}
+
+.rp-play-flag--live {
+  color: var(--rp-brand);
+  border: 1px solid var(--rp-brand);
+}
+
+/* The same height with and without stars, so the card never jumps. */
+.rp-play-reviews {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 22px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: #3d3f3a;
+}
+
+.rp-play-reviews span:last-child {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rp-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.rp-stars path {
+  fill: #151515;
+}
+
+.rp-play-ring {
+  position: absolute;
+  left: -10px;
+  top: -6px;
+  width: 170px;
+  height: 34px;
+  overflow: visible;
+}
+
+.rp-play-ring path {
+  fill: none;
+  stroke: var(--rp-pen);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rp-play .rp-card-price {
+  margin-top: 2px;
+}
+
+.rp-play .rp-card-buy {
+  margin-top: 14px;
+}
+
+.rp-play-side .rp-stage-h {
+  margin-bottom: 16px;
+}
+
+.rp-play-side .rp-obj {
+  min-height: 0;
+  max-width: 440px;
+}
+
+/* The tiles' buttons are pictures of buttons; these ones work. */
+.rp-play-side button {
+  font-family: var(--rp-sans);
+  cursor: pointer;
+}
+
+
+.rp-play-side .rp-obj-discard,
+.rp-play-side .rp-obj-undo {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--rp-ink);
+}
+
+.rp-play-side .rp-obj-undo {
+  color: #3d3f3a;
+}
+
+.rp-play-gap {
+  margin-top: 16px;
+}
+
+/* ---- Hover and press (11 Oct) ----
+   Only on devices that hover, so a tap on a phone does not leave a card
+   lifted; transitions stop where motion is turned down (the end of this
+   file). Lifting a card says "look here", not "click me": the stage tiles
+   stay without a pointer cursor, because their buttons are pictures. */
+
+.rp-btn,
+.rp-play-toggle,
+.rp-obj,
+.rp-card,
+.rp-panel,
+.rp-map,
+.rp-tile-solid,
+.rp-tile-dashed,
+.rp-noticed li,
+.rp-arrow-r {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.rp-arrow-r {
+  display: inline-block;
+}
+
+@media (hover: hover) {
+  .rp-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px -12px rgba(23, 25, 22, 0.55);
+  }
+
+  .rp-obj-approve:hover {
+    background-size: 100% 100%;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px -12px rgba(23, 25, 22, 0.6);
+  }
+
+  .rp-obj-discard:hover {
+    background-size: 100% 1.5px;
+  }
+
+
+  .rp-play-toggle:hover {
+    border-color: #c9c7bf;
+    transform: translateY(-1px);
+  }
+
+  .rp-stages .rp-obj:hover,
+  .rp-pair .rp-obj:hover,
+  .rp-map:hover,
+  .rp-panel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 40px -28px rgba(23, 25, 22, 0.4);
+  }
+
+  .rp-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 40px 70px -40px rgba(23, 25, 22, 0.45);
+  }
+
+  .rp-noticed li:hover::before {
+    background-color: #f6f5f0;
+  }
+
+  .rp-tile-solid:hover,
+  .rp-tile-dashed:hover {
+    transform: translateY(-2px);
+  }
+
+  a:hover > .rp-arrow-r {
+    transform: translateX(3px);
+  }
+
+  .rp-cmp-toggle button[aria-pressed="false"]:hover {
+    color: var(--rp-ink);
+  }
+}
+
+.rp-btn:active,
+.rp-obj-approve:active,
+.rp-play-toggle:active,
+.rp-cmp-toggle button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none;
+}
+
+/* Hovering a note on the hero card shows what it means: the ring around
+   the one photo's dot pulses, or the empty place where reviews would be
+   is outlined in the pen. Nothing is added at rest. */
+.rp-card-gap {
+  border-radius: 6px;
+  outline: 2px dashed transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.2s ease;
+}
+
+.rp-card-wrap:has(.rp-note--proof:hover) .rp-card-gap {
+  outline-color: var(--rp-pen);
+}
+
+.rp-card-wrap:has(.rp-note--photo:hover) .rp-ring {
+  animation: rp-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes rp-pulse {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+/* ---- Smaller screens ---- */
+
+@media (max-width: 1100px) {
+  .rp-hero {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
+
+  /* Stacked, the words centre over the card. Left-aligned, they sat
+     against one edge while the 300px card floated in the middle, which on
+     a tablet left a wide empty strip beside each. Phones go back to the
+     left below 600px, where four centred lines of lede read badly. */
+  .rp-hero-text {
+    text-align: center;
+  }
+
+  .rp-hero-text .rp-lede {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .rp-hero-text .rp-scan {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    text-align: left;
+  }
+
+  .rp-stages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 48px;
+  }
+
+  .rp-split--center {
+    grid-template-columns: 1fr;
+    gap: 80px;
+  }
+}
+
+@media (max-width: 960px) {
+  .rp-split {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .rp-section {
+    padding-top: 96px;
+  }
+}
+
+/* Phones: margin notes come in from the margin and sit under their picture,
+   and the arrows go, since they would point at nothing. */
+@media (max-width: 720px) {
+  .rp-hero {
+    padding-top: 32px;
+  }
+
+  .rp-stages,
+  .rp-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .rp-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rp-note--panel,
+  .rp-note--locked,
+  .rp-note--later {
+    position: static;
+    margin-top: 14px;
+    white-space: normal;
+    text-align: left;
+    transform: none;
+  }
+
+  .rp-note--locked br {
+    display: none;
+  }
+
+  /* The hero's arrows stay until 600px: see below. */
+  .rp-arrow:not(.rp-arrow--photo, .rp-arrow--proof) {
+    display: none;
+  }
+
+  .rp-bracket {
+    right: 6px;
+  }
+
+  .rp-caption--below-note {
+    margin-top: 20px;
+  }
+
+  /* Right-aligned and tilted, it runs off a phone screen. */
+  .rp-note--shot {
+    text-align: left;
+    font-size: 23px;
+    transform: none;
+  }
+}
+
+/* The hero card's notes stay in the margin down to 600px. The card and its
+   notes need about 520px, so between 600 and 720 they fit beside it, and
+   moving them under the card there only left the ring pointing at nothing
+   on screen while the notes sat below the fold. */
+@media (max-width: 600px) {
+  .rp-hero-text {
+    text-align: left;
+  }
+
+  .rp-hero-text .rp-lede,
+  .rp-hero-text .rp-scan {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .rp-hero-text .rp-scan {
+    justify-content: flex-start;
+  }
+
+  .rp-card-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rp-note--photo,
+  .rp-note--proof {
+    position: static;
+    margin-top: 14px;
+    white-space: normal;
+    text-align: left;
+    transform: none;
+  }
+
+  .rp-note--photo br,
+  .rp-note--proof br {
+    display: none;
+  }
+
+  .rp-note--photo::before,
+  .rp-note--proof::before {
+    content: "— ";
+  }
+
+  .rp-arrow--photo,
+  .rp-arrow--proof {
+    display: none;
+  }
+}
+
+/* On a 375px phone the two-up platform tiles were 136px wide and
+   "WooCommerce" ran out through the tile's right border (seen in the
+   11 Oct claims audit). A little less padding round the box and inside
+   each tile gives it room, without shrinking the names. */
+@media (max-width: 420px) {
+  .rp-platforms {
+    padding: 18px 14px;
+  }
+
+  .rp-tile-solid,
+  .rp-tile-dashed {
+    gap: 6px;
+    padding: 0 9px;
+  }
+}
+
+@media (max-width: 720px) {
+  .rp-play {
+    padding: 20px 16px 24px;
+  }
+
+  .rp-play-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rp-play-stage {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 28px;
+  }
+
+  .rp-play-side {
+    width: 100%;
+  }
+
+  /* Shorter on a phone, so the card and the step's words fit on one screen
+     and the change can be seen happening. */
+  .rp-play-card {
+    width: 260px;
+    padding: 16px;
+  }
+
+  .rp-play-card .rp-card-img {
+    width: 100%;
+    height: 140px;
+  }
+
+  .rp-play-flag {
+    top: 24px;
+    left: 24px;
+  }
+
+  .rp-play-side .rp-stage-h {
+    display: none;
+  }
+}
+
+/* ---- Motion (11 Oct) ----
+   Everything here is extra: the page is complete without it, and none of
+   it runs where the device asks for reduced motion. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The hero's marks draw themselves once, as a pen would: the underline,
+     then the ring, then each arrow, then its note. All CSS, so it starts
+     with the page and does not wait for script. pathLength="1" on each
+     path makes a dash of 1 the whole stroke. */
+  .rp-hero .rp-ul-line {
+    animation: rp-wipe 0.6s ease-out 0.25s both;
+  }
+
+  .rp-hero .rp-ring path,
+  .rp-hero .rp-arrow path {
+    stroke-dasharray: 1;
+    animation: rp-draw 0.55s ease-out both;
+  }
+
+  .rp-hero .rp-ring path {
+    animation-delay: 0.6s;
+  }
+
+  .rp-hero .rp-arrow--photo path:first-child {
+    animation-delay: 0.95s;
+  }
+
+  .rp-hero .rp-arrow--photo path:last-child {
+    animation-delay: 1.35s;
+    animation-duration: 0.25s;
+  }
+
+  .rp-hero .rp-arrow--proof path:first-child {
+    animation-delay: 1.25s;
+  }
+
+  .rp-hero .rp-arrow--proof path:last-child {
+    animation-delay: 1.6s;
+    animation-duration: 0.25s;
+  }
+
+  /* `translate`, not `transform`, so the notes keep their tilt. */
+  .rp-hero .rp-note--photo,
+  .rp-hero .rp-note--proof {
+    animation: rp-note-in 0.45s ease-out both;
+  }
+
+  .rp-hero .rp-note--photo {
+    animation-delay: 0.85s;
+  }
+
+  .rp-hero .rp-note--proof {
+    animation-delay: 1.15s;
+  }
+
+  /* The noticed list (NoticedPanel): rows held while it waits below the
+     fold, then in one at a time, each with its "Found". */
+  .rp-panel--waiting .rp-noticed li,
+  .rp-panel--waiting .rp-note--panel {
+    opacity: 0;
+  }
+
+  .rp-panel--playing .rp-noticed li {
+    animation: rp-row-in 0.4s ease-out both;
+    animation-delay: calc(var(--rp-i) * 0.28s + 0.2s);
+  }
+
+  .rp-panel--playing .rp-noticed .rp-sev {
+    animation: rp-pop 0.32s ease-out both;
+    animation-delay: calc(var(--rp-i) * 0.28s + 0.45s);
+  }
+
+  .rp-panel--playing .rp-note--panel {
+    animation: rp-note-in 0.45s ease-out 1.9s both;
+  }
+
+  /* A single sweep under the panel's title while the rows come in. */
+  .rp-panel-head {
+    position: relative;
+  }
+
+  .rp-panel--playing .rp-panel-head::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--rp-brand);
+    transform-origin: left;
+    animation: rp-sweep 1.7s ease-in-out 0.1s both;
+  }
+
+  /* The reviews switch: the ring draws again each time the fix comes back. */
+  .rp-cmp--switched[data-side="fix"] .rp-shot-ring path {
+    stroke-dasharray: 1;
+    animation: rp-draw 0.6s ease-out 0.2s both;
+  }
+
+  /* The walkthrough: each step's card and the stars come in gently. */
+  .rp-play-side {
+    animation: rp-row-in 0.35s ease-out both;
+  }
+
+  .rp-play-reviews--on,
+  .rp-play-flag {
+    animation: rp-pop 0.35s ease-out both;
+  }
+
+  .rp-play-ring path {
+    stroke-dasharray: 1;
+    animation: rp-draw 0.6s ease-out 0.15s both;
+  }
+}
+
+@keyframes rp-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rp-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes rp-note-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes rp-row-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes rp-pop {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes rp-sweep {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  85% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp *,
+  .rp *::before,
+  .rp *::after {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   QuickLift additions (27 Oct 2026). The page above is Avery's, recoloured:
+   violet is QuickLift (buttons, links, "Live"), orange is only ever the pen,
+   the same orange the app uses for "Fix". Avery's site header and footer
+   lived in its root layout, so QuickLift's own are here.
+   ========================================================================== */
+
+body.ql-page {
+  margin: 0;
+  background: #f7f7fb;
+  color: #171916;
+  font-family: "Funnel Sans", system-ui, sans-serif;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ql-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(247, 247, 251, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e4e4ee;
+}
+
+.ql-header-in {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ql-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Funnel Display", system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #171916;
+  text-decoration: none;
+}
+
+.ql-logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #3b2fc9;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.ql-logo-tld {
+  color: #3b2fc9;
+}
+
+.ql-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 15px;
+}
+
+.ql-nav a {
+  color: #2d2f2b;
+  text-decoration: none;
+}
+
+.ql-nav a:hover {
+  color: #3b2fc9;
+}
+
+.ql-nav .ql-nav-btn {
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #3b2fc9;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.ql-nav .ql-nav-btn:hover {
+  background: #2a2194;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .ql-nav a:not(.ql-nav-btn) {
+    display: none;
+  }
+}
+
+.ql-footer {
+  max-width: 1200px;
+  margin: 96px auto 0;
+  padding: 28px 24px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  border-top: 1px solid #e4e4ee;
+  color: #5b5d57;
+  font-size: 14px;
+}
+
+.ql-footer span:first-child {
+  font-weight: 600;
+  color: #171916;
+}
+
+/* The agent card beside "What QuickLift noticed". */
+.ql-ask-fig {
+  margin: 0;
+  max-width: 520px;
+}
+
+.ql-ask {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--rp-line);
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -36px rgba(23, 25, 22, 0.35);
+}
+
+.ql-ask-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ql-ask-input {
+  padding: 14px 16px;
+  border: 1px solid #85837a;
+  border-radius: 12px;
+  background: #fbfbfd;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--rp-ink);
+}
+
+.ql-ask .rp-obj {
+  margin: 0;
+}
+
+/* The Afterpay line the walkthrough's fix adds under the price. */
+.ql-afterpay {
+  font-size: 13.5px;
+  color: #3d3f3a;
+}
+
+.ql-afterpay b {
+  color: #151515;
+}

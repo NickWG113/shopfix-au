@@ -1,8 +1,24 @@
-# ShopFix AU
+# QuickLift (was ShopFix AU)
 
-Paste in an Australian Shopify store. ShopFix checks it for the things an
+Paste in an Australian Shopify store. QuickLift checks it for the things an
 Australian shopper looks for, then lets you switch fixes on — or describe your
 own change in plain English — and watch the store's real page update live.
+
+## Pages
+
+- `/` — the home page, copied from Avery's (8 Oct 2026 "Red pen" design),
+  recoloured and cut down to Shopify only. Its form opens the dashboard.
+- `/dashboard?store=…` — the owner's view: what to fix first, the agent, and
+  what QuickLift read. Every button that changes something opens the preview.
+- `/preview?store=…` — the store's real page with changes on it, then
+  Approve and publish. `&fix=afterpay` opens with a fix switched on;
+  `&ask=…&page=product` hands a request straight to the agent.
+
+A dark "Demo" bar above every page switches between the three (keys 1, 2, 3)
+and keeps the store. It's for presenting, not part of the product; × hides it.
+
+The example-shop photos in `public/images/home/` are Avery's, CC0 from
+StockSnap (sources in Avery's `docs/home-page-photos.md`).
 
 ## Run it
 

@@ -1,25 +1,22 @@
 :root {
-  --bg: #f6f5f1;
+  --bg: #f7f7fb;
   --card: #ffffff;
   --ink: #1b1c1a;
   --muted: #6b6d68;
-  --line: #e4e2db;
-  --accent: #0f5c43;
+  --line: #e4e4ee;
+  --accent: #3b2fc9;
   --accent-ink: #ffffff;
   --pass: #0f7b52;
   --fail: #c2410c;
   --unknown: #8a8a83;
   --radius: 10px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Funnel Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141513; --card: #1d1e1c; --ink: #ecebe6; --muted: #a3a49e;
-    --line: #33342f; --accent: #3fbf8f; --accent-ink: #0b1f17;
-    --pass: #4cc58f; --fail: #f08a4b; --unknown: #8e8f88;
-  }
-}
+/* No dark mode: the home page and dashboard are light only (the home page
+   is Avery's design, drawn on paper), and a dark editor between two light
+   pages looked like a different product. */
+:root { color-scheme: light; }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
 body { background: var(--bg); display: flex; flex-direction: column; }

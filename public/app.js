@@ -44,13 +44,17 @@ function esc(s) {
 
 // ---------- checking a store ----------
 
-$("#check-form").addEventListener("submit", async (e) => {
+$("#check-form").addEventListener("submit", (e) => {
   e.preventDefault();
+  checkStore($("#domain").value).then((ok) => ok && refreshPreview());
+});
+
+async function checkStore(domain) {
   const btn = $("#check-btn");
   btn.disabled = true;
   btn.textContent = "Checking…";
   try {
-    const { store, checks } = await api("/api/check", { domain: $("#domain").value });
+    const { store, checks } = await api("/api/check", { domain });
     state.store = store;
     state.checks = checks;
     state.path = "/";
@@ -66,18 +70,25 @@ $("#check-form").addEventListener("submit", async (e) => {
     for (const c of checks) if (c.fix) state.presets[c.fix] = { on: false, text: state.config.presets[c.fix].defaultText };
     $("#domain").value = store.domain;
     $("#intro").hidden = true;
+    $("#tab-dashboard").href = `/dashboard?store=${encodeURIComponent(store.domain)}`;
+    try {
+      localStorage.setItem("ql:lastStore", store.domain);
+    } catch {
+      // Storage blocked: nothing depends on it.
+    }
     renderStore();
     renderChecks();
     renderChanges();
     $("#ai-card").hidden = false;
-    refreshPreview();
+    return true;
   } catch (err) {
     toast(err.message, true);
+    return false;
   } finally {
     btn.disabled = false;
     btn.textContent = "Check store";
   }
-});
+}
 
 function renderStore() {
   const s = state.store;
@@ -162,9 +173,12 @@ $("#checks").addEventListener("input", (e) => {
 
 // ---------- AI changes ----------
 
-$("#ai-form").addEventListener("submit", async (e) => {
+$("#ai-form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const request = $("#ai-request").value.trim();
+  askAgent($("#ai-request").value.trim());
+});
+
+async function askAgent(request) {
   if (!request || !state.store) return;
   const btn = $("#ai-btn");
   btn.disabled = true;
@@ -183,6 +197,9 @@ $("#ai-form").addEventListener("submit", async (e) => {
     state.custom.push(change);
     $("#ai-request").value = "";
     renderChanges();
+    // The summary of what the agent did sits in the change list, further
+    // down the panel; bring it into view so the owner reads it.
+    $("#changes-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
     setMode("after");
     refreshPreview();
     toast(change.summary);
@@ -190,9 +207,9 @@ $("#ai-form").addEventListener("submit", async (e) => {
     toast(err.message, true);
   } finally {
     btn.disabled = false;
-    btn.textContent = "Apply to preview";
+    btn.textContent = "Make this change";
   }
-});
+}
 
 // ---------- the change list ----------
 
@@ -214,9 +231,14 @@ function renderChanges() {
   $("#changes").innerHTML = items.join("") || `<li class="muted">No changes yet. Switch on a fix or describe one.</li>`;
   $("#changes-card").hidden = !state.store;
 
+  // The approve step always shows, because it is the owner's step in the
+  // flow. It can only publish to the one store this server holds a key for;
+  // on any other store it says what connecting would do instead.
   const pub = state.config.publishStore;
-  $("#publish-box").hidden = !(pub && state.store?.shop === pub);
-  $("#publish-store").textContent = pub || "";
+  const canPublish = Boolean(pub && state.store?.shop === pub);
+  $("#publish-box").hidden = !state.store;
+  $("#publish-store").textContent = canPublish ? pub : "your store";
+  $("#undo-btn").hidden = !canPublish;
   $("#publish-btn").disabled = items.length === 0;
 
   $("#code").textContent =
@@ -240,6 +262,12 @@ $("#changes").addEventListener("click", (e) => {
 });
 
 $("#publish-btn").addEventListener("click", async () => {
+  const pub = state.config.publishStore;
+  if (!(pub && state.store?.shop === pub)) {
+    $("#publish-msg").textContent =
+      "Publishing needs this store connected to QuickLift. Once it is, these changes go into its theme in one snippet, and undo takes them off.";
+    return;
+  }
   if (!confirm(`Publish these changes to the live theme on ${state.config.publishStore}? Shoppers will see them straight away.`)) return;
   const btn = $("#publish-btn");
   btn.disabled = true;
@@ -404,8 +432,28 @@ $("#go-product").addEventListener("click", () => {
 state.config = await api("/api/config");
 $("#ai-off").hidden = state.config.ai;
 $("#ai-form").hidden = !state.config.ai;
-const fromUrl = new URLSearchParams(location.search).get("store");
+// Arriving from the dashboard: ?store= checks that store, ?fix= switches a
+// ready-made fix on, and ?ask= hands a request straight to the agent (on
+// the page ?page= names), so the owner lands on the change, not a form.
+const params = new URLSearchParams(location.search);
+const fromUrl = params.get("store");
 if (fromUrl) {
   $("#domain").value = fromUrl;
-  $("#check-form").requestSubmit();
+  if (await checkStore(fromUrl)) {
+    const fix = params.get("fix");
+    const ask = params.get("ask");
+    if (fix && state.presets[fix]) {
+      state.presets[fix].on = true;
+      if ((fix === "afterpay" || fix === "sticky-cart") && state.store.firstProductPath) state.path = state.store.firstProductPath;
+      if (fix === "sticky-cart") setSize("phone");
+      renderChecks();
+      renderChanges();
+    }
+    if (ask && params.get("page") === "product" && state.store.firstProductPath) state.path = state.store.firstProductPath;
+    refreshPreview();
+    if (ask) {
+      $("#ai-request").value = ask;
+      askAgent(ask);
+    }
+  }
 }

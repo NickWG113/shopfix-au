@@ -1,0 +1,151 @@
+/* What the signed-in pages share (dashboard and preview): QuickLift's
+   colours, type and top bar. The home page has its own sheet (home.css,
+   copied from Avery's) but the same violet and pen orange, so moving from
+   the home page into the app doesn't feel like changing products. */
+
+:root {
+  --ql-bg: #f7f7fb;
+  --ql-card: #ffffff;
+  --ql-ink: #171916;
+  --ql-ink-2: #2d2f2b;
+  --ql-muted: #5b5d57;
+  --ql-line: #e4e4ee;
+  --ql-brand: #3b2fc9;
+  --ql-brand-dark: #2a2194;
+  --ql-brand-tint: #efedfc;
+  --ql-fix: #c2410c;
+  --ql-fix-tint: #fdf0e8;
+  --ql-ok: #0f7b52;
+  --ql-ok-tint: #e7f4ee;
+  --ql-unknown: #77776f;
+  --ql-display: "Funnel Display", system-ui, sans-serif;
+  --ql-sans: "Funnel Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ql-bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 24px;
+  background: var(--ql-card);
+  border-bottom: 1px solid var(--ql-line);
+  font-family: var(--ql-sans);
+}
+
+.ql-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ql-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ql-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ql-logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--ql-brand);
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.ql-logo-tld {
+  color: var(--ql-brand);
+}
+
+.ql-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.ql-tabs a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--ql-ink-2);
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.ql-tabs a:hover {
+  background: var(--ql-bg);
+}
+
+.ql-tabs a.on {
+  background: var(--ql-brand-tint);
+  color: var(--ql-brand-dark);
+  font-weight: 600;
+}
+
+.ql-store-pill {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--ql-line);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--ql-muted);
+  white-space: nowrap;
+}
+
+.ql-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ql-brand);
+  color: #ffffff;
+  font: 600 15px/1.2 var(--ql-sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ql-btn:hover {
+  background: var(--ql-brand-dark);
+}
+
+.ql-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.ql-btn--ghost {
+  background: transparent;
+  color: var(--ql-brand-dark);
+  border: 1px solid var(--ql-line);
+}
+
+.ql-btn--ghost:hover {
+  background: var(--ql-brand-tint);
+}
+
+@media (max-width: 760px) {
+  .ql-bar {
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 10px 16px;
+  }
+  .ql-store-pill {
+    display: none;
+  }
+}

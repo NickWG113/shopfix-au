@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · QuickLift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700&family=Funnel+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/shell.css">
+  <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body class="ql-app">
+  <header class="ql-bar">
+    <a class="ql-logo" href="/"><span class="ql-logo-mark" aria-hidden="true">↑</span><span>QuickLift<span class="ql-logo-tld">.ai</span></span></a>
+    <nav class="ql-tabs" aria-label="Pages">
+      <a href="#" class="on" data-link="dashboard">Dashboard</a>
+      <a href="#" data-link="preview">Preview and approve</a>
+    </nav>
+    <span class="ql-store-pill" id="store-pill" hidden></span>
+  </header>
+
+  <div class="db">
+    <aside class="db-side" id="side" hidden>
+      <div class="db-side-store" id="side-store"></div>
+      <nav class="db-side-nav" aria-label="Dashboard">
+        <a href="#top" class="on">Overview</a>
+        <a href="#fix">What to fix</a>
+        <a href="#agent">Ask the agent</a>
+        <a href="#live">Live on your store</a>
+        <a href="#" data-link="preview">Preview and approve</a>
+      </nav>
+    </aside>
+
+    <main class="db-main" id="top">
+      <section id="loading" class="db-loading">
+        <h1>Checking your store…</h1>
+        <ol class="db-steps" id="load-steps">
+          <li>Reading your home page</li>
+          <li>Reading your product feed</li>
+          <li>Reading a product page</li>
+          <li>Running the checks</li>
+        </ol>
+      </section>
+
+      <section id="error" class="db-card db-error" hidden>
+        <h1>We couldn’t check that store</h1>
+        <p id="error-msg"></p>
+        <a class="ql-btn" href="/">Try another store</a>
+      </section>
+
+      <div id="content" hidden>
+        <section class="db-head">
+          <div>
+            <h1 id="store-name"></h1>
+            <div class="db-meta"><span id="store-domain"></span><span id="store-tags" class="db-tags"></span></div>
+          </div>
+          <div class="db-head-actions">
+            <span class="db-muted" id="checked-at"></span>
+            <button type="button" class="ql-btn ql-btn--ghost" id="recheck">Check again</button>
+          </div>
+        </section>
+
+        <section class="db-tiles" aria-label="Summary">
+          <div class="db-tile db-tile--fix"><b id="n-fix">0</b><span>to fix</span></div>
+          <div class="db-tile db-tile--ok"><b id="n-ok">0</b><span>looking good</span></div>
+          <div class="db-tile db-tile--live"><b id="n-live">0</b><span>live on your store</span></div>
+        </section>
+
+        <div class="db-grid">
+          <section class="db-card" id="fix">
+            <div class="db-card-head">
+              <h2>What to fix first</h2>
+              <span class="db-muted">Most important first</span>
+            </div>
+            <ul class="db-findings" id="findings"></ul>
+            <div id="unknown-wrap" hidden>
+              <h3 class="db-sub">Couldn’t check</h3>
+              <ul class="db-findings db-findings--quiet" id="unknown"></ul>
+            </div>
+            <details class="db-ok" id="ok-wrap">
+              <summary>Looking good (<span id="ok-count">0</span>)</summary>
+              <ul class="db-findings db-findings--quiet" id="ok"></ul>
+            </details>
+          </section>
+
+          <div class="db-col">
+            <section class="db-card db-agent" id="agent">
+              <div class="db-card-head">
+                <h2>Ask the agent</h2>
+                <span class="db-badge">AI</span>
+              </div>
+              <p class="db-muted">Describe any change in plain words. The agent reads your page, makes the change, and shows it to you before anything goes live.</p>
+              <form id="ask-form">
+                <label class="sr-only" for="ask">Your change</label>
+                <textarea id="ask" rows="4" placeholder="e.g. Make the Add to cart button bigger and bright green"></textarea>
+                <div class="db-ask-row">
+                  <label for="ask-page" class="db-muted">On</label>
+                  <select id="ask-page">
+                    <option value="product">A product page</option>
+                    <option value="home">The home page</option>
+                  </select>
+                  <button type="submit" class="ql-btn">Make this change</button>
+                </div>
+              </form>
+              <div class="db-chips" id="chips">
+                <button type="button" data-ask="Make the Add to cart button bigger and bright green">Bigger, brighter Add to cart</button>
+                <button type="button" data-ask="Add a small line under the price saying: Ships from [your city] in 1–2 business days">Shipping line under the price</button>
+                <button type="button" data-ask="Make the product title larger and bolder on phones">Bolder product title on phones</button>
+              </div>
+            </section>
+
+            <section class="db-card" id="live">
+              <div class="db-card-head"><h2>Live on your store</h2></div>
+              <p id="live-msg" class="db-muted">Nothing is live yet. A change goes live only when you approve it.</p>
+              <a class="ql-btn ql-btn--ghost" href="#" data-link="preview">Open preview and approve</a>
+            </section>
+
+            <section class="db-card">
+              <div class="db-card-head"><h2>What QuickLift did</h2></div>
+              <ul class="db-activity" id="activity"></ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/dashboard.js" type="module"></script>
+  <script src="/demo-bar.js"></script>
+</body>
+</html>
