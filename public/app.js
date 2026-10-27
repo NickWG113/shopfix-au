@@ -10,11 +10,13 @@ const state = {
   path: "/",
   presets: {}, // id -> { on, text }
   custom: [], // { summary, css, js, warning, request }
-  mode: "after",
   size: "desktop",
   highlight: true,
   scripts: true,
   scrollY: 0,
+  // What the frame is showing right now, so a new change can be added to
+  // it in place instead of reloading the page (see applyChanges).
+  rendered: null,
 };
 
 async function api(url, body) {
@@ -165,7 +167,7 @@ $("#checks").addEventListener("change", (e) => {
     setSize("phone");
   }
   renderChanges();
-  refreshPreview();
+  applyChanges();
 });
 
 let textTimer;
@@ -207,8 +209,7 @@ async function askAgent(request) {
     // The summary of what the agent did sits in the change list, further
     // down the panel; bring it into view so the owner reads it.
     $("#changes-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
-    setMode("after");
-    refreshPreview();
+    applyChanges();
     toast(change.summary);
   } catch (err) {
     toast(err.message, true);
@@ -302,7 +303,7 @@ $("#undo-btn").addEventListener("click", async () => {
 // ---------- preview ----------
 
 let previewSeq = 0;
-async function refreshPreview() {
+async function refreshPreview({ focus = false } = {}) {
   if (!state.store) return;
   const seq = ++previewSeq;
   $("#loading").hidden = false;
@@ -313,17 +314,49 @@ async function refreshPreview() {
       path: state.path,
       presets: activePresets(),
       custom: state.custom,
-      original: state.mode === "before",
-      highlight: state.highlight && state.mode === "after",
+      highlight: state.highlight,
       scripts: state.scripts,
     });
     // A slow response for an older click mustn't overwrite a newer one.
     if (seq !== previewSeq) return;
     await swapIn(html, seq);
+    state.rendered = snapshot();
+    if (focus && seq === previewSeq) frame.contentWindow?.postMessage({ shopfix: "focus" }, "*");
   } catch (err) {
     if (seq === previewSeq) toast(err.message, true);
   } finally {
     if (seq === previewSeq) $("#loading").hidden = true;
+  }
+}
+
+function snapshot() {
+  return {
+    path: state.path,
+    scripts: state.scripts,
+    highlight: state.highlight,
+    presets: Object.fromEntries(activePresets().map((p) => [p.id, p.text])),
+    custom: state.custom.length,
+  };
+}
+
+// Add new changes to the page already in the frame. Only additions can go
+// in this way: a change that was switched off, or edited, may have altered
+// the page in ways that can't be taken back, so those reload it.
+async function applyChanges() {
+  const was = state.rendered;
+  const now = snapshot();
+  const sameView = was && was.path === now.path && was.scripts === now.scripts && was.highlight === now.highlight;
+  const kept = was && Object.entries(was.presets).every(([id, text]) => now.presets[id] === text);
+  if (!sameView || !kept || now.custom < was.custom) return refreshPreview({ focus: true });
+  const presets = activePresets().filter((p) => !(p.id in was.presets));
+  const custom = state.custom.slice(was.custom);
+  if (!presets.length && !custom.length) return;
+  try {
+    const bundle = await api("/api/bundle", { presets, custom });
+    frame.contentWindow?.postMessage({ shopfix: "apply", css: bundle.css, js: bundle.js }, "*");
+    state.rendered = now;
+  } catch (err) {
+    toast(err.message, true);
   }
 }
 
@@ -397,22 +430,12 @@ window.addEventListener("message", (e) => {
   }
 });
 
-function setMode(mode) {
-  state.mode = mode;
-  document.querySelectorAll("[data-mode]").forEach((b) => b.classList.toggle("on", b.dataset.mode === mode));
-}
 function setSize(size) {
   state.size = size;
   document.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("on", b.dataset.size === size));
   $("#frame-wrap").classList.toggle("phone", size === "phone");
 }
 
-document.querySelectorAll("[data-mode]").forEach((b) =>
-  b.addEventListener("click", () => {
-    setMode(b.dataset.mode);
-    refreshPreview();
-  }),
-);
 document.querySelectorAll("[data-size]").forEach((b) => b.addEventListener("click", () => setSize(b.dataset.size)));
 $("#highlight").addEventListener("change", (e) => {
   state.highlight = e.target.checked;
@@ -457,7 +480,7 @@ if (fromUrl) {
       renderChanges();
     }
     if (ask && params.get("page") === "product" && state.store.firstProductPath) state.path = state.store.firstProductPath;
-    refreshPreview();
+    await refreshPreview({ focus: Boolean(fix) });
     if (ask) {
       $("#ai-request").value = ask;
       askAgent(ask);

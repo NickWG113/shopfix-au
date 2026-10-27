@@ -78,6 +78,10 @@ app.post("/api/preview", (req, res) =>
   }),
 );
 
+// Just the code for some changes, for adding them to a preview that is
+// already showing (no reload, so no flash).
+app.post("/api/bundle", (req, res) => send(res, async () => buildChangeBundle(req.body.presets, req.body.custom)));
+
 app.post("/api/ai-change", (req, res) =>
   send(res, async () => {
     const request = String(req.body.request || "").trim().slice(0, 1000);
