@@ -73,18 +73,18 @@ npm test
 4. **Publish (optional)** — for a store you own, write the changes into the
    live theme, and undo them again. See below.
 
-The preview has **Before / After**, **Desktop / Phone**, **Outline changes**
-(dashed pink outline round everything we added) and **Theme scripts** (turn off
-if a store's page misbehaves in the preview).
+The preview has **Desktop / Phone**, **Highlight changes** (a dashed violet
+outline round everything we added) and **Theme scripts** (turn off if a
+store's page misbehaves in the preview).
 
 ## Demo script (about 3 minutes)
 
 1. Paste `frankbody.com` → **Check store**. Point at the store card (AUD,
    Australian store, theme name) and the three **Fix** items.
-2. Tick **Afterpay instalments**, click **Product** in the toolbar, scroll to
-   the price: "or 4 payments of $10.00" — worked out from the
-   sale price, not the crossed-out one. Flip **Before / After**.
-3. Tick **Returns + Australian business bar**; edit its wording to show it's
+2. Switch on **Afterpay instalments**: the page jumps to the price, where
+   "or 4 payments of $10.00" is worked out from the sale price, not the
+   crossed-out one.
+3. Switch on **Returns + Australian business bar**; edit its wording to show it's
    the owner's call.
 4. Tick **Sticky Add to cart** → it switches to **Phone** and a product page.
    Scroll down past Add to cart and the sticky bar slides in.
