@@ -79,7 +79,7 @@ if a store's page misbehaves in the preview).
 1. Paste `frankbody.com` → **Check store**. Point at the store card (AUD,
    Australian store, theme name) and the three **Fix** items.
 2. Tick **Afterpay instalments**, click **Product** in the toolbar, scroll to
-   the price: "or 4 interest-free payments of $10.00" — worked out from the
+   the price: "or 4 payments of $10.00" — worked out from the
    sale price, not the crossed-out one. Flip **Before / After**.
 3. Tick **Returns + Australian business bar**; edit its wording to show it's
    the owner's call.
