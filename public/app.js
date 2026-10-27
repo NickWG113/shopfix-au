@@ -56,6 +56,11 @@ $("#check-form").addEventListener("submit", async (e) => {
     state.path = "/";
     state.custom = [];
     state.presets = {};
+    // Each store gets its scripts back; the switch-off above is per store.
+    state.scripts = true;
+    // A scroll position from the last store means nothing on this one.
+    state.scrollY = 0;
+    $("#scripts").checked = true;
     // Suggested fixes start switched off: the owner chooses, and the
     // before/after is more convincing when they flip them on themselves.
     for (const c of checks) if (c.fix) state.presets[c.fix] = { on: false, text: state.config.presets[c.fix].defaultText };
@@ -287,45 +292,64 @@ async function refreshPreview() {
   }
 }
 
-// Load the new version in a hidden frame behind the current one and swap
-// when it has drawn, so flipping a fix looks like the page changing in
-// place rather than going blank and reloading.
-let activeFrame = $("#frame");
+// One frame, reloaded in place. (Loading the next version in a second
+// frame behind or over the first and swapping looked smoother, but Chrome
+// left the swapped-in frame blank white on some stores, Toyworld among
+// them, until it was scrolled. A short reload flash is the better trade.)
+const frame = $("#frame");
+let expectingLoad = false;
+let gotReady = false;
+
 function swapIn(html, seq) {
   return new Promise((resolve) => {
-    const next = activeFrame.cloneNode(false);
-    next.removeAttribute("id");
-    next.classList.add("loading-frame");
-    next.hidden = false;
     let done = false;
-    const show = () => {
+    const finish = () => {
       if (done) return;
       done = true;
-      if (seq !== previewSeq) {
-        next.remove();
-        return resolve();
-      }
-      next.classList.remove("loading-frame");
-      if (activeFrame.isConnected && activeFrame !== next) activeFrame.remove();
-      activeFrame = next;
-      $("#empty").hidden = true;
+      if (seq === previewSeq) frame.contentWindow?.postMessage({ shopfix: "scroll", y: state.scrollY }, "*");
       resolve();
     };
-    next.onload = () => {
-      next.contentWindow.postMessage({ shopfix: "scroll", y: state.scrollY }, "*");
-      // A beat for the theme's scripts to lay the page out after load.
-      setTimeout(show, 250);
+    expectingLoad = true;
+    gotReady = false;
+    frame.onload = () => {
+      // srcdoc loads once per render. A load we didn't ask for, or one from
+      // a page that never said it was ours, means the theme's scripts sent
+      // the frame elsewhere (usually the real store, which refuses to be
+      // framed and shows a broken-page icon).
+      if (!expectingLoad) return frameLeft();
+      expectingLoad = false;
+      if (gotReady) return finish();
+      // "ready" is a message, so it can arrive just after load. Give it a
+      // moment before deciding the page isn't ours.
+      setTimeout(() => (gotReady ? finish() : frameLeft()), 400);
     };
     // Some theme never fires load (a hung asset); don't wait forever.
-    setTimeout(show, 8000);
-    next.srcdoc = html;
-    $("#frame-wrap").appendChild(next);
+    setTimeout(finish, 8000);
+    frame.hidden = false;
+    $("#empty").hidden = true;
+    frame.srcdoc = html;
   });
 }
 
+function frameLeft() {
+  if (!state.scripts) {
+    // Already without scripts and still leaving: nothing more we can do.
+    toast("This store's page won't stay in the preview. Try another page or store.", true);
+    return;
+  }
+  state.scripts = false;
+  $("#scripts").checked = false;
+  toast("This store's own scripts tried to open the real site, so the preview shows it with them off.");
+  refreshPreview();
+}
+
 window.addEventListener("message", (e) => {
-  if (e.source !== activeFrame.contentWindow) return;
   const m = e.data || {};
+  if (e.source !== frame.contentWindow) return;
+  if (m.shopfix === "ready") {
+    gotReady = true;
+    return;
+  }
   if (m.shopfix === "scrolled") {
     state.scrollY = m.y;
   } else if (m.shopfix === "navigate") {
