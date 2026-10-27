@@ -114,7 +114,11 @@ function fixControl(id) {
   const p = state.presets[id];
   return `
     <div class="fix">
-      <label><input type="checkbox" data-fix="${id}" ${p.on ? "checked" : ""}> ${esc(def.label)}</label>
+      <label class="switch${p.on ? " on" : ""}">
+        <input type="checkbox" role="switch" data-fix="${id}" ${p.on ? "checked" : ""}>
+        <span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>
+        <span class="switch-text"><b>${esc(def.label)}</b><span class="switch-state">${p.on ? "On in the preview" : "Try this fix"}</span></span>
+      </label>
       <input type="text" data-fix-text="${id}" value="${esc(p.text)}" aria-label="${esc(def.label)} text">
       ${TRUE_ONLY.has(id) ? `<span class="note">Edit the wording so it's true for this store.</span>` : ""}
     </div>`;
@@ -151,6 +155,9 @@ $("#checks").addEventListener("change", (e) => {
   const id = e.target.dataset.fix;
   if (!id) return;
   state.presets[id].on = e.target.checked;
+  const sw = e.target.closest(".switch");
+  sw?.classList.toggle("on", e.target.checked);
+  if (sw) sw.querySelector(".switch-state").textContent = e.target.checked ? "On in the preview" : "Try this fix";
   // Sticky cart only exists on product pages; jump there so it's visible.
   if (id === "sticky-cart" && e.target.checked && state.store.firstProductPath && !state.path.startsWith("/products/")) {
     state.path = state.store.firstProductPath;
