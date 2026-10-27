@@ -46,6 +46,15 @@
         <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
       </section>
 
+      <section id="ideas-card" class="card" hidden>
+        <div class="ideas-head">
+          <h2>More ideas for this page</h2>
+          <button type="button" id="ideas-more" class="ghost small" hidden>New ideas</button>
+        </div>
+        <p class="muted" id="ideas-note">The agent is reading this page…</p>
+        <ul id="ideas" class="ideas"></ul>
+      </section>
+
       <section id="changes-card" class="card" hidden>
         <h2>Changes in this preview</h2>
         <ul id="changes" class="changes"></ul>

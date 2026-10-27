@@ -17,6 +17,7 @@ const state = {
   // What the frame is showing right now, so a new change can be added to
   // it in place instead of reloading the page (see applyChanges).
   rendered: null,
+  ideas: { path: null, list: [], tried: new Set() },
 };
 
 async function api(url, body) {
@@ -188,7 +189,8 @@ $("#ai-form").addEventListener("submit", (e) => {
 });
 
 async function askAgent(request) {
-  if (!request || !state.store) return;
+  if (!request || !state.store) return false;
+  let added = false;
   const btn = $("#ai-btn");
   btn.disabled = true;
   btn.textContent = "Working on it…";
@@ -204,6 +206,7 @@ async function askAgent(request) {
       return;
     }
     state.custom.push(change);
+    added = true;
     $("#ai-request").value = "";
     renderChanges();
     // The summary of what the agent did sits in the change list, further
@@ -217,7 +220,61 @@ async function askAgent(request) {
     btn.disabled = false;
     btn.textContent = "Make this change";
   }
+  return added;
 }
+
+// ---------- ideas ----------
+
+// The agent's own suggestions for the page on screen, each one click away
+// from being made. Loaded when a new page is shown, kept per page.
+let ideasSeq = 0;
+async function loadIdeas(fresh = false) {
+  if (!state.config.ai || !state.store) return;
+  const seq = ++ideasSeq;
+  const path = state.path;
+  state.ideas = { path, list: [], tried: new Set() };
+  $("#ideas-card").hidden = false;
+  $("#ideas-more").hidden = true;
+  $("#ideas").innerHTML = "";
+  $("#ideas-note").textContent = "The agent is reading this page…";
+  try {
+    const { ideas } = await api("/api/ideas", { domain: state.store.domain, path, fresh });
+    if (seq !== ideasSeq) return;
+    state.ideas.list = ideas;
+    $("#ideas-note").textContent = "Picked for this page by the agent. Try any of them on the page above.";
+    renderIdeas();
+  } catch (err) {
+    if (seq === ideasSeq) $("#ideas-note").textContent = `Couldn't get ideas: ${err.message}`;
+  } finally {
+    if (seq === ideasSeq) $("#ideas-more").hidden = false;
+  }
+}
+
+function renderIdeas() {
+  $("#ideas").innerHTML = state.ideas.list
+    .map((idea, i) => {
+      const tried = state.ideas.tried.has(i);
+      return `
+      <li class="${tried ? "tried" : ""}">
+        <div class="idea-text"><b>${esc(idea.title)}</b><span>${esc(idea.why)}</span></div>
+        <button type="button" data-idea="${i}" ${tried ? "disabled" : ""}>${tried ? "Added" : "Try it"}</button>
+      </li>`;
+    })
+    .join("");
+}
+
+$("#ideas").addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-idea]");
+  if (!b) return;
+  const i = Number(b.dataset.idea);
+  b.disabled = true;
+  b.textContent = "Working…";
+  const ok = await askAgent(state.ideas.list[i].request);
+  if (ok) state.ideas.tried.add(i);
+  renderIdeas();
+});
+
+$("#ideas-more").addEventListener("click", () => loadIdeas(true));
 
 // ---------- the change list ----------
 
@@ -306,6 +363,8 @@ let previewSeq = 0;
 async function refreshPreview({ focus = false } = {}) {
   if (!state.store) return;
   const seq = ++previewSeq;
+  // Ideas take the agent a while; start them alongside the page.
+  if (state.ideas.path !== state.path) loadIdeas();
   $("#loading").hidden = false;
   $("#path").textContent = state.path;
   try {

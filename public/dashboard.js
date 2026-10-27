@@ -160,6 +160,14 @@ function render(checks, config) {
   $("#activity").innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join("");
 
   $("#content").hidden = false;
+
+  // The preview's "More ideas" take the agent half a minute. Ask now, in
+  // the background, so they're ready by the time the owner opens a page.
+  if (config.ai) {
+    for (const path of [store.firstProductPath, "/"].filter(Boolean)) {
+      api("/api/ideas", { domain: store.domain, path }).catch(() => {});
+    }
+  }
 }
 
 function findingRow(c) {

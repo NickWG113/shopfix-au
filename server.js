@@ -7,7 +7,7 @@ import { inspectStore, fetchPage, normaliseDomain, normalisePath } from "./lib/s
 import { runChecks } from "./lib/checks.js";
 import { PRESETS, buildChangeBundle } from "./lib/fixes.js";
 import { renderPreview, pageOutline } from "./lib/preview.js";
-import { generateChange } from "./lib/ai.js";
+import { generateChange, generateIdeas } from "./lib/ai.js";
 import { publish, undo, publishConfigured } from "./lib/publish.js";
 
 // This app's own .env, wherever it was started from. The lib modules read
@@ -95,6 +95,32 @@ app.post("/api/ai-change", (req, res) =>
       existing: (req.body.existing || []).map(String).slice(0, 20),
     });
     return { ...change, request };
+  }),
+);
+
+// Ideas cost an AI call and change only when the page does, so each page's
+// list is kept for half an hour. "More" asks again and replaces it.
+const IDEAS_MS = 30 * 60 * 1000;
+const ideasCache = new Map();
+app.post("/api/ideas", (req, res) =>
+  send(res, async () => {
+    const domain = normaliseDomain(req.body.domain);
+    const pagePath = normalisePath(req.body.path);
+    const key = `${domain}${pagePath}`;
+    const hit = ideasCache.get(key);
+    if (hit && !req.body.fresh && Date.now() - hit.at < IDEAS_MS) return { ideas: await hit.ideas };
+    // Cached as a promise, so the dashboard's early request and the preview's
+    // own share one AI call instead of making two.
+    const ideas = fetchPage(domain, pagePath).then((page) =>
+      generateIdeas(pageOutline(page.html), {
+        domain,
+        path: pagePath,
+        covered: Object.values(PRESETS).map((p) => p.label),
+      }),
+    );
+    ideasCache.set(key, { at: Date.now(), ideas });
+    ideas.catch(() => ideasCache.delete(key));
+    return { ideas: await ideas };
   }),
 );
 
