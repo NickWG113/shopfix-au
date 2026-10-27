@@ -11,7 +11,10 @@ own change in plain English — and watch the store's real page update live.
 - `/dashboard?store=…` — the owner's view: what to fix first, the agent, and
   what QuickLift read. Every button that changes something opens the preview.
 - `/preview?store=…` — the store's real page with changes on it, then
-  Approve and publish. `&fix=afterpay` opens with a fix switched on;
+  Approve and publish. New changes are added to the page in place (no
+  reload) and the page scrolls to each one with a "Changed by QuickLift"
+  label. "More ideas for this page" is the agent's own list of changes for
+  the page on screen, each one click away. `&fix=afterpay` opens with a fix switched on;
   `&ask=…&page=product` hands a request straight to the agent.
 
 A dark "Demo" bar above every page switches between the three (keys 1, 2, 3)
