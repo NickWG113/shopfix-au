@@ -81,6 +81,9 @@ button:disabled { opacity: .55; cursor: progress; }
 .changes li em { display: block; color: var(--fail); font-style: normal; font-size: 12px; margin-top: 2px; }
 .changes button { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; padding: 2px 8px; font-size: 12px; }
 .publish { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+/* display:flex above would otherwise beat the hidden attribute, showing
+   Publish when no store of ours is set up. */
+.publish[hidden] { display: none; }
 .ghost { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 8px; padding: 8px 14px; }
 .code summary { font-size: 13px; color: var(--muted); cursor: pointer; }
 .code pre { max-height: 260px; overflow: auto; font-size: 11px; background: var(--bg); padding: 8px; border-radius: 6px; white-space: pre-wrap; word-break: break-all; }
