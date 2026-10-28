@@ -1,6 +1,6 @@
 /* What the signed-in pages share (dashboard and preview): QuickLift's
    colours, type and top bar. The home page has its own sheet (home.css,
-   copied from Avery's) but the same violet and pen orange, so moving from
+   reused from our earlier prototype) but the same violet and pen orange, so moving from
    the home page into the app doesn't feel like changing products. */
 
 :root {

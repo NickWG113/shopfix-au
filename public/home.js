@@ -1,6 +1,6 @@
 // The home page's few moving parts: the drawn Add to cart buttons and the
-// "one change, start to finish" walkthrough. Ported from Avery's React
-// version; the page is complete without any of it.
+// "one change, start to finish" walkthrough. Ported from our earlier prototype's
+// React version; the page is complete without any of it.
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

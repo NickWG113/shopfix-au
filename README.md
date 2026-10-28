@@ -6,7 +6,7 @@ own change in plain English — and watch the store's real page update live.
 
 ## Pages
 
-- `/` — the home page, copied from Avery's (8 Oct 2026 "Red pen" design),
+- `/` — the home page, reused from our earlier prototype ("Red pen" design),
   recoloured and cut down to Shopify only. Its form opens the dashboard.
 - `/dashboard?store=…` — the owner's view: what to fix first, the agent, and
   what QuickLift read. Every button that changes something opens the preview.
@@ -20,8 +20,11 @@ own change in plain English — and watch the store's real page update live.
 A dark "Demo" bar above every page switches between the three (keys 1, 2, 3)
 and keeps the store. It's for presenting, not part of the product; × hides it.
 
-The example-shop photos in `public/images/home/` are Avery's, CC0 from
-StockSnap (sources in Avery's `docs/home-page-photos.md`).
+The example-shop photos in `public/images/home/` are CC0 from StockSnap:
+[bowls](https://stocksnap.io/photo/stacked-bowls-FTFTNXN41H),
+[mug](https://stocksnap.io/photo/cup-mug-LOSYDU1I0A),
+[vases](https://stocksnap.io/photo/jars-blur-JKJS3BCD7N) and
+[espresso cups](https://stocksnap.io/photo/ceramic-cup-M50EGNEZ4Z).
 
 ## Run it
 

@@ -12,7 +12,7 @@ body.ql-app {
   min-height: calc(100vh - 60px);
 }
 
-/* Grouped side navigation, as on the signed-in Avery app. Sticky so the
+/* Grouped side navigation, as on our earlier prototype's signed-in app. Sticky so the
    sections stay one click away on a long list of findings. */
 .db-side {
   position: sticky;

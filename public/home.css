@@ -1,10 +1,11 @@
 /*
- * The home page, "Red pen" (8 Oct 2026). Loaded by app/routes/_index.tsx
- * only. Everything is under .rp so nothing here reaches the app's pages.
+ * The home page, "Red pen", reused from our earlier prototype. Loaded by
+ * index.html only. Everything is under .rp so nothing here reaches the app.
  *
- * Two colours do two jobs and never swap: green is Avery (buttons, links,
- * "Live"), red is only ever the pen (underlines, rings, margin notes). A red
- * button would read as an error; a green mark would read as Avery approving.
+ * Two colours do two jobs and never swap: violet is QuickLift (buttons,
+ * links, "Live"), orange is only ever the pen (underlines, rings, margin
+ * notes). An orange button would read as a problem; a violet mark would
+ * read as QuickLift approving.
  *
  * The marked-up pictures have fixed widths on purpose: a mark has to stay on
  * the exact spot it marks, which a fluid picture cannot promise. Below 720px
@@ -42,9 +43,7 @@ main.home:has(> .rp) {
 
 /* The pen's notes hang out to the right of their pictures, so between the
    phone and desktop layouts one can reach past the window's edge. Clipped
-   here rather than letting the whole page scroll sideways. (This was the
-   old home page's rule in app.css, removed with the rest of its styles on
-   9 Oct 2026; the page still relied on it.) */
+   here rather than letting the whole page scroll sideways. */
 main.home {
   overflow-x: clip;
 }
@@ -58,7 +57,7 @@ main.home {
  * the site's tokens, which do turn dark. Two things made sure of that:
  * `color-scheme: light`, so the browser draws the fields, caret and
  * autofill light too; and paragraphs take the page's ink (below) rather
- * than app.css's `p { color: var(--muted) }`, whose dark value (#9aa39c)
+ * than a site-wide muted grey, whose dark value (#9aa39c)
  * is about 2.4:1 on this paper. The site header and footer still follow
  * the visitor's setting, as on every other public page.
  */
@@ -440,7 +439,7 @@ main.home {
 
 /* Looks exactly as it did at rest and on hover (Nick, 11 Oct: "keep the
    button how it was"); only a click shows anything: the shop's own "it
-   worked", in green, since this is the shop's button and not Avery's pen. */
+   worked", in the brand colour, since this is the shop's button, not the pen. */
 .rp-card-buy--added {
   background: var(--rp-brand);
 }
@@ -533,7 +532,7 @@ main.home {
   align-items: center;
 }
 
-/* ---- "What Avery noticed" ---- */
+/* ---- "What QuickLift noticed" ---- */
 
 .rp-notes-fig {
   margin: 0;
@@ -570,8 +569,7 @@ main.home {
   color: var(--rp-muted);
 }
 
-/* The severity word exactly as the dashboard shows it (SeverityWord in
-   components/ui.tsx, `.status` and `.sev` in app.css): the word in ink, a
+/* The severity word as the dashboard shows it: the word in ink, a
    coloured dot before it, red for High, amber for Medium, grey for Low
    (Nick, 11 Oct: "mirror what the actual product does"). The light-mode
    values of the app's own tokens, since this page stays light. The one
@@ -1175,9 +1173,8 @@ main.home {
 }
 
 /* The builders' marks (PlatformLogo). Their colours are set here, not
-   left to app.css, because app.css lightens them for dark mode and this
-   page stays light: Shopify's dark-mode green is 2:1 on these white
-   tiles. The same values as app.css's light ones, each 3:1 or more. */
+   left to a shared stylesheet that lightens them for dark mode, because
+   this page stays light. Each is 3:1 or more on these white tiles. */
 .rp .platform-logo {
   display: block;
   flex: none;
@@ -1350,7 +1347,7 @@ main.home {
 /* One page at a time, each a window onto the same screenshot. The window
    is 500 by 856 of the 1122 by 1348 picture, so the picture is 224.4% of
    the window's width, and each side is moved into place by its own offset
-   (in _index.tsx's TileReviewsCompare).
+   (in the page's compare switch).
 
    856 is the height Nick accepted on 11 Oct (the card had been too long).
    On the shop page it shows the first row of tiles whole, buttons and all,
@@ -1577,7 +1574,7 @@ main.home {
 }
 
 /* Paused, the step you are on is simply marked; running, it fills over the
-   step's five seconds (PLAY_STEP_MS in _index.tsx). */
+   step's five seconds (STEP_MS in home.js). */
 .rp-play-step[aria-current="step"] .rp-play-fill {
   transform: scaleX(1);
 }
@@ -2228,10 +2225,10 @@ main.home {
 }
 
 /* ==========================================================================
-   QuickLift additions (27 Oct 2026). The page above is Avery's, recoloured:
+   QuickLift additions (27 Oct 2026). The page above is reused, recoloured:
    violet is QuickLift (buttons, links, "Live"), orange is only ever the pen,
-   the same orange the app uses for "Fix". Avery's site header and footer
-   lived in its root layout, so QuickLift's own are here.
+   the same orange the app uses for "Fix". The header and footer are
+   QuickLift's own, here.
    ========================================================================== */
 
 body.ql-page {

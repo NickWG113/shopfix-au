@@ -14,7 +14,7 @@
   color: var(--ink);
 }
 /* No dark mode: the home page and dashboard are light only (the home page
-   is Avery's design, drawn on paper), and a dark editor between two light
+   is drawn on paper), and a dark editor between two light
    pages looked like a different product. */
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
