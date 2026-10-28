@@ -17,13 +17,17 @@
   try {
     store ||= localStorage.getItem("ql:lastStore") || "";
   } catch {
-    // No remembered store; the dashboard and preview tabs ask for one.
+    // Storage blocked: falls through to the demo store below.
   }
+  // On a computer that has never checked a store (anyone opening the shared
+  // link), the dashboard tab used to land on the home page's address box,
+  // which looked broken. The demo store is the one the presentation uses.
+  store ||= "frankbody.com";
   const q = store ? `?store=${encodeURIComponent(store)}` : "";
   const here = location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
   const tabs = [
     { key: "1", label: "Home page", href: "/", on: here === "/" || here === "/index" },
-    { key: "2", label: "Owner’s dashboard", href: store ? `/dashboard${q}` : "/#hero-scan", on: here === "/dashboard" },
+    { key: "2", label: "Owner’s dashboard", href: `/dashboard${q}`, on: here === "/dashboard" },
     { key: "3", label: "Preview and approve", href: `/preview${q}`, on: here === "/preview" },
   ];
 
