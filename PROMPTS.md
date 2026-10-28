@@ -1,10 +1,8 @@
 # PROMPTS.md
 
-QuickLift was built with AI coding assistants, mostly Claude Code. It is a cut-down, Shopify-only version of Avery, a product Nicholas has been building with Claude since August 2026, so many of QuickLift's decisions were first made in those Avery chats.
+QuickLift was built with AI coding assistants, mostly Claude Code. This file has two parts. Part 1 is the prompts QuickLift itself sends to its AI agent. Part 2 is the prompts that shaped the build, in the order they were sent, with their real dates.
 
-This file has two parts. Part 1 is the prompts QuickLift itself sends to its AI agent. Part 2 is the prompts that shaped the build, in the order they were sent, with their real dates. Part 2 only includes prompts about Shopify and the QuickLift build; chats about other platforms, billing and admin are left out.
-
-The prompts are copied as typed, typos included. Secret keys, a co-founder's name, employer details and swearing have been removed or replaced with [brackets], and long prompts are cut with "…".
+The prompts are copied as typed, typos included. Secret keys, names outside the team, employer details and swearing have been removed or replaced with [brackets], and long prompts are cut with "…".
 
 ---
 
@@ -52,63 +50,21 @@ Rules:
 
 ## Part 2: Prompts that shaped the build
 
-### 19–20 August: why Shopify (Avery's first chat)
+### Before 22 October: the groundwork
 
-The first prompt set the target: small Shopify stores that don't have the traffic to run their own A/B tests.
+Before the assignment, Nicholas spent August to mid-October working with Claude on an earlier prototype of the same idea. The decisions QuickLift reuses came from that work:
 
-> Can you see files inside here? … essentially, our idea is a AI agent that does three main things. So the first one is is a AI developer. Um, second is it automatically injects analytics. And then the third thing is I am currently working as a CRO product manager, and I have experience in knowing what experience work. Um, combining these two will automatically recommend improvements. And what we're targeting here is Shopify stores, um, because it's, like, hundreds of thousands that make, you know, up to five or six figures in revenue. A lot of those don't have the traffic to do AB tests, so just base improvements would would be better for the most of the time. And, you know, we'll charge, like, a monthly fee of hundred to two hundred dollars. I wanna know exactly what is working right now based on this repo and what still has to be coded. …
-
-> since we are going to be applying this to other shopify websites, would it be ggod to have results split across stuff like home page, offer page, search page, checkout etc
-
-> can i create a free fake shopify account?
-
-> so would this have any benefit over shopify's tracking currently?
-
-> give me a list of metrics we can and cant do, alongside if shoipify already allows it. im scared this part will be worthless
-
-### 24 September: the owner sees a preview before anything changes
-
-> i actually love the reccomednations you gave them - just to confirm, we will give them the ability to actually action those changes by clicking a button, we will code and give a preview then they can look?
-
-### 11–13 October: making real changes to a Shopify store
-
-This is where the approach QuickLift uses was worked out. Shopify limits what an outside app can change in a store's theme, and these prompts pushed past "give the owner steps to follow".
-
-> Test a full shopify fix.
-
-> For anything else, like moving a section or rewording a heading, Avery gives the merchant steps to do it in Shopify's editor themselves. That's the limit of what Shopify allows apps. this is terrible? there has to be a way we can do this
-
-> do you understand what i want? i want us to be able to reccomend changes, and then for it to happen.
-
-> no but i dont just want style changes i want to be able to completely change the page. does this make sense>
-
-> so there is no way to create custom code in shopify atm?
-
-> you can defintiely connect claude to shopify. surely we can connect using our thing then??
-
-> so there is NOTHING we can do there? doesnt it make it like useless for shopifuy stores???
-
-> with context about what we are talking about, please do deep research online to see what platofmrs ecommerce websites use to host? if like 90% are shopify and we dont have a great solution this is bad
-
-> always come back to the use case of what we want and how to provide as much value as possible.
-
-> can you test a larger change on shopify please then? ive opened the tabs in my chrome so you can use.
-
-> give me a simple table of what is possible but not done, done, or not possible for the ideas for avery in these platforms in a tbale
-
-> i dont want this to be the end of the idea
-
-> how do we get full theme access? explain this more please
-
-> i dont want this only scoped to how to get enabled on shopify though. i want a proper good ab testing platform. remember this and get fable to look into it it is important
-
-> in our most recent chat we talk through building an a/b testing platform. i have you on fable i want you to essentially audit the plan for wha it suggested. dont build anything, just audit and note down any recceomdnations
+- **Small Shopify stores (August).** Target Shopify stores making five to six figures a year. Most don't have the traffic to run their own A/B tests, so they're better served by changes that are already known to work. Organise the advice by page type: home page, product page, checkout.
+- **A preview before anything changes (September).** The owner should see every change on their own page and approve it with one click. Nothing goes live on its own.
+- **Look at the site the way a shopper does (September).** The AI should review what a person actually sees on the page, not just run a fixed checklist, and it should work for any kind of online shop.
+- **No research numbers shown to owners (September).** Published figures guide what to suggest first, but an owner only ever sees facts about their own store.
+- **Make the change, don't just describe it (11–13 October).** Giving owners steps to follow in Shopify's editor wasn't good enough: the tool should make the change itself. This led to the research on what Shopify lets an outside app change in a store's theme.
 
 ### 22 October: the uni assignment
 
-> Okay, long story short is our university assignment is that we need to use AI to help small to medium enterprises in Australia. I figured that since we've built out an actual product, we can probably leverage a lot of this. What I think we should do is build a much simpler version of this in a separate repo. The requirement that we're looking to do is help e-commerce websites using Shopify to optimize their stores. So we'll just have a much simpler version of Avery. We'll make a much simpler website. We can just show the [stuff] in my localhost, stuff like that. As an initial starting point, I need to give a context doc of every decision we've had as to why we've done things. To Isaac's document, sorry, Isaac's my friend. To his codex, so we can fill out some forms. But I want you to frame these decisions that we would have made from the perspective of a small to medium enterprise. …
+> Okay, long story short is our university assignment is that we need to use AI to help small to medium enterprises in Australia. I figured that since we've built out an actual product, we can probably leverage a lot of this. What I think we should do is build a much simpler version of this in a separate repo. The requirement that we're looking to do is help e-commerce websites using Shopify to optimize their stores. So we'll just have a much simpler version of [our earlier prototype]. We'll make a much simpler website. We can just show the [stuff] in my localhost, stuff like that. As an initial starting point, I need to give a context doc of every decision we've had as to why we've done things. To Isaac's document, sorry, Isaac's my friend. To his codex, so we can fill out some forms. But I want you to frame these decisions that we would have made from the perspective of a small to medium enterprise. …
 
-### 25 October: the first QuickLift build (on another computer)
+### 25 October: the first build (on another computer)
 
 This chat ran on a different computer, so only its opening prompt is recorded here. It produced the first commit, "ShopFix AU: check an Australian Shopify store and preview fixes live".
 
@@ -116,15 +72,7 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 
 [Further prompts from this chat: to be added from the other computer]
 
-### 27 October: Shopify sign-in, and how a competitor changes pages
-
-> no but i cant sign in because i dont have a shopify store
-
-> i feel like our ui still isnt great for inside the portal - are there any examples for what competitors have?
-
-> oh so shoplyft just uses theme editor to change stuff?
-
-### 27–28 October: turning ShopFix into QuickLift
+### 27 October: from ShopFix to QuickLift
 
 > there should be a repo we can connect to - can i set it up in this chat maybe?
 
@@ -136,7 +84,7 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 
 > and we need to make our demo strong too
 
-> maybe we also need to fix our prototype tool. i think we should build out the home page (we can copy avery, maybe we just make the name quicklift.ai and change the colours then we copy the home page and make it only for shopify. then we can have a dashboard that the owner sees, and then finally we can have the current ui which shows the changes before they approve them. does this make sense?
+> maybe we also need to fix our prototype tool. i think we should build out the home page ([we can reuse our earlier prototype's], maybe we just make the name quicklift.ai and change the colours then we copy the home page and make it only for shopify. then we can have a dashboard that the owner sees, and then finally we can have the current ui which shows the changes before they approve them. does this make sense?
 
 > for quicklift.ai can we please also make a much more simplified best practice document using things from onlien rather than my [work] experience?
 
@@ -150,4 +98,16 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 
 > can you give more suggestions for the page too? i love them i just want moer
 
+### 28 October: testing it, and the demo
+
 > if i ask something other than that exact prompt request, will it still action?
+
+> can you please also let me know - would this actually work on a shopify development store
+
+> do you think our demo is fine for 4 minutes?
+
+> if i actually ask it stuff like this will it do it or is it all movie magic right now
+
+> these left tabs dont work
+
+> also make these a toggle - not a set in stone deciison
