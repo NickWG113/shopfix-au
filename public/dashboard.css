@@ -461,3 +461,11 @@ body.ql-app {
     grid-template-columns: 1fr;
   }
 }
+
+/* A section the side navigation just pointed at lights up briefly, so the
+   link visibly does something even when the section was already on screen. */
+@keyframes db-flash { 0% { box-shadow: 0 0 0 0 rgba(59, 47, 201, .5); border-color: var(--ql-brand); }
+  60% { box-shadow: 0 0 0 10px rgba(59, 47, 201, 0); border-color: var(--ql-brand); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 47, 201, 0); } }
+.db-flash { animation: db-flash 1.2s ease-out; }
+@media (prefers-reduced-motion: reduce) { .db-flash { animation: none; outline: 2px solid var(--ql-brand); } }

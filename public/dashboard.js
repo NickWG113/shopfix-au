@@ -211,5 +211,47 @@ $("#chips").addEventListener("click", (e) => {
 
 $("#recheck").addEventListener("click", load);
 
+// ---------- side navigation ----------
+
+// Most of the dashboard fits on one screen, so a plain jump to a section
+// that's already visible looked like the link did nothing. Each link now
+// scrolls if it needs to and briefly lights up its section.
+const sideLinks = [...document.querySelectorAll('.db-side-nav a[href^="#"]')];
+// While a click's smooth scroll is still moving, the page is briefly near
+// the top, which would flip the highlight back to Overview.
+let clickedAt = 0;
+function markActive(id) {
+  for (const a of sideLinks) a.classList.toggle("on", a.getAttribute("href") === `#${id}`);
+}
+for (const a of sideLinks) {
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    const id = a.getAttribute("href").slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    clickedAt = Date.now();
+    if (id === "top") window.scrollTo({ top: 0, behavior: "smooth" });
+    else target.scrollIntoView({ behavior: "smooth", block: "start" });
+    markActive(id);
+    if (id !== "top") {
+      target.classList.remove("db-flash");
+      void target.offsetWidth;
+      target.classList.add("db-flash");
+      setTimeout(() => target.classList.remove("db-flash"), 1500);
+    }
+  });
+}
+// The highlight follows clicks rather than scrolling: "What to fix" and
+// "Ask the agent" sit side by side at the same height, so the scroll
+// position can't say which one is being read. Back at the top, it's the
+// overview again.
+window.addEventListener(
+  "scroll",
+  () => {
+    if (window.scrollY < 40 && Date.now() - clickedAt > 1200) markActive("top");
+  },
+  { passive: true },
+);
+
 wireLinks();
 load();
