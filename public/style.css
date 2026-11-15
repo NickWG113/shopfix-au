@@ -128,16 +128,23 @@ button:disabled { opacity: .55; cursor: progress; }
 
 /* ---------- the right-hand column ---------- */
 
-.rail { display: flex; flex-direction: column; gap: 16px; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-box); padding: 18px 20px; }
-.card h2 { margin: 0 0 12px; font: 700 18px/1.25 "Funnel Display", system-ui, sans-serif; letter-spacing: -0.01em; }
-.card-lede { margin: -6px 0 12px; }
-.ai-msg { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fdf0ea; color: #8a2d0a; font-size: 13.5px; line-height: 1.5; }
-.ai-msg b { display: block; margin-bottom: 2px; }
+.rail { display: flex; flex-direction: column; gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-box); padding: 16px 18px; }
+.card h2 { margin: 0; font: 700 17px/1.25 "Funnel Display", system-ui, sans-serif; letter-spacing: -0.01em; }
+.card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.count {
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: var(--accent-tint); color: var(--accent-dark); font: 700 12px/1 "Funnel Sans", system-ui, sans-serif;
+}
+.count:empty { display: none; }
 
 /* The agent at work: a log, then its code typing out in a dark editor. */
-.ai-dev { margin-top: 14px; padding: 12px; border: 1px solid var(--line, #e4e4ee); border-radius: 12px; background: #fafaff; }
-.ai-dev-head { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-dark, #2a2194); }
+.ai-dev { margin-top: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #fafaff; }
+.ai-dev-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ai-dev-head p { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-dark); }
+.ai-dev-x { border: 0; background: none; color: var(--muted); font-size: 18px; line-height: 1; padding: 0 2px; cursor: pointer; }
+.ai-dev-x:hover { color: var(--ink); }
+.ai-why { margin: 4px 0 0; color: #8a2d0a; font-size: 13px; line-height: 1.45; }
 .ai-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.4; }
 .ai-log li { position: relative; padding-left: 24px; }
 .ai-log li::before { position: absolute; left: 0; top: 1px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
@@ -145,39 +152,50 @@ button:disabled { opacity: .55; cursor: progress; }
 .ai-log li.stopped::before { content: "!"; background: #fdf0ea; color: #c2410c; }
 .ai-log li.doing::before { content: ""; border: 2px solid #d9d5f7; border-top-color: #3b2fc9; width: 12px; height: 12px; animation: ai-spin .8s linear infinite; }
 .ai-log code { display: inline-block; margin-top: 2px; font-size: 12px; color: #2a2194; background: #efedfc; padding: 1px 6px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
-.ai-code { margin: 10px 0 0; max-height: 200px; overflow: auto; padding: 10px 12px; border-radius: 8px; background: #14122b; color: #d9d6ff; font: 11.5px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+.ai-code { margin: 10px 0 0; max-height: 150px; overflow: auto; padding: 10px 12px; border-radius: 8px; background: #14122b; color: #d9d6ff; font: 11.5px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
 @keyframes ai-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ai-log li.doing::before { animation: none; } }
 
-.notice {
-  display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 14px 16px;
-  border: 1px solid #cfe9dc; border-radius: var(--r-box); background: #eef8f2; color: #134e36; font-size: 14px; line-height: 1.45;
-}
-.notice-tick { font-weight: 700; }
-
+/* Your changes: one line each, then the decision. */
 .decision { border-color: var(--accent); }
-.changes { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
-.changes li {
-  display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.4;
-  padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-inner); background: var(--bg);
-}
-.changes li.muted { background: none; border-style: dashed; }
-.changes li span { flex: 1; }
-.changes li em { display: block; color: var(--fail); font-style: normal; font-size: 12.5px; margin-top: 4px; }
-.changes button { border: 0; background: none; color: var(--muted); padding: 0; font-size: 13px; text-decoration: underline; }
-.changes button:hover { color: var(--fail); }
-.publish { display: flex; flex-direction: column; gap: 10px; }
+.changes { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-direction: column; }
+.changes li { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.4; }
+.changes li:first-child { border-top: 0; padding-top: 0; }
+.changes li.muted { color: var(--muted); font-size: 13.5px; }
+.changes li span { flex: 1; min-width: 0; }
+.changes li em { display: block; color: var(--fail); font-style: normal; font-size: 12.5px; margin-top: 3px; }
+.changes li em::before { content: "Check: "; font-weight: 600; }
+.changes button { flex-shrink: 0; width: 24px; height: 24px; border: 0; border-radius: 6px; background: none; color: var(--muted); font-size: 17px; line-height: 1; cursor: pointer; }
+.changes button:hover { background: #fdf0ea; color: var(--fail); }
+.publish { display: flex; flex-direction: column; gap: 6px; }
 /* display:flex above would otherwise beat the hidden attribute. */
 .publish[hidden] { display: none; }
-.publish > .muted { margin: 0; }
-.decision-buttons { display: flex; align-items: center; gap: 18px; }
-.decision-buttons .primary { padding: 12px 22px; font-size: 15px; }
-.text-btn { border: 0; background: none; padding: 8px 0; color: var(--ink); font-weight: 600; }
+.decision-buttons { display: flex; align-items: center; gap: 16px; }
+.decision-buttons .primary { padding: 11px 20px; font-size: 15px; }
+.primary:disabled { opacity: .45; cursor: default; }
+.decision-note { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.decision-note.live { color: var(--pass); font-weight: 600; }
+.text-btn { border: 0; background: none; padding: 8px 0; color: var(--ink); font-weight: 600; cursor: pointer; }
 .text-btn:hover { color: var(--fail); }
+.text-btn.small { align-self: flex-start; padding: 2px 0; font-size: 13px; color: var(--accent-dark); text-decoration: underline; }
 .ghost { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 8px 14px; }
-.ghost.small { padding: 4px 10px; font-size: 12px; }
-.code { margin-top: 12px; }
-.code summary { font-size: 13px; color: var(--muted); cursor: pointer; }
+.code { margin-top: 10px; }
+.code summary { font-size: 12.5px; color: var(--muted); cursor: pointer; }
+
+/* Make a change: three tabs, one open at a time. */
+.tabs { display: flex; gap: 4px; padding: 4px; margin: -4px -6px 14px; border-radius: 12px; background: var(--bg); }
+.tabs button {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 6px; border: 0; border-radius: 9px;
+  background: none; color: var(--muted); font: 600 13.5px "Funnel Sans", system-ui, sans-serif; cursor: pointer; white-space: nowrap;
+}
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(23, 25, 22, .12); }
+.tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.panel-lede { margin: 0 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.chips button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 5px 11px; font: 12.5px "Funnel Sans", system-ui, sans-serif; color: var(--ink); cursor: pointer; }
+.chips button:hover { border-color: var(--accent); color: var(--accent-dark); }
+.chips button.chip-refuse { border-style: dashed; }
 .code pre { max-height: 260px; overflow: auto; font-size: 11px; background: var(--bg); padding: 8px; border-radius: 6px; white-space: pre-wrap; word-break: break-all; }
 
 #ai-form { display: flex; flex-direction: column; gap: 10px; }
@@ -187,22 +205,24 @@ button:disabled { opacity: .55; cursor: progress; }
 }
 #ai-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-/* Fixes: what to fix first, then the rest out of the way. */
-.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.check .t { font-weight: 600; font-size: 14.5px; display: flex; gap: 8px; align-items: baseline; }
-.check .s { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 999px; }
-.check.fail .s { color: var(--fail); background: #fdf0e8; }
-.check.unknown .s { color: var(--unknown); background: #f1f1ee; }
-.check.pass .s { color: var(--pass); background: #e7f4ee; }
-.check p { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
-.checks-more summary { font-size: 13.5px; color: var(--muted); cursor: pointer; }
-.checks-more ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-.fix { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
-.fix input[type=text] {
+/* Fixes: one switch each; the wording box only once a fix is on. */
+.checks { display: flex; flex-direction: column; gap: 12px; }
+.fix-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.fix-item { display: flex; flex-direction: column; gap: 6px; }
+.fix-edit { display: none; flex-direction: column; gap: 4px; padding-left: 2px; }
+.fix-item.on .fix-edit { display: flex; }
+.fix-edit input[type=text] {
   width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 13px;
   background: var(--bg); color: var(--ink);
 }
-.fix .note { font-size: 12px; color: var(--muted); }
+.fix-edit .note { font-size: 12px; color: var(--muted); }
+.switch-why { font-size: 12px; color: var(--muted); }
+.fold { border-top: 1px solid var(--line); padding-top: 10px; }
+.fold summary { font-size: 13px; color: var(--muted); cursor: pointer; }
+.fold[open] summary { margin-bottom: 8px; }
+.fold-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.fold-list li { display: flex; flex-direction: column; gap: 2px; font-size: 13px; line-height: 1.4; }
+.fold-list li span { color: var(--muted); font-size: 12.5px; }
 
 /* A switch, not a tick box (Nick, 27 Oct): turning a fix on is the main
    thing to do here, so it should look like something you press and say
@@ -233,12 +253,10 @@ button:disabled { opacity: .55; cursor: progress; }
 @media (prefers-reduced-motion: reduce) { .switch, .switch-track, .switch-knob { transition: none; } }
 
 /* The agent's ideas for the page on screen. */
-.ideas-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.ideas-head h2 { margin-bottom: 6px; }
-.ideas { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ideas { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .ideas .switch { align-items: flex-start; }
 .ideas .switch-track { margin-top: 2px; }
-.idea-why { font-size: 12.5px; color: var(--muted); }
+.idea-why { font-size: 12.5px; color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .ideas input:disabled + .switch-track { opacity: .7; }
 
 .toast {

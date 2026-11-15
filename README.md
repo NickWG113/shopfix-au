@@ -22,7 +22,7 @@ explains how. To check any store with the real agent, run it locally (below).
 - `/preview?store=…` — the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"
-  label. "More ideas for this page" is the agent's own list of changes for
+  label. The **Ideas** tab is the agent's own list of changes for
   the page on screen, each one click away. `&fix=afterpay` opens with a fix switched on;
   `&ask=…&page=product` hands a request straight to the agent.
 
@@ -49,6 +49,10 @@ Open http://localhost:3010. You can also open
 `http://localhost:3010/?store=frankbody.com` to check a store straight away.
 
 Without an `ANTHROPIC_API_KEY` everything works except "Describe a change".
+
+To run the mocked online demo on your own computer instead (no API key, no
+credit used): `npm run demo`, then open http://localhost:4010. On Windows
+PowerShell, if `npm` is blocked by the script policy, use `npm.cmd run demo`.
 
 ```bash
 npm test
@@ -92,9 +96,10 @@ on the page. A refusal (fake reviews, made-up claims) stops there with the
 reason.
 
 The preview is laid out as a review: the store's page **Now** beside the page
-**With your changes**, scrolled together, and a right-hand column with **Your
-decision** (Approve and publish, or Discard all), the agent, the fixes and the
-agent's ideas. **Phone** shows both versions side by side; **Computer** shows
+**With your changes**, scrolled together, and a right-hand column with two
+cards: **Your changes** (one line each, then Approve and publish or Discard
+all) and **Make a change**, with three tabs: **Ask the agent**, **Fixes** and
+**Ideas**. **Phone** shows both versions side by side; **Computer** shows
 one at a time at desktop width. **Outline what changed** draws a dashed violet
 outline round everything we added, and **Theme scripts** can be turned off if a
 store's page misbehaves in the preview.

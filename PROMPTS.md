@@ -145,3 +145,7 @@ Walking through every use case in the video script on the live demo turned up si
 > yeah i want to display giving an dea and implementing it, an ai developer and then the daily tracking of stats
 
 Three additions for the video. When the agent makes a change, it is now shown working like a developer ("The agent at work": the page it read, the theme classes it found, and its CSS and JavaScript typing out before the change goes on the page). Switching on one of its ideas shows the same thing, so an idea becomes a change on screen. And a new Daily results page shows conversion rate, orders and revenue day by day, before and after the changes went live. Its figures are sample data for a A$100k-a-year store, and the page says so.
+
+> [screenshot of the preview's right-hand column] this menu just feels wayyy too cluitered. spend some time thinking about how to make it better
+
+The column had five cards open at once, the same "nothing goes live until you approve" message three times, and a second red box under the agent's log. It is now two cards: **Your changes** (one line per change with ×, then Approve and publish) and **Make a change**, with tabs for **Ask the agent**, **Fixes** and **Ideas**, so only one way of changing the page is open at a time. The agent's log opens where the request came from, and a refusal shows inside it.

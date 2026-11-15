@@ -36,10 +36,10 @@ Before recording:
 
 ## Use case 2: one-click fixes on the real page (2 min)
 
-**Show:** click a Fix item so the preview opens on the store's real page.
+**Show:** click a Fix item so the preview opens on the store's real page, with the **Fixes** tab open on the right.
 
 1. Switch on **Afterpay instalments**. The page scrolls to the price, where "or 4 payments of …" appears. **Say:** "It's worked out from the sale price, not the crossed-out one."
-2. Switch on the **Returns and Australian business bar**, then edit its wording. **Say:** "Only the owner knows what's true about their business, so every line can be changed."
+2. Switch on the **Returns + Australian business bar**, then edit its wording in the box that appears under it. **Say:** "Only the owner knows what's true about their business, so every line can be changed."
 3. Switch on **Sticky Add to cart**. It moves to Phone view and a product page. Scroll past Add to cart and the bar slides in.
 4. Point at the violet "Changed by QuickLift" outlines. **Say:** "Every change is labelled, so the owner sees exactly what's different."
 
@@ -49,8 +49,8 @@ Before recording:
 
 The agentic feature, part one. Take your time.
 
-- On a product page, scroll to **More ideas for this page**. **Say:** "The agent looks at this exact page the way a first-time shopper on a phone would, and suggests changes, each one naming a real button or section on this page."
-- Read one idea aloud, then switch it on. The column jumps to **The agent at work** and, a moment later, the change is on the page under **With your changes**, beside **Now**.
+- On a product page, open the **Ideas** tab on the right. **Say:** "The agent looks at this exact page the way a first-time shopper on a phone would, and suggests changes, each one naming a real button or section on this page."
+- Read one idea aloud, then switch it on. **The agent at work** opens right above the ideas and, a moment later, the change is on the page under **With your changes**, beside **Now**.
 - **Say:** "One click from an idea to the change on the store's own page. Nothing is live yet."
 
 ---
@@ -59,10 +59,10 @@ The agentic feature, part one. Take your time.
 
 The agentic feature, part two: the owner asks for something in their own words, and the agent does a developer's job.
 
-- Type, for example: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."* Press **Make this change**.
+- Open the **Ask the agent** tab and type, for example: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."* Press **Make this change**.
 - Point at **The agent at work** as it goes. **Say:** "It reads the page, finds what to change in the store's own theme, these class names here, and writes the CSS and JavaScript. You're watching it write the code."
 - When it finishes, the page scrolls to the change. **Say:** "No developer, no ticket, no waiting a week. And it works to rules: it never invents reviews, discounts, countdown timers or claims about the business."
-- Prove the rule: press the chip **Add five 5-star customer reviews under the price**. The log stops with a **!**, and the reason stays under the request. **Say:** "It refuses, and explains why: fake reviews break Australian Consumer Law."
+- Prove the rule: press the chip **Fake 5-star reviews (it’ll refuse)**. The log stops with a **!** and the reason, in red. **Say:** "It refuses, and explains why: fake reviews break Australian Consumer Law."
 
 ---
 
@@ -70,7 +70,7 @@ The agentic feature, part two: the owner asks for something in their own words, 
 
 The online demo acts this out: nothing is written to the real store, but every step shows.
 
-- Point at **Your decision**: every change is listed, each with **Remove**. **Say:** "Nothing goes live until the owner approves it."
+- Point at **Your changes** at the top right: every change is listed on one line, each with **×** to remove it. **Say:** "Nothing goes live until the owner approves it."
 - Press **Approve and publish**. The message says the changes are now live in one snippet in the store's theme.
 - Press **Owner's dashboard** in the Demo bar (or key 2). **Live on your store** now counts the changes.
 - Go back to **Preview and approve** (key 3), approve again, and press **Undo published changes**. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits."

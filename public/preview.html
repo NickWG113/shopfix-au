@@ -88,23 +88,23 @@
         </div>
       </section>
 
+      <!-- Two cards: what you've changed and the decision on it, then one
+           place to make changes, in tabs, so only one way of changing the
+           page is open at a time. -->
       <aside class="rail">
-        <p class="notice">
-          <span class="notice-tick" aria-hidden="true">✓</span>
-          <span>This is a preview. Nothing changes on the real store until you approve it.</span>
-        </p>
-
         <section id="changes-card" class="card decision" hidden>
-          <h2>Your decision</h2>
+          <div class="card-head">
+            <h2>Your changes</h2>
+            <span class="count" id="changes-n">0</span>
+          </div>
           <ul id="changes" class="changes"></ul>
           <div id="publish-box" class="publish" hidden>
-            <p class="muted">Approving puts these changes live for every shopper. You can undo them at any time, and your store goes straight back to how it was.</p>
             <div class="decision-buttons">
               <button type="button" id="publish-btn" class="primary">Approve and publish<span id="publish-store" hidden></span></button>
               <button type="button" id="discard-btn" class="text-btn">Discard all</button>
             </div>
-            <button type="button" id="undo-btn" class="ghost">Undo published changes</button>
-            <p id="publish-msg" class="muted"></p>
+            <p class="decision-note" id="publish-msg">Nothing goes live until you approve, and you can undo it.</p>
+            <button type="button" id="undo-btn" class="text-btn small" hidden>Undo published changes</button>
           </div>
           <details class="code">
             <summary>Show the code</summary>
@@ -112,36 +112,49 @@
           </details>
         </section>
 
-        <section id="ai-card" class="card" hidden>
-          <h2>Ask the agent</h2>
-          <p class="muted card-lede">Describe any change in plain words. It shows up in “With your changes”.</p>
-          <form id="ai-form">
-            <textarea id="ai-request" rows="3" placeholder="e.g. Make the Add to cart button green and bigger"></textarea>
-            <button type="submit" id="ai-btn">Make this change</button>
-          </form>
+        <section id="make-card" class="card make" hidden>
+          <h2 class="sr-only">Make a change</h2>
+          <div class="tabs" role="tablist" aria-label="Ways to make a change">
+            <button type="button" role="tab" id="tab-ask" data-tab="ask" aria-controls="panel-ask" aria-selected="true">Ask the agent</button>
+            <button type="button" role="tab" id="tab-fixes" data-tab="fixes" aria-controls="panel-fixes" aria-selected="false">Fixes <span class="count" id="fixes-n"></span></button>
+            <button type="button" role="tab" id="tab-ideas" data-tab="ideas" aria-controls="panel-ideas" aria-selected="false">Ideas <span class="count" id="ideas-n"></span></button>
+          </div>
+
+          <div class="panel" id="panel-ask" role="tabpanel" aria-labelledby="tab-ask">
+            <form id="ai-form">
+              <label class="sr-only" for="ai-request">Describe a change</label>
+              <textarea id="ai-request" rows="2" placeholder="Describe a change, e.g. make the Add to cart button green and bigger"></textarea>
+              <button type="submit" id="ai-btn">Make this change</button>
+            </form>
+            <div class="chips" id="ai-chips">
+              <button type="button" data-ask="Make the Add to cart button bigger and bright green">Bigger, brighter Add to cart</button>
+              <button type="button" data-ask="Add a small line under the price saying: Ships from [your city] in 1–2 business days">Shipping line under the price</button>
+              <button type="button" data-ask="Make the product title larger and bolder on phones">Bolder title on phones</button>
+            </div>
+            <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
+          </div>
+
+          <div class="panel" id="panel-fixes" role="tabpanel" aria-labelledby="tab-fixes" hidden>
+            <div id="checks" class="checks"></div>
+          </div>
+
+          <div class="panel" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" hidden>
+            <p class="panel-lede" id="ideas-note">The agent is reading this page…</p>
+            <ul id="ideas" class="ideas"></ul>
+            <button type="button" id="ideas-more" class="text-btn small" hidden>Get new ideas</button>
+          </div>
+
           <!-- The agent at work, like a developer's log: what it read, what it
-               found to change, and the code as it writes it. -->
+               found to change, and the code as it writes it. Under the tabs,
+               so it shows whichever tab asked for the change. -->
           <div id="ai-dev" class="ai-dev" hidden>
-            <p class="ai-dev-head">The agent at work</p>
+            <div class="ai-dev-head">
+              <p>The agent at work</p>
+              <button type="button" id="ai-dev-x" class="ai-dev-x" aria-label="Hide the agent's log">×</button>
+            </div>
             <ol id="ai-log" class="ai-log" aria-live="polite"></ol>
             <pre id="ai-code" class="ai-code" hidden></pre>
           </div>
-          <p id="ai-msg" class="ai-msg" role="status" hidden></p>
-          <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
-        </section>
-
-        <section id="checks-card" class="card" hidden>
-          <h2>Fixes for this store</h2>
-          <ul id="checks" class="checks"></ul>
-        </section>
-
-        <section id="ideas-card" class="card" hidden>
-          <div class="ideas-head">
-            <h2>More ideas for this page</h2>
-            <button type="button" id="ideas-more" class="ghost small" hidden>New ideas</button>
-          </div>
-          <p class="muted" id="ideas-note">The agent is reading this page…</p>
-          <ul id="ideas" class="ideas"></ul>
         </section>
       </aside>
     </div>

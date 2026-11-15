@@ -165,15 +165,13 @@
       return {
         store: domain,
         demo: true,
-        note:
-          `Approved: ${n} change${n === 1 ? " is" : "s are"} now live on ${domain}, in one snippet in its theme. ` +
-          `(This online demo acts it out. The real store isn't touched.)`,
+        note: `✓ Live on ${domain}: ${n} change${n === 1 ? "" : "s"}, in one snippet in its theme. (Acted out in this demo; the real store isn't touched.)`,
       };
     },
     async undo(body) {
       const domain = await recordedStore(body.domain);
       setLive(domain, []);
-      return { store: domain, demo: true, note: `Undone: the snippet on ${domain} is empty again, and the store is back to how it was.` };
+      return { store: domain, demo: true, note: `Undone: ${domain} is back to how it was.` };
     },
   };
 
@@ -233,11 +231,7 @@
 .ql-recorded{position:relative;padding-right:40px}
 .ql-recorded-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:none;color:#2a2194;font-size:20px;line-height:1;cursor:pointer}
 .ql-try{margin:10px 0 0;font:14px/1.6 "Funnel Sans",system-ui,sans-serif;color:inherit;opacity:.85}
-.ql-try a{color:inherit;font-weight:600;margin-right:10px;white-space:nowrap}
-.ql-replay{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.ql-replay p{flex-basis:100%;margin:0;font-size:13px;color:#5b5d57}
-.ql-replay button{border:1px solid #e4e4ee;background:#fff;border-radius:999px;padding:6px 10px;font:13px "Funnel Sans",system-ui,sans-serif;cursor:pointer;text-align:left}
-.ql-replay button:hover{border-color:#3b2fc9}`;
+.ql-try a{color:inherit;font-weight:600;margin-right:10px;white-space:nowrap}`;
     document.head.appendChild(style);
     document.body.prepend(bar);
   }
@@ -254,40 +248,33 @@
     }
   }
 
+  // Short names for the requests the demo is ready for, in the same order
+  // as EXTRA_REQUESTS; the full request is what gets sent.
+  const CHIP_NAMES = [
+    "Bigger, brighter Add to cart",
+    "Shipping line under the price",
+    "Bolder title on phones",
+    "Green button + “Ships from Sydney”",
+    "Fake 5-star reviews (it’ll refuse)",
+  ];
+
+  // The dashboard and the preview each have a row of suggestion chips:
+  // swap in the requests the demo is ready for.
   async function replayChips() {
     const { EXTRA_REQUESTS } = (await modules)[1];
-    // The dashboard has its own chips, which fill in the request: swap in
-    // the requests the demo is ready for rather than adding a second set.
-    const own = document.getElementById("chips");
-    if (own) {
-      own.replaceChildren(
-        ...EXTRA_REQUESTS.map((r) => {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.dataset.ask = r;
-          b.textContent = r;
-          return b;
-        }),
-      );
-      return;
-    }
-    const form = document.getElementById("ai-form");
-    if (!form) return;
-    const box = document.createElement("div");
-    box.className = "ql-replay";
-    box.innerHTML = `<p>Try one of these, or type your own:</p>`;
-    for (const r of EXTRA_REQUESTS) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = r;
-      b.addEventListener("click", () => {
-        const field = form.querySelector("textarea, input[type=text]");
-        if (field) field.value = r;
-        form.requestSubmit();
-      });
-      box.appendChild(b);
-    }
-    (document.getElementById("ai-msg") || form).after(box);
+    const own = document.getElementById("chips") || document.getElementById("ai-chips");
+    if (!own) return;
+    own.replaceChildren(
+      ...EXTRA_REQUESTS.map((r, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.dataset.ask = r;
+        b.title = r;
+        b.textContent = CHIP_NAMES[i] || r;
+        if (/review/i.test(r)) b.className = "chip-refuse";
+        return b;
+      }),
+    );
   }
 
   function ready() {

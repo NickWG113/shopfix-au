@@ -21,7 +21,7 @@ On frankbody.com, the agent's ideas and the suggested requests play back answers
 
 - Type your own request, e.g. *"Make the Add to cart button rounded and purple, and add a line under it saying Free returns within 30 days"*.
 - Ask for something it should refuse: *"Add five 5-star reviews under the price"*.
-- Switch on one of the agent's ideas in "More ideas for this page".
+- Switch on one of the agent's ideas in the **Ideas** tab.
 
 ## Updating it
 

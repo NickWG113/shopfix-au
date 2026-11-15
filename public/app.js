@@ -89,7 +89,7 @@ async function checkStore(domain) {
     renderStore();
     renderChecks();
     renderChanges();
-    $("#ai-card").hidden = false;
+    $("#make-card").hidden = false;
     fitFrames();
     return true;
   } catch (err) {
@@ -119,62 +119,63 @@ function renderStore() {
 
 const TRUE_ONLY = new Set(["shipping-bar", "trust-bar"]);
 
-function fixControl(id) {
+// One switch per fix: what it does, and which finding it answers. Its
+// wording only shows once it's on, which is when it matters.
+function fixControl(id, why = "") {
   const def = state.config.presets[id];
   const p = state.presets[id];
   return `
-    <div class="fix">
+    <li class="fix-item${p.on ? " on" : ""}">
       <label class="switch${p.on ? " on" : ""}">
         <input type="checkbox" role="switch" data-fix="${id}" ${p.on ? "checked" : ""}>
         <span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>
-        <span class="switch-text"><b>${esc(def.label)}</b><span class="switch-state">${p.on ? "On in the preview" : "Try this fix"}</span></span>
+        <span class="switch-text"><b>${esc(def.label)}</b>${why ? `<span class="switch-why">${esc(why)}</span>` : ""}</span>
       </label>
-      <input type="text" data-fix-text="${id}" value="${esc(p.text)}" aria-label="${esc(def.label)} text">
-      ${TRUE_ONLY.has(id) ? `<span class="note">Edit the wording so it's true for this store.</span>` : ""}
-    </div>`;
+      <div class="fix-edit">
+        <input type="text" data-fix-text="${id}" value="${esc(p.text)}" aria-label="${esc(def.label)} wording">
+        ${TRUE_ONLY.has(id) ? `<span class="note">Edit the wording so it’s true for this store.</span>` : ""}
+      </div>
+    </li>`;
 }
 
 function renderChecks() {
-  const order = { fail: 0, unknown: 1, pass: 2 };
-  const checks = [...state.checks].sort((a, b) => order[a.status] - order[b.status]);
-  const label = { pass: "OK", fail: "Fix", unknown: "Can't tell" };
-  const item = (c) => `
-      <li class="check ${c.status}">
-        <div class="t"><span class="s">${label[c.status]}</span> ${esc(c.title)}</div>
-        <p>${esc(c.detail)}</p>
-        ${c.fix ? fixControl(c.fix) : ""}
-      </li>`;
-  // What needs fixing stays in view; what already passes, and the fixes
-  // for it, fold away so the column isn't a wall of cards.
-  const open = checks.filter((c) => c.status !== "pass");
-  const passed = checks.filter((c) => c.status === "pass");
-  let html = open.map(item).join("") || `<li class="muted">Nothing to fix from our checks. Ask the agent for anything else.</li>`;
+  const fixable = state.checks.filter((c) => c.status === "fail" && c.fix);
+  const needsOwner = state.checks.filter((c) => c.status === "fail" && !c.fix);
+  const passed = state.checks.filter((c) => c.status === "pass");
+  const unsure = state.checks.filter((c) => c.status === "unknown");
+  // Fixes for things the store already does well are still on offer (a
+  // store can pass a check and still want, say, a sticky cart).
+  const suggested = new Set(fixable.map((c) => c.fix));
+  const extra = state.store.passwordPage ? [] : Object.keys(state.config.presets).filter((id) => !suggested.has(id));
+  for (const id of extra) state.presets[id] ??= { on: false, text: state.config.presets[id].defaultText };
 
-  // Fixes for things the store already does are still offered (a store can
-  // pass a check and still want, say, a sticky cart), inside the fold.
-  const suggested = new Set(state.checks.map((c) => c.fix).filter(Boolean));
-  const extra = Object.keys(state.config.presets).filter((id) => !suggested.has(id));
-  let more = passed.map(item).join("");
-  if (extra.length && !state.store.passwordPage) {
-    for (const id of extra) state.presets[id] ??= { on: false, text: state.config.presets[id].defaultText };
-    more += `<li class="check"><div class="t">More fixes to try</div>${extra.map(fixControl).join("")}</li>`;
+  const line = (c) => `<li><b>${esc(c.title)}</b><span>${esc(c.detail)}</span></li>`;
+  const fold = (title, inner, open = false) => `<details class="fold"${open ? " open" : ""}><summary>${title}</summary>${inner}</details>`;
+  let html = fixable.length
+    ? `<ul class="fix-list">${fixable.map((c) => fixControl(c.fix, c.title)).join("")}</ul>`
+    : `<p class="panel-lede">Nothing to fix from our checks. Try the agent, or the extra fixes below.</p>`;
+  if (needsOwner.length) html += fold(`Needs you, not a fix (${needsOwner.length})`, `<ul class="fold-list">${needsOwner.map(line).join("")}</ul>`);
+  if (extra.length) {
+    // Kept open while one of them is on, so it can be found and switched off.
+    const anyOn = extra.some((id) => state.presets[id]?.on);
+    html += fold(`More fixes to try (${extra.length})`, `<ul class="fix-list">${extra.map((id) => fixControl(id)).join("")}</ul>`, anyOn);
   }
-  if (more) {
-    // Kept open if something inside it is switched on, so it can be found.
-    const anyOn = [...passed.map((c) => c.fix), ...extra].some((id) => id && state.presets[id]?.on);
-    html += `<li><details class="checks-more"${anyOn ? " open" : ""}><summary>Already looking good (${passed.length}) and more fixes</summary><ul>${more}</ul></details></li>`;
+  if (passed.length || unsure.length) {
+    html += fold(
+      `Already looking good (${passed.length})`,
+      `<ul class="fold-list">${passed.map(line).join("")}${unsure.map((c) => `<li><b>${esc(c.title)} (can’t tell)</b><span>${esc(c.detail)}</span></li>`).join("")}</ul>`,
+    );
   }
   $("#checks").innerHTML = html;
-  $("#checks-card").hidden = false;
+  $("#fixes-n").textContent = fixable.length || "";
 }
 
 $("#checks").addEventListener("change", (e) => {
   const id = e.target.dataset.fix;
   if (!id) return;
   state.presets[id].on = e.target.checked;
-  const sw = e.target.closest(".switch");
-  sw?.classList.toggle("on", e.target.checked);
-  if (sw) sw.querySelector(".switch-state").textContent = e.target.checked ? "On in the preview" : "Try this fix";
+  e.target.closest(".switch")?.classList.toggle("on", e.target.checked);
+  e.target.closest(".fix-item")?.classList.toggle("on", e.target.checked);
   // Sticky cart only exists on product pages; jump there so it's visible.
   if (id === "sticky-cart" && e.target.checked && state.store.firstProductPath && !state.path.startsWith("/products/")) {
     state.path = state.store.firstProductPath;
@@ -206,8 +207,11 @@ $("#ai-form").addEventListener("submit", (e) => {
 // did, then the code it wrote, typed out before the change goes on the
 // page. Every line says what really happened: the page it read, the
 // request it worked on, the selectors in the code it sent back.
-function devLog() {
+// The log goes where the request came from: under the request box, or
+// above the ideas when an idea was switched on, so it's in view.
+function devLog(anchor) {
   const box = $("#ai-dev");
+  if (anchor && anchor.nextElementSibling !== box) anchor.after(box);
   const log = $("#ai-log");
   const code = $("#ai-code");
   box.hidden = false;
@@ -224,6 +228,14 @@ function devLog() {
       last.className = "doing";
       last.innerHTML = esc(text) + (detail ? ` <code>${esc(detail)}</code>` : "");
       log.append(last);
+    },
+    // The reason under the step on screen, e.g. why it said no.
+    why(text) {
+      if (!last) return;
+      const p = document.createElement("p");
+      p.className = "ai-why";
+      p.textContent = text;
+      last.append(p);
     },
     end(ok = true) {
       settle(ok ? "done" : "stopped");
@@ -270,14 +282,13 @@ function targetsOf(css) {
 
 const lineCount = (s) => (s?.trim() ? s.trim().split("\n").length : 0);
 
-async function askAgent(request) {
+async function askAgent(request, anchor = $("#ai-form")) {
   if (!request || !state.store) return false;
   let added = null;
   const btn = $("#ai-btn");
   btn.disabled = true;
   btn.textContent = "Working on it…";
-  $("#ai-msg").hidden = true;
-  const dev = devLog();
+  const dev = devLog(anchor);
   dev.step("Reading the page", state.path);
   const writing = setTimeout(() => dev.step("Working out the change for this store’s theme"), 600);
   try {
@@ -289,13 +300,11 @@ async function askAgent(request) {
     });
     clearTimeout(writing);
     if (!change.css && !change.js) {
-      dev.step("Checked the request against its rules");
+      // Why the agent said no (fake reviews, made-up claims, or it couldn't
+      // tell what to change) is the point, so it stays in the log.
+      dev.step("Didn’t make this change");
+      dev.why(change.warning || "It couldn’t find a way to do this on this page.");
       dev.end(false);
-      // Why the agent said no (fake reviews, made-up claims) is the point
-      // here, so it stays under the request rather than in a passing toast.
-      const msg = $("#ai-msg");
-      msg.innerHTML = `<b>The agent didn’t make this change</b>${esc(change.warning || "It couldn’t find a way to do this on this page.")}`;
-      msg.hidden = false;
       return;
     }
     const targets = targetsOf(change.css);
@@ -311,7 +320,7 @@ async function askAgent(request) {
     $("#ai-request").value = "";
     renderChanges();
     applyChanges();
-    dev.step("Done: it’s on the page under “With your changes”, and listed under Your decision");
+    dev.step("Done: it’s on the page, and in Your changes");
     dev.end();
     toast(change.summary);
   } catch (err) {
@@ -335,15 +344,16 @@ async function loadIdeas(fresh = false) {
   const seq = ++ideasSeq;
   const path = state.path;
   state.ideas = { path, list: [], made: new Map(), busy: new Set() };
-  $("#ideas-card").hidden = false;
   $("#ideas-more").hidden = true;
   $("#ideas").innerHTML = "";
+  $("#ideas-n").textContent = "…";
   $("#ideas-note").textContent = "The agent is reading this page…";
   try {
     const { ideas } = await api("api/ideas", { domain: state.store.domain, path, fresh });
     if (seq !== ideasSeq) return;
     state.ideas.list = ideas;
-    $("#ideas-note").textContent = "Picked for this page by the agent. Switch any of them on to see it on the page.";
+    $("#ideas-n").textContent = ideas.length || "";
+    $("#ideas-note").textContent = "The agent’s ideas for the page on screen. Switch one on to see it.";
     renderIdeas();
   } catch (err) {
     if (seq === ideasSeq) $("#ideas-note").textContent = `Couldn't get ideas: ${err.message}`;
@@ -367,13 +377,14 @@ function renderIdeas() {
     .map((idea, i) => {
       const on = ideaOn(i);
       const busy = state.ideas.busy.has(i);
-      const status = busy ? "The agent is making it…" : on ? "On in the preview" : "Try this idea";
+      // Only says something when there's something to say.
+      const status = busy ? "The agent is making it…" : on ? "On in the preview" : "";
       return `
       <li>
         <label class="switch${on || busy ? " on" : ""}">
           <input type="checkbox" role="switch" data-idea="${i}" ${on || busy ? "checked" : ""} ${busy ? "disabled" : ""}>
           <span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>
-          <span class="switch-text"><b>${esc(idea.title)}</b><span class="idea-why">${esc(idea.why)}</span><span class="switch-state">${status}</span></span>
+          <span class="switch-text"><b>${esc(idea.title)}</b><span class="idea-why">${esc(idea.why)}</span>${status ? `<span class="switch-state">${status}</span>` : ""}</span>
         </label>
       </li>`;
     })
@@ -401,7 +412,7 @@ $("#ideas").addEventListener("change", async (e) => {
   }
   state.ideas.busy.add(i);
   renderIdeas();
-  const change = await askAgent(state.ideas.list[i].request);
+  const change = await askAgent(state.ideas.list[i].request, $("#ideas-note"));
   state.ideas.busy.delete(i);
   if (change) state.ideas.made.set(i, change);
   renderIdeas();
@@ -419,16 +430,20 @@ function activePresets() {
 
 function renderChanges() {
   const presets = activePresets();
+  const remove = (attr, label) => `<button type="button" ${attr} aria-label="Remove: ${esc(label)}" title="Remove">×</button>`;
   const items = [
-    ...presets.map((p) => `<li><span>${esc(state.config.presets[p.id].label)}</span><button data-off="${p.id}">Remove</button></li>`),
+    ...presets.map((p) => {
+      const label = state.config.presets[p.id].label;
+      return `<li><span>${esc(label)}</span>${remove(`data-off="${p.id}"`, label)}</li>`;
+    }),
     ...state.custom.map(
-      (c, i) =>
-        `<li><span>${esc(c.summary)}${c.warning ? `<em>${esc(c.warning)}</em>` : ""}</span><button data-del="${i}">Remove</button></li>`,
+      (c, i) => `<li><span>${esc(c.summary)}${c.warning ? `<em>${esc(c.warning)}</em>` : ""}</span>${remove(`data-del="${i}"`, c.summary)}</li>`,
     ),
   ];
-  $("#changes").innerHTML = items.join("") || `<li class="muted">No changes yet. Switch on a fix below, or ask the agent.</li>`;
+  $("#changes").innerHTML = items.join("") || `<li class="muted">Nothing yet. Ask the agent, or switch on a fix or an idea below.</li>`;
   $("#changes-card").hidden = !state.store;
   const n = items.length;
+  $("#changes-n").textContent = n || "";
   const status = $("#status-pill");
   if (status) status.textContent = n ? `Previewing ${n} change${n === 1 ? "" : "s"}` : "Nothing changed yet";
   $("#change-count").textContent = n ? `(${n})` : "";
@@ -453,8 +468,10 @@ function renderChanges() {
 }
 
 $("#changes").addEventListener("click", (e) => {
-  const off = e.target.dataset.off;
-  const del = e.target.dataset.del;
+  const b = e.target.closest("button");
+  if (!b) return;
+  const off = b.dataset.off;
+  const del = b.dataset.del;
   if (off) {
     state.presets[off].on = false;
     renderChecks();
@@ -493,6 +510,7 @@ $("#publish-btn").addEventListener("click", async () => {
   try {
     const r = await api("api/publish", { shop: state.store.shop, domain: state.store.domain, presets: activePresets(), custom: state.custom });
     $("#publish-msg").textContent = r.note || `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
+    $("#publish-msg").classList.add("live");
     state.demoLive = demo;
     $("#undo-btn").hidden = false;
     toast(demo ? "Approved and published." : "Published. Reload the real store to see it.");
@@ -507,6 +525,7 @@ $("#undo-btn").addEventListener("click", async () => {
   try {
     const r = await api("api/undo", { domain: state.store?.domain });
     $("#publish-msg").textContent = r.note || `Removed from ${r.store}. The theme is back to how it was.`;
+    $("#publish-msg").classList.remove("live");
     if (state.config.demoPublish) {
       state.demoLive = false;
       $("#undo-btn").hidden = true;
@@ -738,11 +757,50 @@ $("#go-product").addEventListener("click", () => {
   refreshPreview();
 });
 
+// ---------- tabs: one way of making a change open at a time ----------
+
+const TABS = ["ask", "fixes", "ideas"];
+function setTab(name) {
+  for (const t of TABS) {
+    const on = t === name;
+    $(`#tab-${t}`).setAttribute("aria-selected", String(on));
+    $(`#tab-${t}`).tabIndex = on ? 0 : -1;
+    $(`#panel-${t}`).hidden = !on;
+  }
+  // A finished log belongs to the tab it came from; one still working stays.
+  if (!$("#ai-btn").disabled) $("#ai-dev").hidden = true;
+}
+$(".tabs").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-tab]");
+  if (b) setTab(b.dataset.tab);
+});
+// Arrow keys move between tabs, as tabs do.
+$(".tabs").addEventListener("keydown", (e) => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const at = TABS.indexOf(document.activeElement?.dataset.tab);
+  if (at < 0) return;
+  const next = TABS[(at + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length];
+  setTab(next);
+  $(`#tab-${next}`).focus();
+});
+
+// A suggestion chip sends its request straight to the agent.
+$("#ai-chips").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-ask]");
+  if (!b || $("#ai-btn").disabled) return;
+  $("#ai-request").value = b.dataset.ask;
+  askAgent(b.dataset.ask);
+});
+
+$("#ai-dev-x").addEventListener("click", () => ($("#ai-dev").hidden = true));
+
 // ---------- start ----------
 
 state.config = await api("api/config");
 $("#ai-off").hidden = state.config.ai;
 $("#ai-form").hidden = !state.config.ai;
+$("#ai-chips").hidden = !state.config.ai;
+setTab("ask");
 // Arriving from the dashboard: ?store= checks that store, ?fix= switches a
 // ready-made fix on, and ?ask= hands a request straight to the agent (on
 // the page ?page= names), so the owner lands on the change, not a form.
@@ -759,6 +817,8 @@ if (fromUrl) {
       if (fix === "sticky-cart") setSize("phone");
       renderChecks();
       renderChanges();
+      // Arrived to try a fix: open the tab it's in.
+      setTab("fixes");
     }
     if (ask && params.get("page") === "product" && state.store.firstProductPath) state.path = state.store.firstProductPath;
     await refreshPreview({ focus: Boolean(fix) });
