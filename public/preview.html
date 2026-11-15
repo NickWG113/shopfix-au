@@ -23,81 +23,121 @@
     </form>
   </header>
 
-  <main id="app" class="layout">
-    <aside class="panel" id="panel">
-      <section id="intro" class="card intro">
-        <h1>Try a change on your store’s real page, then approve it.</h1>
-        <ol>
-          <li>Paste a store address above.</li>
-          <li>See what an Australian shopper would miss.</li>
-          <li>Switch fixes on, or describe your own change, and watch the real page update.</li>
-        </ol>
-        <p class="muted">Reads only public pages. Nothing changes on the store unless you publish to a store you own.</p>
-      </section>
-
-      <section id="store-card" class="card" hidden></section>
-
-      <section id="ai-card" class="card" hidden>
-        <h2>Ask the agent</h2>
-        <form id="ai-form">
-          <textarea id="ai-request" rows="3" placeholder="e.g. Make the Add to cart button green and bigger"></textarea>
-          <button type="submit" id="ai-btn">Make this change</button>
-        </form>
-        <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
-      </section>
-
-      <section id="ideas-card" class="card" hidden>
-        <div class="ideas-head">
-          <h2>More ideas for this page</h2>
-          <button type="button" id="ideas-more" class="ghost small" hidden>New ideas</button>
-        </div>
-        <p class="muted" id="ideas-note">The agent is reading this page…</p>
-        <ul id="ideas" class="ideas"></ul>
-      </section>
-
-      <section id="changes-card" class="card" hidden>
-        <h2>Changes in this preview</h2>
-        <ul id="changes" class="changes"></ul>
-        <div id="publish-box" class="publish" hidden>
-          <button id="publish-btn" class="primary">Approve and publish to <span id="publish-store"></span></button>
-          <button id="undo-btn" class="ghost">Undo published changes</button>
-          <p id="publish-msg" class="muted"></p>
-        </div>
-        <details class="code">
-          <summary>Show the code</summary>
-          <pre id="code"></pre>
-        </details>
-      </section>
-
-      <section id="checks-card" class="card" hidden>
-        <h2>Fixes to try</h2>
-        <ul id="checks" class="checks"></ul>
-      </section>
-
-
-    </aside>
-
-    <section class="stage">
-      <div class="toolbar">
-        <div class="seg" role="group" aria-label="Screen size">
-          <button data-size="desktop" class="on">Desktop</button>
-          <button data-size="phone">Phone</button>
-        </div>
-        <label class="toggle"><input type="checkbox" id="highlight" checked> Highlight changes</label>
-        <label class="toggle" title="Turn off if a store's page jumps away or looks broken in the preview"><input type="checkbox" id="scripts" checked> Theme scripts</label>
-        <div class="path">
-          <button id="go-home" title="Home page">Home</button>
-          <button id="go-product" title="A product page">Product</button>
-          <code id="path">/</code>
-        </div>
-      </div>
-      <div class="frame-wrap" id="frame-wrap">
-        <div id="empty" class="empty">The store's page will appear here.</div>
-        <iframe id="frame" title="Store preview" sandbox="allow-scripts" hidden></iframe>
-        <div id="loading" class="loading" hidden>Loading…</div>
-      </div>
-      <div id="toast" class="toast" role="status" hidden></div>
+  <!-- Laid out like a review: what you're looking at, the page as it is
+       beside the page with your changes, and one column for deciding and
+       for making more changes. -->
+  <main id="app" class="review">
+    <section id="intro" class="card intro">
+      <h1>Try a change on your store’s real page, then approve it.</h1>
+      <ol>
+        <li>Paste a store address above.</li>
+        <li>See what an Australian shopper would miss.</li>
+        <li>Switch fixes on, or describe your own change, and see your page before and after.</li>
+      </ol>
+      <p class="muted">Reads only public pages. Nothing changes on the store unless you approve it.</p>
     </section>
+
+    <section class="review-head" id="review-head" hidden>
+      <p class="eyebrow">Review changes for</p>
+      <h1 id="review-title"></h1>
+      <div class="pills" id="review-pills"></div>
+    </section>
+
+    <div class="review-grid" id="review-grid" hidden>
+      <section class="stage" aria-label="Preview">
+        <div class="stage-head">
+          <h2>On your page</h2>
+          <div class="stage-controls">
+            <div class="seg" role="group" aria-label="Which page">
+              <button type="button" id="go-home" class="on">Home page</button>
+              <button type="button" id="go-product">Product page</button>
+            </div>
+            <div class="seg" role="group" aria-label="Screen size">
+              <button type="button" data-size="phone" class="on">Phone</button>
+              <button type="button" data-size="desktop">Computer</button>
+            </div>
+            <div class="seg" id="computer-view" role="group" aria-label="Which version" hidden>
+              <button type="button" data-view="fix" class="on">With your changes</button>
+              <button type="button" data-view="now">Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="frames phone" id="frame-wrap">
+          <div class="pane pane-now">
+            <p class="pane-label">Now</p>
+            <div class="pane-box">
+              <iframe id="frame-now" title="Your page now" sandbox="allow-scripts"></iframe>
+            </div>
+          </div>
+          <div class="pane pane-fix">
+            <p class="pane-label pane-label--fix">With your changes <span id="change-count"></span></p>
+            <div class="pane-box">
+              <div id="empty" class="empty">Your page will appear here.</div>
+              <iframe id="frame" title="Your page with the changes" sandbox="allow-scripts" hidden></iframe>
+              <div id="loading" class="loading" hidden>Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-foot">
+          <code id="path">/</code>
+          <label class="toggle"><input type="checkbox" id="highlight" checked> Outline what changed</label>
+          <label class="toggle" title="Turn off if a store's page jumps away or looks broken in the preview"><input type="checkbox" id="scripts" checked> Theme scripts</label>
+        </div>
+      </section>
+
+      <aside class="rail">
+        <p class="notice">
+          <span class="notice-tick" aria-hidden="true">✓</span>
+          <span>This is a preview. Nothing changes on the real store until you approve it.</span>
+        </p>
+
+        <section id="changes-card" class="card decision" hidden>
+          <h2>Your decision</h2>
+          <ul id="changes" class="changes"></ul>
+          <div id="publish-box" class="publish" hidden>
+            <p class="muted">Approving puts these changes live for every shopper. You can undo them at any time, and your store goes straight back to how it was.</p>
+            <div class="decision-buttons">
+              <button type="button" id="publish-btn" class="primary">Approve and publish<span id="publish-store" hidden></span></button>
+              <button type="button" id="discard-btn" class="text-btn">Discard all</button>
+            </div>
+            <button type="button" id="undo-btn" class="ghost">Undo published changes</button>
+            <p id="publish-msg" class="muted"></p>
+          </div>
+          <details class="code">
+            <summary>Show the code</summary>
+            <pre id="code"></pre>
+          </details>
+        </section>
+
+        <section id="ai-card" class="card" hidden>
+          <h2>Ask the agent</h2>
+          <p class="muted card-lede">Describe any change in plain words. It shows up in “With your changes”.</p>
+          <form id="ai-form">
+            <textarea id="ai-request" rows="3" placeholder="e.g. Make the Add to cart button green and bigger"></textarea>
+            <button type="submit" id="ai-btn">Make this change</button>
+          </form>
+          <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
+        </section>
+
+        <section id="checks-card" class="card" hidden>
+          <h2>Fixes for this store</h2>
+          <ul id="checks" class="checks"></ul>
+        </section>
+
+        <section id="ideas-card" class="card" hidden>
+          <div class="ideas-head">
+            <h2>More ideas for this page</h2>
+            <button type="button" id="ideas-more" class="ghost small" hidden>New ideas</button>
+          </div>
+          <p class="muted" id="ideas-note">The agent is reading this page…</p>
+          <ul id="ideas" class="ideas"></ul>
+        </section>
+      </aside>
+    </div>
+
+    <div id="toast" class="toast" role="status" hidden></div>
   </main>
 
   <script src="app.js" type="module"></script>

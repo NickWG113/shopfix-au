@@ -81,9 +81,13 @@ npm test
 4. **Publish (optional)** — for a store you own, write the changes into the
    live theme, and undo them again. See below.
 
-The preview has **Desktop / Phone**, **Highlight changes** (a dashed violet
-outline round everything we added) and **Theme scripts** (turn off if a
-store's page misbehaves in the preview).
+The preview is laid out as a review: the store's page **Now** beside the page
+**With your changes**, scrolled together, and a right-hand column with **Your
+decision** (Approve and publish, or Discard all), the agent, the fixes and the
+agent's ideas. **Phone** shows both versions side by side; **Computer** shows
+one at a time at desktop width. **Outline what changed** draws a dashed violet
+outline round everything we added, and **Theme scripts** can be turned off if a
+store's page misbehaves in the preview.
 
 ## Demo script (about 3 minutes)
 

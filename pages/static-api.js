@@ -98,6 +98,10 @@
         );
       }
       let html = await res.text();
+      // Pages saved before 15 Nov point at a change with scrollIntoView,
+      // which also scrolls the QuickLift page around the frame. Same fix as
+      // lib/preview.js, applied to the saved copy.
+      html = html.replace("el.scrollIntoView({block:'center'});", "var rr=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,rr.top+window.scrollY-window.innerHeight/2+rr.height/2));");
       // The same additions renderPreview (lib/preview.js) makes on the server,
       // in the same places: CSS and the highlight at the end of <head>, the
       // script at the end of <body>.

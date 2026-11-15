@@ -10,7 +10,11 @@ const state = {
   path: "/",
   presets: {}, // id -> { on, text }
   custom: [], // { summary, css, js, warning, request }
-  size: "desktop",
+  // Phone first: both versions fit side by side at a phone's width, and
+  // most of these stores' shoppers are on phones.
+  size: "phone",
+  // On Computer only one version fits: "fix" (with the changes) or "now".
+  view: "fix",
   highlight: true,
   scripts: true,
   scrollY: 0,
@@ -79,10 +83,13 @@ async function checkStore(domain) {
     } catch {
       // Storage blocked: nothing depends on it.
     }
+    $("#review-head").hidden = false;
+    $("#review-grid").hidden = false;
     renderStore();
     renderChecks();
     renderChanges();
     $("#ai-card").hidden = false;
+    fitFrames();
     return true;
   } catch (err) {
     toast(err.message, true);
@@ -95,19 +102,18 @@ async function checkStore(domain) {
 
 function renderStore() {
   const s = state.store;
+  // The first pill says where the review stands (renderChanges keeps it
+  // current); the rest say what we know about the store.
   const tags = [
-    s.currency ? `<span class="tag">${esc(s.currency)}</span>` : "",
-    s.australian ? `<span class="tag">Australian store</span>` : `<span class="tag warn">Not obviously Australian</span>`,
-    s.themeName ? `<span class="tag">Theme: ${esc(s.themeName)}</span>` : "",
-    s.products.length ? `<span class="tag">${s.products.length} products read</span>` : "",
-    s.passwordPage ? `<span class="tag warn">Password protected</span>` : "",
+    `<span class="pill status" id="status-pill"></span>`,
+    `<span class="pill">${esc(s.domain)}</span>`,
+    s.currency ? `<span class="pill">${esc(s.currency)}</span>` : "",
+    s.australian ? `<span class="pill">Australian store</span>` : `<span class="pill warn">Not obviously Australian</span>`,
+    s.themeName ? `<span class="pill">Theme: ${esc(s.themeName)}</span>` : "",
+    s.passwordPage ? `<span class="pill warn">Password protected</span>` : "",
   ].join("");
-  $("#store-card").innerHTML = `
-    <div class="store-name">${esc(s.name)}</div>
-    <div class="muted">${esc(s.domain)}</div>
-    <div class="tags">${tags}</div>
-    ${s.australian ? "" : `<p class="muted">This tool is built for Australian stores; the checks still run, but some advice assumes AU shoppers.</p>`}`;
-  $("#store-card").hidden = false;
+  $("#review-title").textContent = s.name;
+  $("#review-pills").innerHTML = tags;
 }
 
 const TRUE_ONLY = new Set(["shipping-bar", "trust-bar"]);
@@ -131,24 +137,31 @@ function renderChecks() {
   const order = { fail: 0, unknown: 1, pass: 2 };
   const checks = [...state.checks].sort((a, b) => order[a.status] - order[b.status]);
   const label = { pass: "OK", fail: "Fix", unknown: "Can't tell" };
-  let html = checks
-    .map(
-      (c) => `
+  const item = (c) => `
       <li class="check ${c.status}">
         <div class="t"><span class="s">${label[c.status]}</span> ${esc(c.title)}</div>
         <p>${esc(c.detail)}</p>
         ${c.fix ? fixControl(c.fix) : ""}
-      </li>`,
-    )
-    .join("");
+      </li>`;
+  // What needs fixing stays in view; what already passes, and the fixes
+  // for it, fold away so the column isn't a wall of cards.
+  const open = checks.filter((c) => c.status !== "pass");
+  const passed = checks.filter((c) => c.status === "pass");
+  let html = open.map(item).join("") || `<li class="muted">Nothing to fix from our checks. Ask the agent for anything else.</li>`;
 
   // Fixes for things the store already does are still offered (a store can
-  // pass a check and still want, say, a sticky cart), just further down.
+  // pass a check and still want, say, a sticky cart), inside the fold.
   const suggested = new Set(state.checks.map((c) => c.fix).filter(Boolean));
   const extra = Object.keys(state.config.presets).filter((id) => !suggested.has(id));
+  let more = passed.map(item).join("");
   if (extra.length && !state.store.passwordPage) {
     for (const id of extra) state.presets[id] ??= { on: false, text: state.config.presets[id].defaultText };
-    html += `<li class="check unknown"><div class="t">More fixes to try</div>${extra.map(fixControl).join("")}</li>`;
+    more += `<li class="check"><div class="t">More fixes to try</div>${extra.map(fixControl).join("")}</li>`;
+  }
+  if (more) {
+    // Kept open if something inside it is switched on, so it can be found.
+    const anyOn = [...passed.map((c) => c.fix), ...extra].some((id) => id && state.presets[id]?.on);
+    html += `<li><details class="checks-more"${anyOn ? " open" : ""}><summary>Already looking good (${passed.length}) and more fixes</summary><ul>${more}</ul></details></li>`;
   }
   $("#checks").innerHTML = html;
   $("#checks-card").hidden = false;
@@ -324,8 +337,13 @@ function renderChanges() {
         `<li><span>${esc(c.summary)}${c.warning ? `<em>${esc(c.warning)}</em>` : ""}</span><button data-del="${i}">Remove</button></li>`,
     ),
   ];
-  $("#changes").innerHTML = items.join("") || `<li class="muted">No changes yet. Switch on a fix or describe one.</li>`;
+  $("#changes").innerHTML = items.join("") || `<li class="muted">No changes yet. Switch on a fix below, or ask the agent.</li>`;
   $("#changes-card").hidden = !state.store;
+  const n = items.length;
+  const status = $("#status-pill");
+  if (status) status.textContent = n ? `Previewing ${n} change${n === 1 ? "" : "s"}` : "Nothing changed yet";
+  $("#change-count").textContent = n ? `(${n})` : "";
+  $("#discard-btn").hidden = n === 0;
 
   // The approve step always shows, because it is the owner's step in the
   // flow. It can only publish to the one store this server holds a key for;
@@ -356,6 +374,17 @@ $("#changes").addEventListener("click", (e) => {
   } else return;
   renderChanges();
   refreshPreview();
+});
+
+// Everything off in one go: the fixes, the agent's changes and its ideas.
+$("#discard-btn").addEventListener("click", () => {
+  for (const p of Object.values(state.presets)) p.on = false;
+  state.custom = [];
+  renderChecks();
+  renderIdeas();
+  renderChanges();
+  refreshPreview();
+  toast("All changes discarded. Your page is back to how it is now.");
 });
 
 $("#publish-btn").addEventListener("click", async () => {
@@ -397,8 +426,11 @@ async function refreshPreview({ focus = false } = {}) {
   const seq = ++previewSeq;
   // Ideas take the agent a while; start them alongside the page.
   if (state.ideas.path !== state.path) loadIdeas();
+  loadNow();
   $("#loading").hidden = false;
   $("#path").textContent = state.path;
+  $("#go-home").classList.toggle("on", state.path === "/");
+  $("#go-product").classList.toggle("on", state.path.startsWith("/products/"));
   try {
     const { html } = await api("api/preview", {
       domain: state.store.domain,
@@ -417,6 +449,26 @@ async function refreshPreview({ focus = false } = {}) {
     if (seq === previewSeq) toast(err.message, true);
   } finally {
     if (seq === previewSeq) $("#loading").hidden = true;
+  }
+}
+
+// "Now": the same page with nothing changed, beside the one with the
+// changes. It only reloads when the page itself does (another page, another
+// store, theme scripts on or off), never when a change is switched on, so
+// it stays still while the other side changes.
+const frameNow = $("#frame-now");
+let nowKey = null;
+async function loadNow() {
+  const key = `${state.store.domain}|${state.path}|${state.scripts}`;
+  if (key === nowKey) return;
+  nowKey = key;
+  try {
+    const { html } = await api("api/preview", { domain: state.store.domain, path: state.path, original: true, scripts: state.scripts });
+    if (nowKey !== key) return;
+    frameNow.onload = () => frameNow.contentWindow?.postMessage({ shopfix: "scroll", y: state.scrollY }, "*");
+    frameNow.srcdoc = html;
+  } catch {
+    // The page with the changes says what went wrong; no second message.
   }
 }
 
@@ -504,13 +556,20 @@ function frameLeft() {
 
 window.addEventListener("message", (e) => {
   const m = e.data || {};
-  if (e.source !== frame.contentWindow) return;
-  if (m.shopfix === "ready") {
+  const fromNow = e.source === frameNow.contentWindow;
+  if (e.source !== frame.contentWindow && !fromNow) return;
+  if (fromNow) {
+    // "Now" follows the page with the changes; a link clicked in it
+    // still opens that page on both sides.
+    if (m.shopfix !== "navigate" && m.shopfix !== "form") return;
+  } else if (m.shopfix === "ready") {
     gotReady = true;
     return;
   }
   if (m.shopfix === "scrolled") {
     state.scrollY = m.y;
+    // Keep "Now" at the same place, so the two can be compared at a glance.
+    frameNow.contentWindow?.postMessage({ shopfix: "scroll", y: m.y }, "*");
   } else if (m.shopfix === "navigate") {
     if (m.host !== state.store.domain) return toast("That link leaves the store, so the preview doesn't follow it.");
     state.path = m.path;
@@ -524,10 +583,42 @@ window.addEventListener("message", (e) => {
 function setSize(size) {
   state.size = size;
   document.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("on", b.dataset.size === size));
-  $("#frame-wrap").classList.toggle("phone", size === "phone");
+  const wrap = $("#frame-wrap");
+  wrap.classList.toggle("phone", size === "phone");
+  wrap.classList.toggle("computer", size !== "phone");
+  $("#computer-view").hidden = size === "phone";
+  fitFrames();
+}
+
+// Computer view draws the page at a real desktop width and scales it to
+// the box, so a store shows its desktop layout, not a squeezed one.
+const DESKTOP_WIDTH = 1280;
+function fitFrames() {
+  const computer = state.size !== "phone";
+  for (const f of [frame, frameNow]) {
+    const box = f.parentElement;
+    if (!computer) {
+      f.style.width = f.style.height = f.style.transform = "";
+      continue;
+    }
+    const w = box.clientWidth || $("#frame-wrap").clientWidth;
+    const scale = Math.min(1, w / DESKTOP_WIDTH);
+    f.style.width = `${DESKTOP_WIDTH}px`;
+    f.style.height = `${(box.clientHeight || 600) / scale}px`;
+    f.style.transform = `scale(${scale})`;
+  }
+}
+new ResizeObserver(fitFrames).observe($("#frame-wrap"));
+
+function setView(view) {
+  state.view = view;
+  document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === view));
+  $("#frame-wrap").classList.toggle("show-now", view === "now");
+  fitFrames();
 }
 
 document.querySelectorAll("[data-size]").forEach((b) => b.addEventListener("click", () => setSize(b.dataset.size)));
+document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
 $("#highlight").addEventListener("change", (e) => {
   state.highlight = e.target.checked;
   refreshPreview();
