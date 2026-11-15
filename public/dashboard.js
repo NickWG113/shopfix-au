@@ -49,7 +49,7 @@ let store = null;
 
 function previewUrl(extra = {}) {
   const q = new URLSearchParams({ store: store?.domain || domain, ...extra });
-  return `/preview?${q}`;
+  return `preview?${q}`;
 }
 
 function wireLinks() {
@@ -74,7 +74,7 @@ function animateSteps() {
 
 async function load() {
   if (!domain) {
-    location.href = "/";
+    location.href = "./";
     return;
   }
   $("#loading").hidden = false;
@@ -82,14 +82,14 @@ async function load() {
   $("#error").hidden = true;
   const stop = animateSteps();
   try {
-    const result = await api("/api/check", { domain });
+    const result = await api("api/check", { domain });
     store = result.store;
     try {
       localStorage.setItem("ql:lastStore", store.domain);
     } catch {
       // Storage blocked: the home page just won't offer a way back here.
     }
-    const config = await api("/api/config");
+    const config = await api("api/config");
     render(result.checks, config);
   } catch (err) {
     $("#error-msg").textContent = err.message;
@@ -165,7 +165,7 @@ function render(checks, config) {
   // the background, so they're ready by the time the owner opens a page.
   if (config.ai) {
     for (const path of [store.firstProductPath, "/"].filter(Boolean)) {
-      api("/api/ideas", { domain: store.domain, path }).catch(() => {});
+      api("api/ideas", { domain: store.domain, path }).catch(() => {});
     }
   }
 }

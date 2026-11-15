@@ -111,3 +111,23 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 > these left tabs dont work
 
 > also make these a toggle - not a set in stone deciison
+
+### 15 November: getting ready to submit
+
+> we need to make some finishing touches to this. we needto have 3  things ready to present i think[course brief link] 1. Slide deck (PDF) … 2.Demonstration video … Show the PoC working across at least three different use cases. Your agentic feature should be one of them.
+
+> what can we showcase and waht do we need to build
+
+> 1. sure build 2. make public 3. create it 4. lets mock data. we can extrapolate that a buisiness making 100k a year with a 5% increase makes 5 grand. etc. 5. someone else doing 6. someone else doing 7. that is us. we need to make sure we shoud the different use cases etc.
+
+> wait. do NOT touch [our earlier prototype's] repo. this is meant to be the shopfix repo. please do NOT touch [it]
+
+> you can take inspuiration from there thoug
+
+> can we not just have it live on hibut
+
+> github
+
+We chose a recorded copy on GitHub Pages over a paid server: the fixes run live on recorded store pages, and the agent's real answers are played back.
+
+What came out of it: the online demo on GitHub Pages (`pages/static-api.js`, `scripts/record-demo.js`, `scripts/build-pages.js`, `docs/github-pages.md`), a shared sign-in for when the full app is hosted (`lib/auth.js`), the proof-of-value working (`docs/proof-of-value.md`), and the demo video script (`docs/demo-video-script.md`).

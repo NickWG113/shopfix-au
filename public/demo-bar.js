@@ -24,11 +24,14 @@
   // which looked broken. The demo store is the one the presentation uses.
   store ||= "frankbody.com";
   const q = store ? `?store=${encodeURIComponent(store)}` : "";
-  const here = location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+  // Only the last part of the address, and relative links, so the same
+  // pages work at the site root (our server) and under a folder (the
+  // recorded copy on GitHub Pages, /shopfix-au/).
+  const here = "/" + (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
   const tabs = [
-    { key: "1", label: "Home page", href: "/", on: here === "/" || here === "/index" },
-    { key: "2", label: "Owner’s dashboard", href: `/dashboard${q}`, on: here === "/dashboard" },
-    { key: "3", label: "Preview and approve", href: `/preview${q}`, on: here === "/preview" },
+    { key: "1", label: "Home page", href: "./", on: here === "/" || here === "/index" },
+    { key: "2", label: "Owner’s dashboard", href: `dashboard${q}`, on: here === "/dashboard" },
+    { key: "3", label: "Preview and approve", href: `preview${q}`, on: here === "/preview" },
   ];
 
   const style = document.createElement("style");

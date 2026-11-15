@@ -57,7 +57,7 @@ async function checkStore(domain) {
   btn.disabled = true;
   btn.textContent = "Checking…";
   try {
-    const { store, checks } = await api("/api/check", { domain });
+    const { store, checks } = await api("api/check", { domain });
     state.store = store;
     state.checks = checks;
     state.path = "/";
@@ -73,7 +73,7 @@ async function checkStore(domain) {
     for (const c of checks) if (c.fix) state.presets[c.fix] = { on: false, text: state.config.presets[c.fix].defaultText };
     $("#domain").value = store.domain;
     $("#intro").hidden = true;
-    $("#tab-dashboard").href = `/dashboard?store=${encodeURIComponent(store.domain)}`;
+    $("#tab-dashboard").href = `dashboard?store=${encodeURIComponent(store.domain)}`;
     try {
       localStorage.setItem("ql:lastStore", store.domain);
     } catch {
@@ -195,7 +195,7 @@ async function askAgent(request) {
   btn.disabled = true;
   btn.textContent = "Working on it…";
   try {
-    const change = await api("/api/ai-change", {
+    const change = await api("api/ai-change", {
       domain: state.store.domain,
       path: state.path,
       request,
@@ -238,7 +238,7 @@ async function loadIdeas(fresh = false) {
   $("#ideas").innerHTML = "";
   $("#ideas-note").textContent = "The agent is reading this page…";
   try {
-    const { ideas } = await api("/api/ideas", { domain: state.store.domain, path, fresh });
+    const { ideas } = await api("api/ideas", { domain: state.store.domain, path, fresh });
     if (seq !== ideasSeq) return;
     state.ideas.list = ideas;
     $("#ideas-note").textContent = "Picked for this page by the agent. Switch any of them on to see it on the page.";
@@ -369,7 +369,7 @@ $("#publish-btn").addEventListener("click", async () => {
   const btn = $("#publish-btn");
   btn.disabled = true;
   try {
-    const r = await api("/api/publish", { shop: state.store.shop, presets: activePresets(), custom: state.custom });
+    const r = await api("api/publish", { shop: state.store.shop, presets: activePresets(), custom: state.custom });
     $("#publish-msg").textContent = `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
     toast("Published. Reload the real store to see it.");
   } catch (err) {
@@ -381,7 +381,7 @@ $("#publish-btn").addEventListener("click", async () => {
 
 $("#undo-btn").addEventListener("click", async () => {
   try {
-    const r = await api("/api/undo", {});
+    const r = await api("api/undo", {});
     $("#publish-msg").textContent = `Removed from ${r.store}. The theme is back to how it was.`;
     toast("Published changes removed.");
   } catch (err) {
@@ -400,7 +400,7 @@ async function refreshPreview({ focus = false } = {}) {
   $("#loading").hidden = false;
   $("#path").textContent = state.path;
   try {
-    const { html } = await api("/api/preview", {
+    const { html } = await api("api/preview", {
       domain: state.store.domain,
       path: state.path,
       presets: activePresets(),
@@ -443,7 +443,7 @@ async function applyChanges() {
   const custom = state.custom.slice(was.custom);
   if (!presets.length && !custom.length) return;
   try {
-    const bundle = await api("/api/bundle", { presets, custom });
+    const bundle = await api("api/bundle", { presets, custom });
     frame.contentWindow?.postMessage({ shopfix: "apply", css: bundle.css, js: bundle.js }, "*");
     state.rendered = now;
   } catch (err) {
@@ -550,7 +550,7 @@ $("#go-product").addEventListener("click", () => {
 
 // ---------- start ----------
 
-state.config = await api("/api/config");
+state.config = await api("api/config");
 $("#ai-off").hidden = state.config.ai;
 $("#ai-form").hidden = !state.config.ai;
 // Arriving from the dashboard: ?store= checks that store, ?fix= switches a

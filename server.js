@@ -9,6 +9,7 @@ import { PRESETS, buildChangeBundle } from "./lib/fixes.js";
 import { renderPreview, pageOutline } from "./lib/preview.js";
 import { generateChange, generateIdeas } from "./lib/ai.js";
 import { publish, undo, publishConfigured } from "./lib/publish.js";
+import { installAuth, authConfigured } from "./lib/auth.js";
 
 // This app's own .env, wherever it was started from. The lib modules read
 // process.env when called, not when imported, so loading it here is in time.
@@ -16,7 +17,18 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(here, ".env"), quiet: true });
 
 const app = express();
+// Hosted behind one proxy (Fly, Render and the like), so the visitor's own
+// address is the one the proxy reports. The sign-in limit counts by it.
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10kb" }));
+
+// For the host's health check, and open even when sign-in is on.
+app.get("/healthz", (_req, res) => res.send("ok"));
+
+// The shared demo login, when DEMO_USERNAME and DEMO_PASSWORD are set
+// (lib/auth.js says why). Before the static files, so it covers every page.
+installAuth(app, { loginPage: path.join(here, "public", "login.html") });
 // Three pages: / (home), /dashboard (the owner's view of one store) and
 // /preview (try changes on the store's real page, then approve them).
 // `extensions` lets /dashboard find dashboard.html without a route each.
@@ -148,4 +160,5 @@ app.listen(port, () => {
   console.log(`QuickLift running at http://localhost:${port}`);
   if (!process.env.ANTHROPIC_API_KEY) console.log("  (no ANTHROPIC_API_KEY: AI changes are off)");
   if (!publishConfigured()) console.log("  (no SHOPIFY_STORE/SHOPIFY_ADMIN_TOKEN: Publish is off, preview still works)");
+  console.log(authConfigured() ? "  (sign-in is on: DEMO_USERNAME/DEMO_PASSWORD)" : "  (no DEMO_USERNAME/DEMO_PASSWORD: no sign-in, open to anyone who can reach it)");
 });

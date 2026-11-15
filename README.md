@@ -4,6 +4,12 @@ Paste in an Australian Shopify store. QuickLift checks it for the things an
 Australian shopper looks for, then lets you switch fixes on — or describe your
 own change in plain English — and watch the store's real page update live.
 
+**Try it online:** https://nickwg113.github.io/shopfix-au/. No sign-in. It's a
+recorded copy of four stores: the fixes run live, and the agent's real answers
+are played back. [docs/github-pages.md](docs/github-pages.md) explains what's
+live and what's replayed. To check any store and talk to the agent live, run
+it locally (below).
+
 ## Pages
 
 - `/` — the home page, reused from our earlier prototype ("Red pen" design),
@@ -137,6 +143,14 @@ Decisions worth knowing:
   an edit the owner made since.
 - **Only public pages are read**, and addresses like `localhost` or private IPs
   are refused, so the server can't be pointed at itself.
+
+## Sign-in for the hosted demo (optional)
+
+Set `DEMO_USERNAME`, `DEMO_PASSWORD` and `SESSION_SECRET` in `.env` (or as the
+host's secrets) and every page asks for that one shared login first. It keeps
+the AI features, which cost money per use, off the open internet, and gives
+the judges a login. Leave them empty and the app runs with no sign-in, as
+before. `/healthz` stays open for the host's health check. See `lib/auth.js`.
 
 ## Publishing to a real store (optional)
 

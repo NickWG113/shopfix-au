@@ -22,7 +22,7 @@ try {
   const last = localStorage.getItem("ql:lastStore");
   if (last) {
     const link = document.getElementById("nav-dashboard");
-    link.href = `/dashboard?store=${encodeURIComponent(last)}`;
+    link.href = `dashboard?store=${encodeURIComponent(last)}`;
     link.textContent = "Your dashboard";
   }
 } catch {
