@@ -262,7 +262,6 @@
 
 .rs-hist-item--undone .rs-hist-title {
   color: var(--ql-muted);
-  text-decoration: line-through;
 }
 
 .rs-hist-meta {

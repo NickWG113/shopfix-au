@@ -189,3 +189,7 @@ The history is back beside the chart, one line per change (number, change, verdi
 > average day bar looks bad. i just mean making daily sales more pronounced
 
 The average-day line is gone. The changes now show in the daily bars themselves: bigger effects (the loser −25% while live, the winners +10% and +6%), a gentler weekly rhythm and less day-to-day noise. The sample's headline is now about +17%, a good case; the video script has the presenter say the proof of value plans on a cautious 5%.
+
+> [screenshot of the undone change] dont have strikethrough
+
+The undone change is no longer struck through; it keeps its grey text, its Loser verdict and "Undone" in its details.
