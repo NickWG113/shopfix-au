@@ -8,9 +8,10 @@
 // - The ready-made fixes run for real: lib/fixes.js is loaded here and
 //   builds the same code the server would, applied to the recorded page.
 // - The agent is mocked (mock-agent.js): no AI and no network, it writes
-//   the change in the browser from what the request asks for. Where an
-//   answer was recorded once from the real agent (frankbody.com's ideas and
-//   suggested requests), that recorded answer is played back instead.
+//   the change in the browser from what the request asks for. Where a
+//   store has an agent.json, recorded once from the real agent, that
+//   recorded answer is played back instead. (Frank Body had one; it was
+//   taken out of the demo on 15 Nov, so none of the stores do now.)
 // - Publish is acted out: Approve and publish says what would go live and
 //   counts it on the dashboard (in this browser only), but nothing is
 //   written to the real store. Real publishing needs the full app and the
@@ -19,6 +20,13 @@
   "use strict";
 
   const realFetch = window.fetch.bind(window);
+  // Frank Body was taken out of the demo on 15 Nov. A browser that last
+  // checked it would otherwise send every tab back to a store that's gone.
+  try {
+    if (localStorage.getItem("ql:lastStore") === "frankbody.com") localStorage.removeItem("ql:lastStore");
+  } catch {
+    // Storage blocked: nothing remembered.
+  }
   // Each build stamps its own version here (scripts/build-pages.js), and
   // every file the demo loads carries it, so a browser can't mix files
   // cached from an older build with this one.
@@ -219,7 +227,7 @@
     const bar = document.createElement("div");
     bar.className = "ql-recorded";
     bar.innerHTML =
-      `<strong>Online demo:</strong> saved copies of four stores (15 Nov 2026) and a simulated agent. Nothing touches the real stores. ` +
+      `<strong>Online demo:</strong> saved copies of three Australian stores (15 Nov 2026) and a simulated agent. Nothing touches the real stores. ` +
       `<a href="${REPO}#readme" target="_blank" rel="noopener">About</a>` +
       `<button type="button" class="ql-recorded-x" aria-label="Hide this note">×</button>`;
     bar.querySelector(".ql-recorded-x").addEventListener("click", () => bar.remove());

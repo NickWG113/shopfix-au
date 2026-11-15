@@ -80,8 +80,7 @@ async function checkStore(domain) {
     $("#store-pill").textContent = store.domain;
     $("#store-pill").hidden = false;
     $("#tab-dashboard").href = `dashboard?store=${encodeURIComponent(store.domain)}`;
-    $("#tab-results").href = `results?store=${encodeURIComponent(store.domain)}`;
-    $("#to-results").href = `results?store=${encodeURIComponent(store.domain)}`;
+    $("#to-results").href = `dashboard?store=${encodeURIComponent(store.domain)}#results`;
     try {
       localStorage.setItem("ql:lastStore", store.domain);
     } catch {

@@ -4,8 +4,7 @@
 
 /** The stores recorded for the GitHub Pages copy, in the order shown. */
 export const DEMO_STORES = [
-  { domain: "frankbody.com", note: "Skincare. Has a few things to fix: the one our video uses." },
-  { domain: "toyworld.com.au", note: "Toys. Several things to fix." },
+  { domain: "toyworld.com.au", note: "Toys. Several things to fix: the one our video uses." },
   { domain: "mrsimple.com.au", note: "Fashion. A few things to fix." },
   { domain: "culturekings.com.au", note: "Streetwear. A big brand that passes most checks." },
 ];

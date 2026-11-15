@@ -33,7 +33,7 @@ test("a session token works until it expires and can't be forged", () => {
 });
 
 test("after sign-in we only ever go to a page on this site", () => {
-  assert.equal(safeNext("/dashboard?store=frankbody.com"), "/dashboard?store=frankbody.com");
+  assert.equal(safeNext("/dashboard?store=toyworld.com.au"), "/dashboard?store=toyworld.com.au");
   assert.equal(safeNext("https://evil.example"), "/");
   assert.equal(safeNext("//evil.example"), "/");
   assert.equal(safeNext("/\\evil.example"), "/");

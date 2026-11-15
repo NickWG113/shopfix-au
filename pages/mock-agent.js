@@ -35,7 +35,7 @@ const TARGETS = {
   price: {
     name: "price",
     words: /\bprices?\b/,
-    sel: [".product__info-container .price", ".product .price", ".product-single__price", "[data-product-price]", ".product-price", ".price-item--sale", ".price-item--regular"],
+    sel: [".product__info-container .price", ".product .price", ".product-single__price", "[data-product-price]", ".product-price", ".price-item--sale", ".price-item--regular", ".f-price--large"],
   },
   cardTitle: {
     name: "product names on the cards",
@@ -45,7 +45,7 @@ const TARGETS = {
   cardPrice: {
     name: "prices on the cards",
     words: /card prices?|prices? on (the )?cards?/,
-    sel: [".card-information .price", ".product-card__price", ".grid-product__price", ".product-item__price"],
+    sel: [".card-information .price", ".product-card__price", ".grid-product__price", ".product-item__price", ".product-card__info .f-price"],
   },
 };
 

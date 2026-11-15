@@ -4,86 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Results · QuickLift</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700&family=Funnel+Sans:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="shell.css">
-  <link rel="stylesheet" href="dashboard.css">
-  <link rel="stylesheet" href="results.css">
+  <!-- Results moved to the top of the dashboard (15 Nov), so the owner sees
+       everything in one place. Old links land there. -->
+  <script>location.replace("dashboard" + location.search + "#results");</script>
 </head>
-<body class="ql-app">
-  <header class="ql-bar">
-    <a class="ql-logo" href="./"><span class="ql-logo-mark" aria-hidden="true">↑</span><span>QuickLift<span class="ql-logo-tld">.ai</span></span></a>
-    <nav class="ql-tabs" aria-label="Steps">
-      <a href="#" data-link="dashboard"><span class="ql-step-n">1</span>What to fix</a>
-      <a href="#" data-link="preview"><span class="ql-step-n">2</span>Preview and approve</a>
-      <a href="#" class="on" aria-current="step" data-link="results"><span class="ql-step-n">3</span>Results</a>
-    </nav>
-    <span class="ql-store-pill" id="store-pill" hidden></span>
-  </header>
-
-  <div class="db db--plain">
-    <main class="db-main" id="top">
-      <section id="loading" class="db-loading">
-        <h1>Loading your results…</h1>
-      </section>
-
-      <section id="error" class="db-card db-error" hidden>
-        <h1>We couldn’t load that store</h1>
-        <p id="error-msg"></p>
-        <a class="ql-btn" href="./">Try another store</a>
-      </section>
-
-      <!-- Step 3: how the store is doing since the changes went live, in a
-           sentence, three numbers and one chart. The rest folds away. -->
-      <div id="content" hidden>
-        <section class="db-head">
-          <h1>Results <span class="db-tag rs-sample">Sample data</span></h1>
-          <p class="db-summary" id="summary"></p>
-          <p class="db-meta" id="sample-note"></p>
-        </section>
-
-        <section class="rs-tiles" aria-label="The 14 days since the changes went live, against the 14 days before">
-          <div class="db-tile rs-tile"><span class="rs-tile-label">Revenue, last 14 days</span><b id="t-rev"></b><span class="rs-delta" id="d-rev"></span></div>
-          <div class="db-tile rs-tile"><span class="rs-tile-label">Visits that bought</span><b id="t-conv"></b><span class="rs-delta" id="d-conv"></span></div>
-          <div class="db-tile rs-tile rs-tile--today"><span class="rs-tile-label">Today so far</span><b id="t-today"></b><span class="rs-delta" id="d-today"></span></div>
-        </section>
-
-        <section class="db-card rs-card" id="revenue">
-          <div class="db-card-head">
-            <h2>Revenue, day by day</h2>
-          </div>
-          <div class="rs-legend" aria-hidden="true">
-            <span><i class="rs-key rs-key--before"></i>Before the changes</span>
-            <span><i class="rs-key rs-key--after"></i>After</span>
-          </div>
-          <div class="rs-chart" id="chart-rev"></div>
-          <p class="db-muted rs-read-line">Compare weeks, not days: a small store’s daily figures jump around.</p>
-        </section>
-
-        <div class="rs-grid">
-          <section class="db-card" id="live">
-            <div class="db-card-head"><h2>What went live</h2></div>
-            <ul class="rs-live" id="live-list"></ul>
-            <a class="ql-btn ql-btn--ghost" href="#" data-link="preview">Make another change</a>
-          </section>
-
-          <details class="db-card rs-days" id="days">
-            <summary>See every day</summary>
-            <div class="rs-table-wrap">
-              <table class="rs-table">
-                <thead><tr><th scope="col">Day</th><th scope="col">Visits</th><th scope="col">Orders</th><th scope="col">Bought</th><th scope="col">Revenue</th></tr></thead>
-                <tbody id="day-rows"></tbody>
-              </table>
-            </div>
-          </details>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <div class="rs-tip" id="tip" role="tooltip" hidden></div>
-
-  <script src="results.js" type="module"></script>
-  <script src="demo-bar.js"></script>
+<body>
+  <p>Results are on the <a href="dashboard">dashboard</a> now.</p>
 </body>
 </html>

@@ -10,9 +10,9 @@
 //   page-<slug>.html             the home and first product page, ready for
 //   page-<slug>.noscripts.html   the preview frame with no changes on them
 //
-// It never touches agent.json. frankbody.com has one, recorded once from the
-// real agent on 15 Nov 2026; the online demo plays it back where it has an
-// answer and uses the mock everywhere else.
+// It never touches agent.json. A store can have one, recorded once from the
+// real agent; the online demo plays it back where it has an answer and uses
+// the mock everywhere else.
 
 import fs from "node:fs/promises";
 import path from "node:path";

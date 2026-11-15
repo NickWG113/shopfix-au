@@ -1,7 +1,10 @@
-// The owner's dashboard: one store, what to fix first, and the agent.
+// The owner's dashboard, the one page to look at: how the store is doing
+// (results-view.js, sample data), then suggested improvements and the agent.
 // It reads the same /api/check the preview uses, so the two never disagree,
 // and every button that changes anything opens the preview, where the owner
 // sees the change on their real page before approving it.
+
+import { renderResults } from "./results-view.js";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -60,6 +63,9 @@ const NO_FIX = {
 const params = new URLSearchParams(location.search);
 const domain = (params.get("store") || "").trim();
 let store = null;
+// The ready-made fixes the owner has approved, by id, so their findings
+// say "Fixed" instead of offering the fix again.
+let liveFixes = new Set();
 
 function previewUrl(extra = {}) {
   const q = new URLSearchParams({ store: store?.domain || domain, ...extra });
@@ -68,7 +74,6 @@ function previewUrl(extra = {}) {
 
 function wireLinks() {
   for (const a of document.querySelectorAll('[data-link="preview"]')) a.href = previewUrl();
-  for (const a of document.querySelectorAll('[data-link="results"]')) a.href = `results?${new URLSearchParams({ store: store?.domain || domain })}`;
   for (const a of document.querySelectorAll('[data-link="dashboard"]')) a.href = location.pathname + location.search;
 }
 
@@ -105,7 +110,7 @@ async function load() {
       // Storage blocked: the home page just won't offer a way back here.
     }
     const config = await api("api/config");
-    render(result.checks, config, result.live || 0);
+    render(result.checks, config, result.liveItems || []);
   } catch (err) {
     $("#error-msg").textContent = err.message;
     $("#error").hidden = false;
@@ -115,9 +120,9 @@ async function load() {
   }
 }
 
-function render(checks, config, live = 0) {
+function render(checks, config, live = []) {
   wireLinks();
-  document.title = `${store.name} · What to fix · QuickLift`;
+  document.title = `${store.name} · Dashboard · QuickLift`;
   $("#store-name").textContent = store.name;
   $("#store-pill").textContent = store.domain;
   $("#store-pill").hidden = false;
@@ -137,10 +142,13 @@ function render(checks, config, live = 0) {
   const unknown = checks.filter((c) => c.status === "unknown" && c.id !== "password");
   const ok = checks.filter((c) => c.status === "pass");
 
+  liveFixes = new Set(fails.filter((c) => c.fix && live.includes(config.presets[c.fix]?.label)).map((c) => c.fix));
+  const fixed = fails.filter((c) => liveFixes.has(c.fix)).length;
+
   // The whole check in one sentence, instead of three number tiles.
   const things = (n) => `${n} thing${n === 1 ? "" : "s"}`;
   $("#summary").textContent = fails.length
-    ? `We found ${things(fails.length)} to fix. ${ok.length} ${ok.length === 1 ? "is" : "are"} already looking good.`
+    ? `We found ${things(fails.length)} to fix${fixed ? `, and ${fixed} ${fixed === 1 ? "is" : "are"} fixed now` : ""}. ${ok.length} ${ok.length === 1 ? "is" : "are"} already looking good.`
     : `Nothing to fix from our checks: ${ok.length} ${ok.length === 1 ? "thing is" : "things are"} looking good.`;
 
   $("#findings").innerHTML = fails.length
@@ -153,10 +161,8 @@ function render(checks, config, live = 0) {
   $("#ok-count").textContent = ok.length;
   $("#ok").innerHTML = ok.map((c) => quietRow(c, "ok", "OK")).join("");
 
-  // Only once something is live does it earn a place here, with the way
-  // to step 3.
-  $("#live").hidden = !live;
-  if (live) $("#live-msg").innerHTML = `<b>${live} change${live === 1 ? " is" : "s are"} live</b> on ${esc(store.domain)}.`;
+  // How the store is doing, at the top of the page.
+  renderResults(store, live);
 
   if (!config.ai) {
     $("#ask-form").querySelector("button").disabled = true;
@@ -173,6 +179,8 @@ function render(checks, config, live = 0) {
   $("#activity").innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join("");
 
   $("#content").hidden = false;
+  // Arriving from "See the results" after approving: go to that section.
+  if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: "start" });
 
   // The preview's ideas take the real agent a while. Ask now, in the
   // background, so they're ready by the time the owner opens a page.
@@ -187,7 +195,9 @@ function findingRow(c) {
   const sev = PRIORITY[c.id] ?? "medium";
   // No ready-made fix: what the owner can do goes under the detail, full
   // width, rather than squeezing the row into two narrow columns.
-  const action = c.fix
+  const action = c.fix && liveFixes.has(c.fix)
+    ? `<div class="db-f-action"><span class="db-fixed">✓ Fixed, live</span></div>`
+    : c.fix
     ? `<div class="db-f-action"><a class="ql-btn" href="${esc(previewUrl({ fix: c.fix }))}">Preview the fix</a></div>`
     : NO_FIX[c.id]
       ? `<div class="db-f-note">${esc(NO_FIX[c.id])}</div>`

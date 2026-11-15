@@ -161,3 +161,13 @@ The dark tab bar is back across the top of every page, home included: Home, What
 > [screenshot of the two phone previews] dont make this scroll together it feels weird
 
 "Now" and "With your changes" each scroll on their own now; "Now" no longer follows the other page.
+
+> i cant see this working either? [screenshot of an agent idea switched on, with nothing visible on the page]
+
+That idea's change waited for the store's product recommendations, which never load in a saved copy, so it hid the section instead. Every idea and suggested request was then tested on the new demo store's saved pages, and the simulated agent was taught that theme's price classes so each one visibly changes the page.
+
+> the dashboard of results should be on the same page Like essentially this, there should be one page which is like a dashboard for them. And the top, it has like all the results and stuff and improvements over time, like the results screen that you have, which is great. We just want to have a bit maybe below that that says like, oh, suggested improvements, blah, blah, blah. So it's like a spot they can look one thing and see everything, if that makes sense. Also, maybe we do a shop other than Frank and Body just because of the nature of the product. And I don't want to have some of this content shown to a uni lecturer. Thank you.
+
+> like its a bit sexual
+
+The dashboard is now the one page: **How your store is doing** (the results, sample data) at the top, **Suggested improvements** below, and an approved fix shows as "✓ Fixed, live". The flow is two steps, Dashboard → Preview and approve, and the old Results link forwards to the dashboard. Frank Body was taken out of the online demo entirely; Toyworld, a family toy shop, is the demo store now. The sample results were evened out so they show the 5% lift the proof of value assumes, not a lucky 12%.

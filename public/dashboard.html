@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>What to fix · QuickLift</title>
+  <title>Dashboard · QuickLift</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@500;600;700&family=Funnel+Sans:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="shell.css">
   <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="results.css">
 </head>
 <body class="ql-app">
   <header class="ql-bar">
     <a class="ql-logo" href="./"><span class="ql-logo-mark" aria-hidden="true">↑</span><span>QuickLift<span class="ql-logo-tld">.ai</span></span></a>
     <nav class="ql-tabs" aria-label="Steps">
-      <a href="#" class="on" aria-current="step" data-link="dashboard"><span class="ql-step-n">1</span>What to fix</a>
+      <a href="#" class="on" aria-current="step" data-link="dashboard"><span class="ql-step-n">1</span>Dashboard</a>
       <a href="#" data-link="preview"><span class="ql-step-n">2</span>Preview and approve</a>
-      <a href="#" data-link="results"><span class="ql-step-n">3</span>Results</a>
     </nav>
     <span class="ql-store-pill" id="store-pill" hidden></span>
   </header>
@@ -38,63 +38,105 @@
         <a class="ql-btn" href="./">Try another store</a>
       </section>
 
-      <!-- Step 1 in one screen: what we found, said in a sentence, the
-           fixes most important first, and the agent for anything else. -->
+      <!-- One page for the owner: how the store is doing at the top, then
+           what to improve next. -->
       <div id="content" hidden>
         <section class="db-head">
           <h1 id="store-name"></h1>
-          <p class="db-summary" id="summary"></p>
           <p class="db-meta" id="store-meta"></p>
         </section>
 
-        <section class="db-card db-live" id="live" hidden>
-          <p id="live-msg"></p>
-          <a class="ql-btn" href="#" data-link="results">See the results</a>
+        <section class="db-section" id="results">
+          <div class="db-section-head">
+            <h2>How your store is doing <span class="db-tag rs-sample">Sample data</span></h2>
+            <p class="db-summary" id="results-summary"></p>
+            <p class="db-muted rs-note-line" id="sample-note"></p>
+          </div>
+
+          <div class="rs-tiles" aria-label="The 14 days since the changes went live, against the 14 days before">
+            <div class="db-tile rs-tile"><span class="rs-tile-label">Revenue, last 14 days</span><b id="t-rev"></b><span class="rs-delta" id="d-rev"></span></div>
+            <div class="db-tile rs-tile"><span class="rs-tile-label">Visits that bought</span><b id="t-conv"></b><span class="rs-delta" id="d-conv"></span></div>
+            <div class="db-tile rs-tile rs-tile--today"><span class="rs-tile-label">Today so far</span><b id="t-today"></b><span class="rs-delta" id="d-today"></span></div>
+          </div>
+
+          <div class="rs-grid">
+            <div class="db-card rs-card">
+              <div class="db-card-head"><h3 class="rs-h">Revenue, day by day</h3></div>
+              <div class="rs-legend" aria-hidden="true">
+                <span><i class="rs-key rs-key--before"></i>Before the changes</span>
+                <span><i class="rs-key rs-key--after"></i>After</span>
+              </div>
+              <div class="rs-chart" id="chart-rev"></div>
+              <p class="db-muted rs-read-line">Compare weeks, not days: a small store’s daily figures jump around.</p>
+              <details class="rs-days" id="days">
+                <summary>See every day</summary>
+                <div class="rs-table-wrap">
+                  <table class="rs-table">
+                    <thead><tr><th scope="col">Day</th><th scope="col">Visits</th><th scope="col">Orders</th><th scope="col">Bought</th><th scope="col">Revenue</th></tr></thead>
+                    <tbody id="day-rows"></tbody>
+                  </table>
+                </div>
+              </details>
+            </div>
+            <div class="db-card" id="live">
+              <div class="db-card-head"><h3 class="rs-h">Live on your store</h3></div>
+              <ul class="rs-live" id="live-list"></ul>
+            </div>
+          </div>
         </section>
 
-        <div class="db-grid">
-          <section class="db-card" id="fix">
-            <div class="db-card-head">
-              <h2>What to fix first</h2>
-            </div>
-            <ul class="db-findings" id="findings"></ul>
-            <div id="unknown-wrap" hidden>
-              <h3 class="db-sub">Couldn’t check</h3>
-              <ul class="db-findings db-findings--quiet" id="unknown"></ul>
-            </div>
-            <details class="db-ok" id="ok-wrap">
-              <summary>Already looking good (<span id="ok-count">0</span>)</summary>
-              <ul class="db-findings db-findings--quiet" id="ok"></ul>
-            </details>
-          </section>
+        <section class="db-section" id="improve">
+          <div class="db-section-head">
+            <h2>Suggested improvements</h2>
+            <p class="db-summary" id="summary"></p>
+          </div>
 
-          <div class="db-col">
-            <section class="db-card db-agent" id="agent">
+          <div class="db-grid">
+            <section class="db-card" id="fix">
               <div class="db-card-head">
-                <h2>Or ask for any change</h2>
+                <h3 class="rs-h">What to fix first</h3>
               </div>
-              <p class="db-muted">Say it in plain words. The agent makes it on a copy of your page for you to check.</p>
-              <form id="ask-form">
-                <label class="sr-only" for="ask">Your change</label>
-                <textarea id="ask" rows="3" placeholder="e.g. Make the Add to cart button bigger and bright green"></textarea>
-                <button type="submit" class="ql-btn">Make this change</button>
-              </form>
-              <div class="db-chips" id="chips">
-                <button type="button" data-ask="Make the Add to cart button bigger and bright green">Bigger, brighter Add to cart</button>
-                <button type="button" data-ask="Add a small line under the price saying: Ships from [your city] in 1–2 business days">Shipping line under the price</button>
-                <button type="button" data-ask="Make the product title larger and bolder on phones">Bolder title on phones</button>
+              <ul class="db-findings" id="findings"></ul>
+              <div id="unknown-wrap" hidden>
+                <h3 class="db-sub">Couldn’t check</h3>
+                <ul class="db-findings db-findings--quiet" id="unknown"></ul>
               </div>
+              <details class="db-ok" id="ok-wrap">
+                <summary>Already looking good (<span id="ok-count">0</span>)</summary>
+                <ul class="db-findings db-findings--quiet" id="ok"></ul>
+              </details>
             </section>
 
-            <details class="db-how">
-              <summary>How we checked</summary>
-              <ul class="db-activity" id="activity"></ul>
-            </details>
+            <div class="db-col">
+              <section class="db-card db-agent" id="agent">
+                <div class="db-card-head">
+                  <h3 class="rs-h">Or ask for any change</h3>
+                </div>
+                <p class="db-muted">Say it in plain words. The agent makes it on a copy of your page for you to check.</p>
+                <form id="ask-form">
+                  <label class="sr-only" for="ask">Your change</label>
+                  <textarea id="ask" rows="3" placeholder="e.g. Make the Add to cart button bigger and bright green"></textarea>
+                  <button type="submit" class="ql-btn">Make this change</button>
+                </form>
+                <div class="db-chips" id="chips">
+                  <button type="button" data-ask="Make the Add to cart button bigger and bright green">Bigger, brighter Add to cart</button>
+                  <button type="button" data-ask="Add a small line under the price saying: Ships from [your city] in 1–2 business days">Shipping line under the price</button>
+                  <button type="button" data-ask="Make the product title larger and bolder on phones">Bolder title on phones</button>
+                </div>
+              </section>
+
+              <details class="db-how">
+                <summary>How we checked</summary>
+                <ul class="db-activity" id="activity"></ul>
+              </details>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </main>
   </div>
+
+  <div class="rs-tip" id="tip" role="tooltip" hidden></div>
 
   <script src="dashboard.js" type="module"></script>
   <script src="demo-bar.js"></script>

@@ -1,7 +1,7 @@
 // The tab bar across the top of every page, for moving around the demo:
-// Home, then the three steps (What to fix, Preview and approve, Results).
+// Home, then the two steps (Dashboard, Preview and approve).
 // It keeps the store being shown, from the address or the last store
-// checked. Keys 1 to 4 switch tabs too (not while typing). × hides it for
+// checked. Keys 1 to 3 switch tabs too (not while typing). × hides it for
 // the rest of the visit, for recording; the keys still work.
 //
 // For presenting, not part of the product: an owner would move through the
@@ -16,7 +16,7 @@
   }
   // On a computer that has never checked a store (anyone opening the shared
   // link), the store the presentation uses.
-  store ||= "frankbody.com";
+  store ||= "toyworld.com.au";
   const q = `?store=${encodeURIComponent(store)}`;
   // Only the last part of the address, and relative links, so the same
   // pages work at the site root (our server) and under a folder (the online
@@ -24,9 +24,8 @@
   const here = "/" + (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
   const tabs = [
     { key: "1", label: "Home", href: "./", on: here === "/" || here === "/index" },
-    { key: "2", label: "What to fix", href: `dashboard${q}`, on: here === "/dashboard" },
+    { key: "2", label: "Dashboard", href: `dashboard${q}`, on: here === "/dashboard" },
     { key: "3", label: "Preview and approve", href: `preview${q}`, on: here === "/preview" },
-    { key: "4", label: "Results", href: `results${q}`, on: here === "/results" },
   ];
 
   document.addEventListener("keydown", (e) => {

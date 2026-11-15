@@ -1,34 +1,15 @@
-// Daily results: how the store is doing, day by day, since its changes went
-// live. The figures are SAMPLE DATA, said on the page: a store making about
-// A$100,000 a year (docs/proof-of-value.md), worked out the same way every
-// time for the same store so the page doesn't change on reload. Connected to
-// a store, the same page would read each day's visits, orders and revenue
-// from its Shopify analytics.
+// How the store is doing, day by day, since its changes went live: the top
+// of the dashboard (dashboard.js calls renderResults). The figures are
+// SAMPLE DATA, said on the page: a store making about A$100,000 a year
+// (docs/proof-of-value.md), worked out the same way every time for the same
+// store so the page doesn't change on reload. Connected to a store, it would
+// read each day's visits, orders and revenue from its Shopify analytics.
 
 const $ = (sel) => document.querySelector(sel);
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 }
-
-async function api(url, body) {
-  const res = await fetch(url, body === undefined ? {} : {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({ error: "The server sent something unreadable." }));
-  if (!res.ok || data.error) throw new Error(data.error || `Request failed (${res.status})`);
-  return data;
-}
-
-const params = new URLSearchParams(location.search);
-const domain = (params.get("store") || "").trim();
-
-function link(page) {
-  return `${page}?${new URLSearchParams({ store: domain })}`;
-}
-for (const a of document.querySelectorAll("[data-link]")) a.href = link(a.dataset.link);
 
 // ---------- the sample ----------
 
@@ -72,7 +53,12 @@ function buildSample(store) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const days = [];
-  const convWobble = [...wobble(rand, LIVE_AFTER, 0.35), ...wobble(rand, DAYS - LIVE_AFTER, 0.35)];
+  // Every kind of daily noise cancels out within each two weeks, so the two
+  // periods differ by the 5% lift the sample is built on, not by luck.
+  const both = (size) => [...wobble(rand, LIVE_AFTER, size), ...wobble(rand, DAYS - LIVE_AFTER, size)];
+  const convWobble = both(0.35);
+  const visitWobble = both(0.12);
+  const orderWobble = both(0.15);
   // Orders are whole numbers: carrying the fractions from day to day keeps
   // each period's total true to its rate.
   let carry = 0;
@@ -81,12 +67,12 @@ function buildSample(store) {
     date.setDate(today.getDate() - (DAYS - i));
     const after = i >= LIVE_AFTER;
     if (i === LIVE_AFTER) carry = 0;
-    const visits = Math.round(SAMPLE.visitsPerDay * WEEKDAY[date.getDay()] * (1 + (rand() - 0.5) * 0.24));
+    const visits = Math.round(SAMPLE.visitsPerDay * WEEKDAY[date.getDay()] * (1 + visitWobble[i]));
     const rate = (after ? SAMPLE.convAfter : SAMPLE.convBefore) * (1 + convWobble[i]);
     const exact = visits * rate + carry;
     const orders = Math.max(0, Math.round(exact));
     carry = exact - orders;
-    const revenue = Math.round(orders * SAMPLE.order * (1 + (rand() - 0.5) * 0.3));
+    const revenue = Math.round(orders * SAMPLE.order * (1 + orderWobble[i]));
     days.push({ date, visits, orders, revenue, after });
   }
   // Today, up to now.
@@ -212,13 +198,10 @@ function revChart(days, liveIndex) {
   });
 }
 
-// ---------- the page ----------
+// ---------- the results ----------
 
-function render(store, live) {
-  document.title = `Results · ${store.name} · QuickLift`;
-  $("#store-pill").textContent = store.domain;
-  $("#store-pill").hidden = false;
-
+/** Fills the results section. live: what the owner has approved (the online demo remembers it). */
+export function renderResults(store, live) {
   const { days, today, liveDate } = buildSample(store.domain);
   const before = totals(days.slice(0, LIVE_AFTER));
   const after = totals(days.slice(LIVE_AFTER));
@@ -226,9 +209,12 @@ function render(store, live) {
   // The answer first, in a sentence.
   const diff = after.revenue - before.revenue;
   const rel = before.revenue ? Math.round((Math.abs(diff) / before.revenue) * 100) : 0;
-  $("#summary").textContent =
-    `Since your changes went live on ${dayName(liveDate)}, revenue is ${diff >= 0 ? "up" : "down"} ` +
-    `${money(Math.abs(diff))} (${diff >= 0 ? "+" : "−"}${rel}%) on the two weeks before.`;
+  const change = `${diff >= 0 ? "up" : "down"} ${money(Math.abs(diff))} (${diff >= 0 ? "+" : "−"}${rel}%)`;
+  // Before anything is approved there are no "your changes" to speak of,
+  // so it says plainly what the figures are.
+  $("#results-summary").textContent = live.length
+    ? `Since your changes went live on ${dayName(liveDate)}, revenue is ${change} on the two weeks before.`
+    : `Nothing is live yet, so this is a sample: two weeks after its changes went live, revenue was ${change}.`;
   $("#sample-note").textContent =
     `Sample figures for a store making about A$100,000 a year, not ${store.domain}’s real sales. ` +
     `A connected store’s figures would come from its Shopify analytics.`;
@@ -250,32 +236,8 @@ function render(store, live) {
     )
     .join("");
 
+  // Only what the owner really approved; the sample never claims more.
   $("#live-list").innerHTML = live.length
-    ? live.map((l) => `<li><span>${esc(l)}</span><span class="db-muted">Since ${esc(shortDate(liveDate))}</span></li>`).join("")
-    : `<li class="db-muted">Nothing approved yet for this store. The sample shows what this page looks like once changes are live.</li>`;
-
-  $("#content").hidden = false;
+    ? live.map((l) => `<li><span>${esc(l)}</span><span class="db-muted">Live</span></li>`).join("")
+    : `<li class="db-muted">Nothing approved yet. The chart shows what this looks like once changes are live.</li>`;
 }
-
-async function load() {
-  if (!domain) {
-    location.href = "./";
-    return;
-  }
-  try {
-    const [result, config] = await Promise.all([api("api/check", { domain }), api("api/config")]);
-    // What went live: what the owner approved (the online demo remembers
-    // it), or else the ready-made fixes this store's check suggested.
-    const live = result.liveItems?.length
-      ? result.liveItems
-      : result.checks.filter((c) => c.status === "fail" && c.fix && config.presets[c.fix]).map((c) => config.presets[c.fix].label);
-    render(result.store, live);
-  } catch (err) {
-    $("#error-msg").textContent = err.message;
-    $("#error").hidden = false;
-  } finally {
-    $("#loading").hidden = true;
-  }
-}
-
-load();

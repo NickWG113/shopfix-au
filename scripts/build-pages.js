@@ -33,6 +33,16 @@ await fs.cp(path.join(root, "recording"), path.join(out, "recording"), { recursi
 // GitHub Pages would otherwise run Jekyll, which skips some files.
 await fs.writeFile(path.join(out, ".nojekyll"), "");
 
+// Scripts that import each other (dashboard.js imports results-view.js) get
+// the version on the import too.
+for (const name of await fs.readdir(out)) {
+  if (!name.endsWith(".js")) continue;
+  const file = path.join(out, name);
+  const js = await fs.readFile(file, "utf8");
+  const stamped = js.replace(/(from "\.\/[\w-]+\.js)"/g, `$1?v=${VERSION}"`);
+  if (stamped !== js) await fs.writeFile(file, stamped);
+}
+
 // The replay goes first in <head>, before the pages' own scripts can call api/.
 let pages = 0;
 for (const name of await fs.readdir(out)) {

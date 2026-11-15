@@ -559,3 +559,72 @@ p.db-meta {
 .db-how .db-activity {
   margin-top: 12px;
 }
+
+/* ---- one dashboard: results on top, improvements below (15 Nov) ---- */
+
+.db-section {
+  margin-top: 28px;
+  scroll-margin-top: 16px;
+}
+
+.db-section-head {
+  margin-bottom: 16px;
+}
+
+.db-section-head h2 {
+  margin: 0;
+  font-family: var(--ql-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.db-section-head .db-summary {
+  margin-top: 6px;
+}
+
+.rs-note-line {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.rs-h {
+  margin: 0;
+  font-family: var(--ql-display);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#improve {
+  padding-top: 24px;
+  border-top: 1px solid var(--ql-line);
+}
+
+/* The chart gets most of the width; what's live sits beside it. */
+.db-section .rs-grid {
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr);
+}
+
+.db-section .rs-days summary {
+  font-family: var(--ql-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ql-ink-2);
+}
+
+@media (max-width: 1000px) {
+  .db-section .rs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.db-fixed {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--ql-ok-tint);
+  color: var(--ql-ok);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}

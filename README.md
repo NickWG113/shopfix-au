@@ -5,7 +5,7 @@ Australian shopper looks for, then lets you switch fixes on — or describe your
 own change in plain English — and watch the store's real page update live.
 
 **Try it online:** https://nickwg113.github.io/shopfix-au/. No sign-in. It's a
-mocked copy: four stores' pages saved on 15 Nov 2026, the fixes running in the
+mocked copy: three stores' pages saved on 15 Nov 2026, the fixes running in the
 browser, and a mocked agent, with nothing live. [docs/github-pages.md](docs/github-pages.md)
 explains how. To check any store with the real agent, run it locally (below).
 
@@ -13,27 +13,30 @@ explains how. To check any store with the real agent, run it locally (below).
 
 - `/` — the home page, reused from our earlier prototype ("Red pen" design),
   recoloured and cut down to Shopify only: how it works, the ground rules,
-  questions. Its form opens step 1.
+  questions. Its form opens the dashboard.
 
-After that, every page has the same step bar: **1 What to fix → 2 Preview
-and approve → 3 Results**.
+After that, every page has the same step bar: **1 Dashboard → 2 Preview and
+approve**.
 
-- `/dashboard?store=…` — step 1, **What to fix**: one sentence on what the
-  check found, each problem with **Preview the fix**, and the agent for any
-  other change.
+- `/dashboard?store=…` — step 1, the one page an owner checks. At the top,
+  **How your store is doing**: revenue since the changes went live, in a
+  sentence, three numbers and one chart, with every day folded away.
+  **Sample data**, labelled on the page (a store making about A$100k a year);
+  connected to a store it would read these from Shopify's analytics. Below,
+  **Suggested improvements**: one sentence on what the check found, each
+  problem with **Preview the fix** (or **✓ Fixed, live** once approved), and
+  the agent for any other change.
 - `/preview?store=…` — step 2, the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"
   label. The **Ideas** tab is the agent's own list of changes for
   the page on screen, each one click away. `&fix=afterpay` opens with a fix switched on;
-  `&ask=…&page=product` hands a request straight to the agent.
-- `/results?store=…` — step 3, **Results**: revenue since the changes went
-  live, in a sentence, three numbers and one chart, with every day folded
-  away. **Sample data**, labelled on the page (a store making about A$100k a
-  year); connected to a store it would read these from Shopify's analytics.
+  `&ask=…&page=product` hands a request straight to the agent. After
+  approving, **See the results on your dashboard →** goes back to step 1.
+- `/results?store=…` — old link; forwards to the dashboard's results.
 
 For presenting, a dark tab bar across the top of every page switches
-between Home, What to fix, Preview and approve, and Results (or keys 1–4),
+between Home, Dashboard, and Preview and approve (or keys 1–3),
 keeping the store. × hides it for the visit (`public/demo-bar.js`).
 
 The example-shop photos in `public/images/home/` are CC0 from StockSnap:
@@ -53,7 +56,7 @@ npm start
 ```
 
 Open http://localhost:3010. You can also open
-`http://localhost:3010/?store=frankbody.com` to check a store straight away.
+`http://localhost:3010/?store=toyworld.com.au` to check a store straight away.
 
 Without an `ANTHROPIC_API_KEY` everything works except "Describe a change".
 
@@ -113,23 +116,20 @@ store's page misbehaves in the preview.
 
 ## Demo script (about 3 minutes)
 
-1. Paste `frankbody.com` → **Check store**. Point at the store card (AUD,
-   Australian store, theme name) and the three **Fix** items.
-2. Switch on **Afterpay instalments**: the page jumps to the price, where
-   "or 4 payments of $10.00" is worked out from the sale price, not the
-   crossed-out one.
-3. Switch on **Returns + Australian business bar**; edit its wording to show it's
-   the owner's call.
-4. Tick **Sticky Add to cart** → it switches to **Phone** and a product page.
-   Scroll down past Add to cart and the sticky bar slides in.
-5. **Describe a change**: "Make the Add to cart button bright green, and add a
+1. Paste `toyworld.com.au` → **Check my store free**. The dashboard shows how
+   the store is doing, then the four things to fix.
+2. **Preview the fix** on the delivery item: a free-shipping bar appears on
+   the store's real page. Edit its wording to show it's the owner's call.
+3. Switch on **Returns + Australian business bar** too.
+4. **Ask the agent**: "Make the Add to cart button bright green, and add a
    small line under it saying Ships from Sydney in 1–2 business days". About
    10 seconds later it's on the page. Open **Show the code** to show it's real
    CSS/JS against the store's own classes.
-6. (If set up) **Publish** to your dev store, reload the real store in another
-   tab, then **Undo**.
+5. **Approve and publish**, then **See the results on your dashboard →**.
+   (With a dev store set up, reload the real store in another tab, then
+   **Undo**.)
 
-Other stores that show a few fixes: `toyworld.com.au`, `mrsimple.com.au`.
+Another store that shows a few fixes: `mrsimple.com.au`.
 Big brands (Culture Kings, Peppermayo) pass most checks — also worth showing,
 as it's what "good" looks like.
 
