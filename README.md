@@ -32,8 +32,9 @@ and approve → 3 Results**.
   away. **Sample data**, labelled on the page (a store making about A$100k a
   year); connected to a store it would read these from Shopify's analytics.
 
-For presenting, keys 1–4 switch between home and the three steps, keeping
-the store (`public/demo-bar.js`).
+For presenting, a dark tab bar across the top of every page switches
+between Home, What to fix, Preview and approve, and Results (or keys 1–4),
+keeping the store. × hides it for the visit (`public/demo-bar.js`).
 
 The example-shop photos in `public/images/home/` are CC0 from StockSnap:
 [bowls](https://stocksnap.io/photo/stacked-bowls-FTFTNXN41H),

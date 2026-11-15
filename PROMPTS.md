@@ -153,3 +153,7 @@ The column had five cards open at once, the same "nothing goes live until you ap
 > please do that for the entire flow. i tneeds to feel REALLY simple to understand
 
 Every page now follows one idea: the flow is three steps, and each page says which one you're on. The dark Demo bar and the dashboard's side menu are gone (keys 1–4 still switch pages for presenting), and the pages' tabs became a step bar, **1 What to fix → 2 Preview and approve → 3 Results**. The home page went from eight sections to five (the walkthrough that repeated How it works, and the A/B, Shopify and pricing panels, became three questions). Step 1 says what the check found in one sentence and names each problem as a problem. Step 2 lost the repeated badges and the page address. Step 3 answers first, in a sentence, then three numbers and one chart, with every day folded away. After approving, "Next: see the results →" leads to step 3.
+
+> give me the ability to swap tabs at the top thanks
+
+The dark tab bar is back across the top of every page, home included: Home, What to fix, Preview and approve, Results, keeping the store (keys 1–4 too, × hides it).

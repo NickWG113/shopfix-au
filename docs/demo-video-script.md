@@ -8,7 +8,7 @@ Before recording:
 
 - Run each store through once, so pages load quickly on camera.
 - Use browser zoom at 110–125% so text is readable on a laptop screen. Hide bookmarks. Close other tabs.
-- Keys switch pages while you present: 1 home, 2 What to fix, 3 Preview and approve, 4 Results. Or click the steps at the top of each page.
+- Switch pages with the dark tab bar across the top (Home, What to fix, Preview and approve, Results), or keys 1 to 4. Press × on it if you don't want it in shot; the keys still work.
 
 ---
 
