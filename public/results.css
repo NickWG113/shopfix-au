@@ -3,9 +3,31 @@
    axes and grid stay quiet so the data reads first. */
 
 .rs-sample {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
   background: var(--ql-fix-tint);
   color: var(--ql-fix);
+  font: 600 13px/1.4 var(--ql-sans);
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+.rs-read-line {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.rs-days summary {
+  font-family: var(--ql-display);
+  font-size: 18px;
   font-weight: 600;
+  cursor: pointer;
+}
+
+.rs-days[open] summary {
+  margin-bottom: 12px;
 }
 
 .rs-note {
@@ -21,8 +43,9 @@
 
 .rs-tiles {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  margin-bottom: 20px;
 }
 
 .rs-tile {
@@ -186,7 +209,6 @@
 .rs-read li + li { margin-top: 8px; }
 
 @media (max-width: 1000px) {
-  .rs-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rs-grid { grid-template-columns: 1fr; }
 }
 

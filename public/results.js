@@ -113,12 +113,6 @@ function totals(rows) {
   return { visits, orders, revenue, conv: visits ? orders / visits : 0 };
 }
 
-function delta(now, before, fmt) {
-  const diff = now - before;
-  const rel = before ? diff / before : 0;
-  const up = diff >= 0;
-  return `<span class="${up ? "rs-up" : "rs-down"}">${up ? "▲" : "▼"} ${fmt(Math.abs(diff))}</span> (${up ? "+" : "−"}${Math.abs(rel * 100).toFixed(0)}%) on the 14 days before`;
-}
 
 // ---------- charts ----------
 // Plain SVG, one series each, with a crosshair and a tooltip on hover.
@@ -187,36 +181,6 @@ function chart(el, { days, liveIndex, value, max, ticks, fmt, marks, tip }) {
   el.addEventListener("pointerleave", hide);
 }
 
-function convChart(days, liveIndex) {
-  const el = $("#chart-conv");
-  el.dataset.label = "Daily conversion rate with a 7-day average, before and after the changes went live";
-  const rates = days.map(conv);
-  const avg = rates.map((_, i) => {
-    const from = Math.max(0, i - 6);
-    return totals(days.slice(from, i + 1)).conv;
-  });
-  chart(el, {
-    days,
-    liveIndex,
-    max: niceMax(Math.max(...rates)),
-    ticks: 4,
-    fmt: (v) => pct(v, 1),
-    marks: (f) => {
-      let s = "";
-      // The average starts once there's a week to average.
-      const pts = avg.map((v, i) => `${f.x(i)},${f.y(v)}`).slice(6);
-      s += `<polyline class="rs-avg" points="${pts.join(" ")}"/>`;
-      rates.forEach((v, i) => {
-        s += `<circle class="rs-dot" cx="${f.x(i)}" cy="${f.y(v)}" r="4"/>`;
-      });
-      return s;
-    },
-    tip: (d, i) =>
-      `<b>${dayName(d.date)}</b>${pct(conv(d), 2)} converted<br>${d.orders} orders from ${d.visits.toLocaleString("en-AU")} visits` +
-      (i >= 6 ? `<br>7-day average ${pct(avg[i], 2)}` : ""),
-  });
-}
-
 function revChart(days, liveIndex) {
   const el = $("#chart-rev");
   el.dataset.label = "Daily revenue in Australian dollars, before and after the changes went live";
@@ -251,32 +215,31 @@ function revChart(days, liveIndex) {
 // ---------- the page ----------
 
 function render(store, live) {
-  document.title = `Daily results · ${store.name} · QuickLift`;
-  $("#store-name").textContent = `${store.name} · ${store.domain}`;
+  document.title = `Results · ${store.name} · QuickLift`;
   $("#store-pill").textContent = store.domain;
   $("#store-pill").hidden = false;
-  $("#side-store").innerHTML = `<b>${esc(store.name)}</b>${esc(store.domain)}`;
-  $("#side").hidden = false;
 
   const { days, today, liveDate } = buildSample(store.domain);
   const before = totals(days.slice(0, LIVE_AFTER));
   const after = totals(days.slice(LIVE_AFTER));
 
-  $("#sample-note").innerHTML =
-    `<b>Sample figures, not ${esc(store.domain)}’s real sales.</b> They show a store making about A$100,000 a year, ` +
-    `with its changes live since ${esc(dayName(liveDate))}. Once a store is connected, QuickLift reads each day’s visits, orders and revenue from its Shopify analytics.`;
-  $("#updated").textContent = `Updated ${new Date().toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit" })}`;
+  // The answer first, in a sentence.
+  const diff = after.revenue - before.revenue;
+  const rel = before.revenue ? Math.round((Math.abs(diff) / before.revenue) * 100) : 0;
+  $("#summary").textContent =
+    `Since your changes went live on ${dayName(liveDate)}, revenue is ${diff >= 0 ? "up" : "down"} ` +
+    `${money(Math.abs(diff))} (${diff >= 0 ? "+" : "−"}${rel}%) on the two weeks before.`;
+  $("#sample-note").textContent =
+    `Sample figures for a store making about A$100,000 a year, not ${store.domain}’s real sales. ` +
+    `A connected store’s figures would come from its Shopify analytics.`;
 
-  $("#t-conv").textContent = pct(after.conv, 2);
-  $("#d-conv").innerHTML = delta(after.conv, before.conv, (v) => `${(v * 100).toFixed(2)} pts`);
-  $("#t-orders").textContent = after.orders.toLocaleString("en-AU");
-  $("#d-orders").innerHTML = delta(after.orders, before.orders, (v) => String(v));
   $("#t-rev").textContent = money(after.revenue);
-  $("#d-rev").innerHTML = delta(after.revenue, before.revenue, money);
+  $("#d-rev").innerHTML = `<span class="${diff >= 0 ? "rs-up" : "rs-down"}">${diff >= 0 ? "▲ +" : "▼ −"}${rel}%</span> on the two weeks before`;
+  $("#t-conv").textContent = pct(after.conv, 1);
+  $("#d-conv").innerHTML = `<span class="${after.conv >= before.conv ? "rs-up" : "rs-down"}">${after.conv >= before.conv ? "▲" : "▼"}</span> from ${pct(before.conv, 1)} the two weeks before`;
   $("#t-today").textContent = `${today.orders} order${today.orders === 1 ? "" : "s"}`;
-  $("#d-today").textContent = `${today.visits} visits, ${money(today.revenue)} so far`;
+  $("#d-today").textContent = `${money(today.revenue)} from ${today.visits} visits`;
 
-  convChart(days, LIVE_AFTER);
   revChart(days, LIVE_AFTER);
 
   $("#day-rows").innerHTML = [today, ...days.slice().reverse()]
@@ -288,7 +251,7 @@ function render(store, live) {
     .join("");
 
   $("#live-list").innerHTML = live.length
-    ? live.map((l) => `<li><span>${esc(l)}</span><span class="db-muted">Live since ${esc(shortDate(liveDate))}</span></li>`).join("")
+    ? live.map((l) => `<li><span>${esc(l)}</span><span class="db-muted">Since ${esc(shortDate(liveDate))}</span></li>`).join("")
     : `<li class="db-muted">Nothing approved yet for this store. The sample shows what this page looks like once changes are live.</li>`;
 
   $("#content").hidden = false;

@@ -12,22 +12,28 @@ explains how. To check any store with the real agent, run it locally (below).
 ## Pages
 
 - `/` — the home page, reused from our earlier prototype ("Red pen" design),
-  recoloured and cut down to Shopify only. Its form opens the dashboard.
-- `/dashboard?store=…` — the owner's view: what to fix first, the agent, and
-  what QuickLift read. Every button that changes something opens the preview.
-- `/results?store=…` — daily results: conversion rate, orders and revenue
-  day by day since the changes went live, with a chart, a table and today so
-  far. **Sample data**, labelled on the page (a store making about A$100k a
-  year); connected to a store it would read these from Shopify's analytics.
-- `/preview?store=…` — the store's real page with changes on it, then
+  recoloured and cut down to Shopify only: how it works, the ground rules,
+  questions. Its form opens step 1.
+
+After that, every page has the same step bar: **1 What to fix → 2 Preview
+and approve → 3 Results**.
+
+- `/dashboard?store=…` — step 1, **What to fix**: one sentence on what the
+  check found, each problem with **Preview the fix**, and the agent for any
+  other change.
+- `/preview?store=…` — step 2, the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"
   label. The **Ideas** tab is the agent's own list of changes for
   the page on screen, each one click away. `&fix=afterpay` opens with a fix switched on;
   `&ask=…&page=product` hands a request straight to the agent.
+- `/results?store=…` — step 3, **Results**: revenue since the changes went
+  live, in a sentence, three numbers and one chart, with every day folded
+  away. **Sample data**, labelled on the page (a store making about A$100k a
+  year); connected to a store it would read these from Shopify's analytics.
 
-A dark "Demo" bar above every page switches between the four (keys 1–4)
-and keeps the store. It's for presenting, not part of the product; × hides it.
+For presenting, keys 1–4 switch between home and the three steps, keeping
+the store (`public/demo-bar.js`).
 
 The example-shop photos in `public/images/home/` are CC0 from StockSnap:
 [bowls](https://stocksnap.io/photo/stacked-bowls-FTFTNXN41H),

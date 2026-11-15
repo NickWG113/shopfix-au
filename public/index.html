@@ -36,10 +36,8 @@
             Quick fixes that lift <span class="rp-ul">your Shopify store.<svg aria-hidden="true" viewBox="0 0 300 20" preserveAspectRatio="none" class="rp-ul-line"><path d="M4 13 C 60 6, 150 4, 220 7 C 250 8, 280 10, 296 8" vector-effect="non-scaling-stroke" pathLength="1"/></svg></span>
           </h1>
           <p class="rp-lede">
-            QuickLift reads your store the way an Australian shopper would and marks what would stop
-            them buying: no Afterpay by the price, delivery costs hidden until checkout, nothing saying
-            you’re local. Then its AI agent makes each fix, or any change you describe in plain words,
-            and shows it on your own page before any shopper sees it. You approve it, and it goes live.
+            Type your store’s address. QuickLift finds what would stop an Australian shopper buying,
+            fixes it on a copy of your page, and puts it live only when you say so.
           </p>
           <form method="get" action="dashboard" class="rp-scan">
             <label for="hero-scan" class="sr-only">Your store’s address</label>
@@ -82,76 +80,15 @@
         </figure>
       </section>
 
-      <!-- What it looks for -->
-      <section class="rp-section">
-        <div class="rp-head">
-          <p class="rp-kicker">What it looks for</p>
-          <h2 class="rp-h2">The small things an Australian shopper trips over.</h2>
-          <p class="rp-sub">
-            A first-time shopper on a phone will not guess. QuickLift reads your pages and product feed
-            as they would, and puts a mark wherever they would stop.
-          </p>
-        </div>
-        <div class="rp-split rp-split--center">
-          <figure class="rp-notes-fig">
-            <div class="rp-panel rp-panel--rest">
-              <div class="rp-panel-head">
-                <div>
-                  <span class="rp-panel-title">What QuickLift noticed</span>
-                  <div class="rp-panel-sub">Most important first</div>
-                </div>
-                <span class="rp-pill">
-                  <svg aria-hidden="true" width="10" height="14" viewBox="0 0 10 14"><rect x="1" y="1" width="8" height="12" rx="2"/></svg>
-                  Phone view
-                </span>
-              </div>
-              <!-- Each line is one of QuickLift's real checks (lib/checks.js),
-                   in the order the dashboard ranks them. -->
-              <ul class="rp-noticed">
-                <li style="--rp-i: 0"><div><div class="rp-noticed-where">Product page</div><div class="rp-noticed-what">No Afterpay or Zip near the price</div></div><span class="rp-sev rp-sev--high"><span class="rp-sev-dot" aria-hidden="true"></span>High</span></li>
-                <li style="--rp-i: 1"><div><div class="rp-noticed-where">Home page</div><div class="rp-noticed-what">Delivery cost not mentioned before checkout</div></div><span class="rp-sev rp-sev--high"><span class="rp-sev-dot" aria-hidden="true"></span>High</span></li>
-                <li style="--rp-i: 2"><div><div class="rp-noticed-where">Every page</div><div class="rp-noticed-what">Nothing says the business is Australian</div></div><span class="rp-sev rp-sev--medium"><span class="rp-sev-dot" aria-hidden="true"></span>Medium</span></li>
-                <li style="--rp-i: 3"><div><div class="rp-noticed-where">Product page</div><div class="rp-noticed-what">Add to cart scrolls out of reach on phones</div></div><span class="rp-sev rp-sev--medium"><span class="rp-sev-dot" aria-hidden="true"></span>Medium</span></li>
-                <li style="--rp-i: 4"><div><div class="rp-noticed-where">Product feed</div><div class="rp-noticed-what">Most products have fewer than 3 photos</div></div><span class="rp-sev rp-sev--medium"><span class="rp-sev-dot" aria-hidden="true"></span>Medium</span></li>
-              </ul>
-              <div class="rp-note rp-note--panel">Then QuickLift gets to work.</div>
-            </div>
-            <figcaption class="rp-caption rp-caption--below-note">Example notes from a check, drawn for this page.</figcaption>
-          </figure>
-
-          <!-- The agent, the core of QuickLift: a request in plain words turned
-               into a change on the store's own page. The request and its reply
-               are the kind the real agent gives (lib/ai.js). -->
-          <figure class="ql-ask-fig">
-            <div class="rp-note rp-note--shot">Just say what you want changed.</div>
-            <div class="ql-ask">
-              <div class="ql-ask-head">
-                <span class="rp-panel-title">Ask the agent</span>
-                <span class="rp-pill">Product page</span>
-              </div>
-              <div class="ql-ask-input">Make Add to cart bright green, and add a line under it saying “Ships from Sydney in 1–2 business days”.</div>
-              <div class="rp-obj rp-obj--green">
-                <div class="rp-obj-ok">
-                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" class="rp-check"><path d="M2 8.5l4 4 8-9"/></svg>
-                  <span>Done: the button is bright green, with the shipping line under it. Preview ready.</span>
-                </div>
-                <div class="rp-obj-small">It reads your page’s own layout, so the change fits your theme. Nothing is live until you approve it.</div>
-              </div>
-            </div>
-            <figcaption class="rp-caption">Drawn for this page. The agent’s real replies say what it changed and anything it had to assume.</figcaption>
-          </figure>
-        </div>
-      </section>
-
       <!-- Three stages -->
       <section id="how" class="rp-section">
         <div class="rp-head rp-head--row">
-          <h2 class="rp-h2">Found. Preview. Live.</h2>
-          <p class="rp-sub rp-sub--side">Every change QuickLift makes goes through the same three stages, and you decide at the last one.</p>
+          <h2 class="rp-h2">How it works</h2>
+          <p class="rp-sub rp-sub--side">Three steps. Nothing reaches your shoppers until the last one, and only you can press it.</p>
         </div>
         <ol class="rp-stages">
           <li>
-            <h3 class="rp-stage-h"><span>01</span>Found</h3>
+            <h3 class="rp-stage-h"><span>01</span>See what to fix</h3>
             <div class="rp-margin rp-margin--top"><span class="rp-note rp-note--inline">A shopper stops here.</span></div>
             <div class="rp-obj">
               <div class="rp-obj-row"><span class="rp-chip">Found</span><span class="rp-obj-meta">Product page · phone view</span></div>
@@ -159,10 +96,10 @@
               <div class="rp-obj-foot"><span>Harbour &amp; Pine</span><span class="rp-obj-link">See the fix &rarr;</span></div>
             </div>
             <div class="rp-margin"></div>
-            <p class="rp-stage-text">QuickLift reads your pages and product feed the way an Australian shopper would, and notes what would stop them buying.</p>
+            <p class="rp-stage-text">QuickLift reads your store like a first-time Australian shopper and lists what would stop them buying, most important first.</p>
           </li>
           <li>
-            <h3 class="rp-stage-h"><span>02</span>Preview</h3>
+            <h3 class="rp-stage-h"><span>02</span>Preview the change</h3>
             <div class="rp-margin rp-margin--top"></div>
             <div class="rp-obj rp-obj--green">
               <div class="rp-obj-ok">
@@ -176,10 +113,10 @@
               <div class="rp-obj-small">Or describe your own change, and the agent writes it.</div>
             </div>
             <div class="rp-margin"><span class="rp-note rp-note--inline">Only you can see this.</span></div>
-            <p class="rp-stage-text">It makes the fix, or any change you describe in plain words, and shows it on a copy of your real page.</p>
+            <p class="rp-stage-text">Switch on a fix, or tell the agent what you want in plain words. You see it on a copy of your own page.</p>
           </li>
           <li>
-            <h3 class="rp-stage-h"><span>03</span>Live</h3>
+            <h3 class="rp-stage-h"><span>03</span>Approve it</h3>
             <div class="rp-margin rp-margin--top"></div>
             <div class="rp-obj">
               <div class="rp-obj-meta rp-obj-meta--strong">Your decision</div>
@@ -187,78 +124,11 @@
               <div class="rp-obj-actions"><span class="rp-obj-approve">Approve and publish</span><span class="rp-obj-discard">Discard</span></div>
             </div>
             <div class="rp-margin"><span class="rp-note rp-note--inline">Only you press this.</span></div>
-            <p class="rp-stage-text">One button puts it live in your theme. Undo takes it off again without touching anything else you’ve changed.</p>
+            <p class="rp-stage-text">One button puts it live, and Undo takes it off. Then watch how your store does, day by day.</p>
           </li>
         </ol>
         <p class="rp-caption">Drawn for this page on Harbour &amp; Pine, an example shop.</p>
 
-        <!-- One change, start to finish (public/home.js plays it). -->
-        <div class="rp-play" id="play" data-step="0">
-          <div class="rp-play-top">
-            <div>
-              <p class="rp-kicker">One change, start to finish</p>
-              <p class="rp-play-hint">Pick any step, or press the buttons, to go through it yourself.</p>
-            </div>
-            <button type="button" class="rp-play-toggle" data-play-toggle aria-label="Pause the walkthrough">
-              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" data-icon-pause><rect x="2" y="1.5" width="2.6" height="9" rx="0.8"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="0.8"/></svg>
-              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" data-icon-play hidden><path d="M3 1.5v9l7.5-4.5z"/></svg>
-              <span data-play-label>Pause</span>
-            </button>
-          </div>
-          <ol class="rp-play-steps">
-            <li><button type="button" class="rp-play-step" data-go="0" aria-current="step"><span class="rp-play-step-n">01</span>Found<span class="rp-play-bar" aria-hidden="true"><span class="rp-play-fill"></span></span></button></li>
-            <li><button type="button" class="rp-play-step" data-go="1"><span class="rp-play-step-n">02</span>Preview<span class="rp-play-bar" aria-hidden="true"><span class="rp-play-fill"></span></span></button></li>
-            <li><button type="button" class="rp-play-step" data-go="2"><span class="rp-play-step-n">03</span>Live<span class="rp-play-bar" aria-hidden="true"><span class="rp-play-fill"></span></span></button></li>
-          </ol>
-          <div class="rp-play-stage" aria-live="off">
-            <div class="rp-play-card-wrap">
-              <div class="rp-card rp-play-card">
-                <span class="rp-play-flag rp-play-flag--preview" data-flag-preview hidden>Preview · only you see this</span>
-                <span class="rp-play-flag rp-play-flag--live" data-flag-live hidden>Live</span>
-                <img src="images/home/vases.jpg" width="800" height="533" loading="lazy" alt="" class="rp-card-img">
-                <div class="rp-card-title">Glazed Bud Vase</div>
-                <div class="rp-card-price">$28.00</div>
-                <div class="rp-play-reviews" data-afterpay>
-                  <svg aria-hidden="true" viewBox="0 0 240 60" preserveAspectRatio="none" class="rp-play-ring" data-afterpay-ring><path d="M34 9 C 96 1, 206 3, 233 22 C 249 40, 172 57, 100 55 C 40 53, 3 44, 8 27 C 12 13, 52 6, 98 5" vector-effect="non-scaling-stroke" pathLength="1"/></svg>
-                  <span class="ql-afterpay" data-afterpay-line hidden>or 4 payments of <b>$7.00</b> with Afterpay</span>
-                </div>
-                <button type="button" class="rp-card-buy" data-cart>Add to cart</button>
-              </div>
-            </div>
-            <div class="rp-play-side" tabindex="-1">
-              <div data-side="0">
-                <h3 class="rp-stage-h"><span>01</span>Found</h3>
-                <div class="rp-obj">
-                  <div class="rp-obj-row"><span class="rp-chip">Found</span><span class="rp-obj-meta">Product page · phone view</span></div>
-                  <div class="rp-obj-title">No Afterpay or Zip near the price</div>
-                  <div class="rp-obj-body">Australian shoppers look for the instalment amount next to the price before they decide.</div>
-                  <div class="rp-obj-actions"><button type="button" class="rp-obj-approve" data-go="1">See the fix &rarr;</button></div>
-                </div>
-              </div>
-              <div data-side="1" hidden>
-                <h3 class="rp-stage-h"><span>02</span>Preview</h3>
-                <div class="rp-obj rp-obj--green">
-                  <div class="rp-obj-ok">
-                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" class="rp-check"><path d="M2 8.5l4 4 8-9"/></svg>
-                    <span>Preview ready: the Afterpay line under the price, worked out from the price itself. Only you see it.</span>
-                  </div>
-                  <div class="rp-obj-meta rp-obj-meta--strong rp-play-gap">Your decision</div>
-                  <div class="rp-obj-actions"><button type="button" class="rp-obj-approve" data-go="2">Approve and publish</button><button type="button" class="rp-obj-discard" data-go="0">Discard</button></div>
-                </div>
-              </div>
-              <div data-side="2" hidden>
-                <h3 class="rp-stage-h"><span>03</span>Live</h3>
-                <div class="rp-obj">
-                  <div class="rp-obj-row"><span class="rp-chip rp-chip--live">Live</span><span class="rp-obj-meta">Every product page</span></div>
-                  <div class="rp-obj-title rp-obj-title--small">Afterpay line under the price</div>
-                  <div class="rp-obj-body">On your store for every visitor now.</div>
-                  <div class="rp-obj-foot"><span>Undo takes it off again.</span><button type="button" class="rp-obj-undo" data-go="1">Undo</button></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="rp-caption">The same three stages on one change, drawn for this page on Harbour &amp; Pine, an example shop.</p>
       </section>
 
       <!-- Ground rules -->
@@ -299,67 +169,25 @@
         </div>
       </section>
 
-      <!-- Why not a testing tool -->
-      <section class="rp-section">
-        <div class="rp-split">
-          <div>
-            <h2 class="rp-h2 rp-h2--small">Why not just run an A/B test?</h2>
-            <p class="rp-sub">Testing tools need lots of visitors before they tell you anything. A small store can wait months for an answer.</p>
-            <p class="rp-sub">QuickLift starts from changes that published research already backs, so you can make good changes today.</p>
-          </div>
-          <div class="rp-pair">
-            <div class="rp-obj">
-              <div class="rp-obj-meta rp-obj-meta--strong">A testing tool, on a small store</div>
-              <div class="rp-obj-row"><span class="rp-chip">Test running</span></div>
-              <div class="rp-obj-title rp-obj-title--small"><span class="rp-ul">Not enough visitors to tell yet.<svg aria-hidden="true" viewBox="0 0 300 20" preserveAspectRatio="none" class="rp-ul-line"><path d="M4 13 C 60 6, 150 4, 220 7 C 250 8, 280 10, 296 8" vector-effect="non-scaling-stroke" pathLength="1"/></svg></span></div>
-              <div class="rp-dashes"></div>
-              <div class="rp-note rp-note--inline">Still waiting, weeks on.</div>
-            </div>
-            <div class="rp-obj">
-              <div class="rp-obj-meta rp-obj-meta--strong">QuickLift, on the same store</div>
-              <div class="rp-obj-row"><span class="rp-chip rp-chip--live">Preview</span></div>
-              <div class="rp-obj-title rp-obj-title--small">A change that research already backs.</div>
-              <div class="rp-obj-foot rp-obj-foot--text">Live today, as soon as you approve it.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Shopify only -->
-      <section id="shopify" class="rp-section">
-        <div class="rp-split">
-          <div>
-            <p class="rp-kicker">Where it works</p>
-            <h2 class="rp-h2 rp-h2--small">Shopify only, on purpose.</h2>
-            <p class="rp-sub">Every Shopify store publishes its pages and product details, so QuickLift can check yours with nothing to install and no login.</p>
-            <p class="rp-sub">When you approve a change, it goes into your theme as one small snippet. Undo empties that snippet, so it can never wipe out an edit you made yourself.</p>
-          </div>
-          <div class="rp-price">
-            <p class="rp-kicker">Pricing</p>
-            <h2 class="rp-h2">Free while we test it.</h2>
-            <div class="rp-price-row"><h3>Free check</h3><p>Type your store’s address and see what QuickLift found.</p></div>
-            <div class="rp-price-row rp-price-row--last"><h3>Pilot</h3><p>We’re trying QuickLift with a few Australian stores first. Fixes and the agent are included.</p></div>
-          </div>
-        </div>
-      </section>
-
       <!-- Questions -->
       <section id="faq" class="rp-section">
         <div class="rp-split">
-          <h2 class="rp-h2">Questions in the margin</h2>
+          <h2 class="rp-h2">Questions</h2>
           <dl class="rp-faq">
             <div><dt>Will shoppers see a change before I approve it?</dt><dd>No. You see it first, on a copy of your own page. QuickLift never publishes on its own.</dd></div>
             <div><dt>Do I need a developer?</dt><dd>No. Switch on a ready-made fix, or describe what you want in plain words. The agent writes the change and shows it to you on your page.</dd></div>
             <div><dt>Will it make things up?</dt><dd>No. It never adds fake reviews, countdown timers or discounts. If a change needs a fact only you know, like your returns window, it leaves it for you to fill in.</dd></div>
-            <div><dt>What does the free check need from me?</dt><dd>Just your store’s address. It reads the pages any shopper can see.</dd></div>
-            <div><dt>Can I take a change back?</dt><dd>Yes. Undo takes QuickLift’s changes off your store in one click.</dd></div>
+            <div><dt>Can I take a change back?</dt><dd>Yes. Undo takes QuickLift’s changes off your store in one click, without touching anything else in your theme.</dd></div>
+            <div><dt>Why not just run an A/B test?</dt><dd>A test needs lots of visitors before it tells you anything, so a small store can wait months. QuickLift starts from changes that published research already backs.</dd></div>
+            <div><dt>Does it work on my store?</dt><dd>If it’s on Shopify, yes. Every Shopify store’s pages are public, so there’s nothing to install and no login for the check.</dd></div>
+            <div><dt>What does it cost?</dt><dd>Nothing while we test it with a few Australian stores.</dd></div>
           </dl>
         </div>
       </section>
 
       <!-- Closing -->
       <section class="rp-close">
-        <h2 class="rp-h1 rp-close-title">Hand over your store. Get it back <span class="rp-ul">marked up<svg aria-hidden="true" viewBox="0 0 300 20" preserveAspectRatio="none" class="rp-ul-line"><path d="M4 13 C 60 6, 150 4, 220 7 C 250 8, 280 10, 296 8" vector-effect="non-scaling-stroke" pathLength="1"/></svg></span>.</h2>
+        <h2 class="rp-h1 rp-close-title">See what your store is <span class="rp-ul">missing<svg aria-hidden="true" viewBox="0 0 300 20" preserveAspectRatio="none" class="rp-ul-line"><path d="M4 13 C 60 6, 150 4, 220 7 C 250 8, 280 10, 296 8" vector-effect="non-scaling-stroke" pathLength="1"/></svg></span>.</h2>
         <form method="get" action="dashboard" class="rp-scan">
           <label for="close-scan" class="sr-only">Your store’s address</label>
           <div class="rp-field">

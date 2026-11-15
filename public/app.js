@@ -77,8 +77,11 @@ async function checkStore(domain) {
     for (const c of checks) if (c.fix) state.presets[c.fix] = { on: false, text: state.config.presets[c.fix].defaultText };
     $("#domain").value = store.domain;
     $("#intro").hidden = true;
+    $("#store-pill").textContent = store.domain;
+    $("#store-pill").hidden = false;
     $("#tab-dashboard").href = `dashboard?store=${encodeURIComponent(store.domain)}`;
     $("#tab-results").href = `results?store=${encodeURIComponent(store.domain)}`;
+    $("#to-results").href = `results?store=${encodeURIComponent(store.domain)}`;
     try {
       localStorage.setItem("ql:lastStore", store.domain);
     } catch {
@@ -103,21 +106,22 @@ async function checkStore(domain) {
 
 function renderStore() {
   const s = state.store;
-  // The first pill says where the review stands (renderChanges keeps it
-  // current); the rest say what we know about the store.
-  const tags = [
-    `<span class="pill status" id="status-pill"></span>`,
-    `<span class="pill">${esc(s.domain)}</span>`,
-    s.currency ? `<span class="pill">${esc(s.currency)}</span>` : "",
-    s.australian ? `<span class="pill">Australian store</span>` : `<span class="pill warn">Not obviously Australian</span>`,
-    s.themeName ? `<span class="pill">Theme: ${esc(s.themeName)}</span>` : "",
-    s.passwordPage ? `<span class="pill warn">Password protected</span>` : "",
-  ].join("");
+  // The store's details are on step 1, and the change count is in Your
+  // changes; only a warning that changes what the owner can do shows here.
+  const tags = s.passwordPage ? `<span class="pill warn">Password protected</span>` : "";
   $("#review-title").textContent = s.name;
   $("#review-pills").innerHTML = tags;
 }
 
 const TRUE_ONLY = new Set(["shipping-bar", "trust-bar"]);
+
+// What each fix answers, named as the problem (as on step 1).
+const PROBLEM = {
+  bnpl: "Fixes: no Afterpay or Zip near the price",
+  shipping: "Fixes: delivery cost isn’t clear up front",
+  trust: "Fixes: nothing says you’re Australian, or how returns work",
+  sticky: "Fixes: Add to cart scrolls out of reach on phones",
+};
 
 // One switch per fix: what it does, and which finding it answers. Its
 // wording only shows once it's on, which is when it matters.
@@ -152,7 +156,7 @@ function renderChecks() {
   const line = (c) => `<li><b>${esc(c.title)}</b><span>${esc(c.detail)}</span></li>`;
   const fold = (title, inner, open = false) => `<details class="fold"${open ? " open" : ""}><summary>${title}</summary>${inner}</details>`;
   let html = fixable.length
-    ? `<ul class="fix-list">${fixable.map((c) => fixControl(c.fix, c.title)).join("")}</ul>`
+    ? `<ul class="fix-list">${fixable.map((c) => fixControl(c.fix, PROBLEM[c.id] || c.title)).join("")}</ul>`
     : `<p class="panel-lede">Nothing to fix from our checks. Try the agent, or the extra fixes below.</p>`;
   if (needsOwner.length) html += fold(`Needs you, not a fix (${needsOwner.length})`, `<ul class="fold-list">${needsOwner.map(line).join("")}</ul>`);
   if (extra.length) {
@@ -511,6 +515,7 @@ $("#publish-btn").addEventListener("click", async () => {
     const r = await api("api/publish", { shop: state.store.shop, domain: state.store.domain, presets: activePresets(), custom: state.custom });
     $("#publish-msg").textContent = r.note || `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
     $("#publish-msg").classList.add("live");
+    $("#to-results").hidden = false;
     state.demoLive = demo;
     $("#undo-btn").hidden = false;
     toast(demo ? "Approved and published." : "Published. Reload the real store to see it.");
@@ -526,6 +531,7 @@ $("#undo-btn").addEventListener("click", async () => {
     const r = await api("api/undo", { domain: state.store?.domain });
     $("#publish-msg").textContent = r.note || `Removed from ${r.store}. The theme is back to how it was.`;
     $("#publish-msg").classList.remove("live");
+    $("#to-results").hidden = true;
     if (state.config.demoPublish) {
       state.demoLive = false;
       $("#undo-btn").hidden = true;
@@ -546,7 +552,6 @@ async function refreshPreview({ focus = false } = {}) {
   if (state.ideas.path !== state.path) loadIdeas();
   loadNow();
   $("#loading").hidden = false;
-  $("#path").textContent = state.path;
   $("#go-home").classList.toggle("on", state.path === "/");
   $("#go-product").classList.toggle("on", state.path.startsWith("/products/"));
   try {

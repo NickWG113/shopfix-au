@@ -219,9 +219,8 @@
     const bar = document.createElement("div");
     bar.className = "ql-recorded";
     bar.innerHTML =
-      `<strong>Online demo.</strong> Four Australian stores, recorded 15 November 2026. ` +
-      `Everything runs in your browser on saved copies of their pages, with a mocked agent, so nothing touches the real stores. ` +
-      `<a href="${REPO}#readme" target="_blank" rel="noopener">Run the full app</a>` +
+      `<strong>Online demo:</strong> saved copies of four stores (15 Nov 2026) and a simulated agent. Nothing touches the real stores. ` +
+      `<a href="${REPO}#readme" target="_blank" rel="noopener">About</a>` +
       `<button type="button" class="ql-recorded-x" aria-label="Hide this note">×</button>`;
     bar.querySelector(".ql-recorded-x").addEventListener("click", () => bar.remove());
     const style = document.createElement("style");

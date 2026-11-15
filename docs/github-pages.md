@@ -12,8 +12,8 @@ GitHub Pages can only serve files, so the online copy is the same front end with
 | Store pages and checks | Saved copies of four stores' home and product pages, from 15 Nov 2026 (`recording/`) | Read live, any store |
 | Ready-made fixes | The same `lib/fixes.js` code, run in the browser on the saved pages | Same |
 | Agent: ideas and "Describe a change" | **Mocked** (`pages/mock-agent.js`). It reads the request for what to change (button, title, price, product cards), a colour, bigger, bolder, rounded, on phones, and a line of text "saying …", then writes the CSS and JavaScript itself. It refuses requests for fake reviews, timers or discounts, as the real agent does. | Claude, live |
-| Daily results | Sample figures, labelled on the page, for a store making about A$100k a year (`public/results.js`) | The same sample: reading real figures from Shopify's analytics isn't built yet |
-| Publish and Undo | **Acted out.** Approve and publish says what would go live, the dashboard counts it (in that browser only), and Undo takes it off. Nothing is written anywhere. | Writes to a dev store's theme |
+| Results | Sample figures, labelled on the page, for a store making about A$100k a year (`public/results.js`) | The same sample: reading real figures from Shopify's analytics isn't built yet |
+| Publish and Undo | **Acted out.** Approve and publish says what would go live, step 1 shows it as live (in that browser only), and Undo takes it off. Nothing is written anywhere. | Writes to a dev store's theme |
 
 On frankbody.com, the agent's ideas and the suggested requests play back answers saved once from the real agent. Everything else, on every store and anything typed, uses the mock.
 

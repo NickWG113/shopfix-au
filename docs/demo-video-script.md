@@ -8,7 +8,7 @@ Before recording:
 
 - Run each store through once, so pages load quickly on camera.
 - Use browser zoom at 110–125% so text is readable on a laptop screen. Hide bookmarks. Close other tabs.
-- Press × on the dark Demo bar if you don't want it in shot. Keys 1 to 4 still switch pages.
+- Keys switch pages while you present: 1 home, 2 What to fix, 3 Preview and approve, 4 Results. Or click the steps at the top of each page.
 
 ---
 
@@ -22,14 +22,15 @@ Before recording:
 
 ## Use case 1: check a store (1 min 30 s)
 
-**Show:** the home page. Paste `frankbody.com` and press Check store. The dashboard loads.
+**Show:** the home page. Paste `frankbody.com` and press Check my store free. Step 1, **What to fix**, loads.
 
 **Say and point:**
 
+- Point at the step bar at the top: **1 What to fix → 2 Preview and approve → 3 Results**. **Say:** "Three steps, and the owner always knows which one they're on."
+- The sentence under the store's name: "We found 3 things to fix. 4 are already looking good."
 - "It reads only public pages: the home page, the product feed and one product page. No login or app install is needed to get a first answer."
-- The store card shows AUD, an Australian store and the theme name.
-- "What to fix first" shows **Fix** items, most important first.
-- Open "Looking good" to show what passed.
+- "What to fix first" names each problem, most important first.
+- Open "Already looking good" to show what passed.
 - "When it can't read something, like a hidden product feed, it says *Can't tell*. It never claims a store is missing something it couldn't see."
 
 ---
@@ -72,8 +73,8 @@ The online demo acts this out: nothing is written to the real store, but every s
 
 - Point at **Your changes** at the top right: every change is listed on one line, each with **×** to remove it. **Say:** "Nothing goes live until the owner approves it."
 - Press **Approve and publish**. The message says the changes are now live in one snippet in the store's theme.
-- Press **Owner's dashboard** in the Demo bar (or key 2). **Live on your store** now counts the changes.
-- Go back to **Preview and approve** (key 3), approve again, and press **Undo published changes**. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits."
+- Press **Undo published changes**. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits." Then approve again.
+- **Next: see the results →** appears under the button. That's use case 6.
 
 In the full app with a dev store connected, this writes to the real theme: reload the store in another tab to show it live, then Undo.
 
@@ -81,14 +82,15 @@ In the full app with a dev store connected, this writes to the real theme: reloa
 
 ## Use case 6: daily results (1 min 15 s)
 
-Press **Daily results** in the Demo bar (key 4), or **See daily results** on the dashboard.
+Press **Next: see the results →** after approving, or **3 Results** in the step bar.
 
 - **Say first:** "These are sample figures, labelled on the page, for a store making about A$100,000 a year. Connected to a real store, this page reads each day's visits, orders and revenue from Shopify."
-- The four tiles: conversion rate, orders and revenue for the 14 days since the changes went live, against the 14 days before, and today so far.
-- Hover over the conversion chart: each day as a dot, the 7-day average as a line, and the dashed line where the changes went live. **Say:** "Day to day it jumps around, because a small store gets a few orders a day. The 7-day average is what to watch."
-- Point at **Every day** (the table) and **What went live**. **Say:** "A 5% lift on A$100,000 a year is about A$5,000 more in sales, with no extra ad spend, and the owner can watch it day by day."
+- Read the first sentence aloud: revenue up since the changes went live.
+- The three tiles: revenue for the 14 days since, the share of visits that bought, and today so far.
+- Hover over the revenue chart: lighter bars before, violet after, and the dashed line where the changes went live. **Say:** "Compare weeks, not days: a small store's daily figures jump around."
+- Point at **What went live**, and open **See every day** for the table. **Say:** "A 5% lift on A$100,000 a year is about A$5,000 more in sales, with no extra ad spend, and the owner can watch it day by day."
 
-If time is short, cut use case 1's "Looking good" and use case 2's returns-bar edit before cutting any of this.
+If time is short, cut use case 1's "Already looking good" and use case 2's returns-bar edit before cutting any of this.
 
 Optional, 20 s, if there's time: check `culturekings.com.au`, a big brand where most checks pass. **Say:** "That's what good looks like, and the tool says so rather than inventing problems."
 
@@ -96,7 +98,7 @@ Optional, 20 s, if there's time: check `culturekings.com.au`, a big brand where 
 
 ## Close (30 s)
 
-**Show:** the Daily results page.
+**Show:** the Results page.
 
 **Say:** "QuickLift turns published usability research into changes a small store can see on its own page, approve in one click, and then watch day by day. For a store doing A$100k a year, a 5% lift is about A$5,000 more in sales with no extra ad spend. Our proof-of-value slides show the range, from cautious to hopeful. The live demo, the code and the prompts we used are all linked in the deck."
 

@@ -35,6 +35,20 @@ const PRIORITY = {
 };
 const RANK = { high: 0, medium: 1 };
 
+// The checks are named for what good looks like ("Shipping cost is clear
+// up front"). Under "What to fix" that reads as if it's already done, so
+// a failed check is named for the problem instead.
+const PROBLEM = {
+  password: "Your store is behind a password",
+  aud: "Prices aren’t shown in Australian dollars",
+  bnpl: "No Afterpay or Zip near the price",
+  shipping: "Delivery cost isn’t clear up front",
+  reviews: "No customer reviews on products",
+  trust: "Nothing says you’re Australian, or how returns work",
+  photos: "Too few product photos",
+  sticky: "Add to cart scrolls out of reach on phones",
+};
+
 // Checks with no automatic fix, and what the owner can do instead.
 const NO_FIX = {
   reviews: "ask your recent customers for a review. There's no automatic fix, because reviews have to be real.",
@@ -103,20 +117,19 @@ async function load() {
 
 function render(checks, config, live = 0) {
   wireLinks();
-  document.title = `${store.name} · QuickLift`;
+  document.title = `${store.name} · What to fix · QuickLift`;
   $("#store-name").textContent = store.name;
-  $("#store-domain").textContent = store.domain;
   $("#store-pill").textContent = store.domain;
   $("#store-pill").hidden = false;
-  $("#side-store").innerHTML = `<b>${esc(store.name)}</b>${esc(store.domain)}`;
-  $("#side").hidden = false;
-  $("#store-tags").innerHTML = [
-    store.currency ? `<span class="db-tag">${esc(store.currency)}</span>` : "",
-    store.australian ? `<span class="db-tag">Australian store</span>` : `<span class="db-tag db-tag--warn">Not obviously Australian</span>`,
-    store.themeName ? `<span class="db-tag">Theme: ${esc(store.themeName)}</span>` : "",
-    store.passwordPage ? `<span class="db-tag db-tag--warn">Password protected</span>` : "",
-  ].join("");
-  $("#checked-at").textContent = `Checked at ${new Date().toLocaleTimeString("en-AU", { hour: "numeric", minute: "2-digit" })}`;
+  // What we know about the store, in one quiet line.
+  $("#store-meta").innerHTML = [
+    esc(store.domain),
+    store.currency ? `Prices in ${esc(store.currency)}` : "",
+    store.australian ? "Australian store" : `<span class="db-warn">Not obviously Australian</span>`,
+    store.passwordPage ? `<span class="db-warn">Password protected</span>` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   const fails = checks
     .filter((c) => c.status === "fail" || c.id === "password")
@@ -124,9 +137,11 @@ function render(checks, config, live = 0) {
   const unknown = checks.filter((c) => c.status === "unknown" && c.id !== "password");
   const ok = checks.filter((c) => c.status === "pass");
 
-  $("#n-fix").textContent = fails.length;
-  $("#n-ok").textContent = ok.length;
-  $("#n-live").textContent = String(live);
+  // The whole check in one sentence, instead of three number tiles.
+  const things = (n) => `${n} thing${n === 1 ? "" : "s"}`;
+  $("#summary").textContent = fails.length
+    ? `We found ${things(fails.length)} to fix. ${ok.length} ${ok.length === 1 ? "is" : "are"} already looking good.`
+    : `Nothing to fix from our checks: ${ok.length} ${ok.length === 1 ? "thing is" : "things are"} looking good.`;
 
   $("#findings").innerHTML = fails.length
     ? fails.map(findingRow).join("")
@@ -138,14 +153,10 @@ function render(checks, config, live = 0) {
   $("#ok-count").textContent = ok.length;
   $("#ok").innerHTML = ok.map((c) => quietRow(c, "ok", "OK")).join("");
 
-  // Publishing is set up for one store we hold a key for (server.js); for
-  // any other store the dashboard says so rather than offering a button
-  // that would refuse.
-  $("#live-msg").textContent = live
-    ? `${live} approved change${live === 1 ? " is" : "s are"} live on ${store.domain}. Undo takes them off again, from Preview and approve.`
-    : config.publishStore && config.publishStore === store.shop
-      ? `Nothing is live yet. Approved changes go into ${config.publishStore}'s theme, and undo takes them off again.`
-      : "Nothing is live yet. A change goes live only when you approve it, once this store is connected.";
+  // Only once something is live does it earn a place here, with the way
+  // to step 3.
+  $("#live").hidden = !live;
+  if (live) $("#live-msg").innerHTML = `<b>${live} change${live === 1 ? " is" : "s are"} live</b> on ${esc(store.domain)}.`;
 
   if (!config.ai) {
     $("#ask-form").querySelector("button").disabled = true;
@@ -163,8 +174,8 @@ function render(checks, config, live = 0) {
 
   $("#content").hidden = false;
 
-  // The preview's "More ideas" take the agent half a minute. Ask now, in
-  // the background, so they're ready by the time the owner opens a page.
+  // The preview's ideas take the real agent a while. Ask now, in the
+  // background, so they're ready by the time the owner opens a page.
   if (config.ai) {
     for (const path of [store.firstProductPath, "/"].filter(Boolean)) {
       api("api/ideas", { domain: store.domain, path }).catch(() => {});
@@ -183,7 +194,7 @@ function findingRow(c) {
       : "";
   return `
     <li>
-      <div class="db-f-title"><span class="db-sev db-sev--${sev}">${sev === "high" ? "High" : "Medium"}</span>${esc(c.title)}</div>
+      <div class="db-f-title"><span class="db-sev db-sev--${sev}">${sev === "high" ? "High" : "Medium"}</span>${esc(PROBLEM[c.id] || c.title)}</div>
       <div class="db-f-detail">${esc(c.detail)}</div>
       ${action}
     </li>`;
@@ -205,59 +216,16 @@ $("#ask-form").addEventListener("submit", (e) => {
   if (!ask) return $("#ask").focus();
   // The agent runs on the preview page, where its change appears on the
   // store's real page; the request travels in the address.
-  location.href = previewUrl({ ask, page: $("#ask-page").value });
+  // A product page, where most requests are about; the preview can switch.
+  location.href = previewUrl({ ask, page: "product" });
 });
 
+// A suggestion goes straight to the agent, as it does on the preview.
 $("#chips").addEventListener("click", (e) => {
   const b = e.target.closest("[data-ask]");
   if (!b) return;
-  $("#ask").value = b.dataset.ask;
-  $("#ask").focus();
+  location.href = previewUrl({ ask: b.dataset.ask, page: "product" });
 });
-
-$("#recheck").addEventListener("click", load);
-
-// ---------- side navigation ----------
-
-// Most of the dashboard fits on one screen, so a plain jump to a section
-// that's already visible looked like the link did nothing. Each link now
-// scrolls if it needs to and briefly lights up its section.
-const sideLinks = [...document.querySelectorAll('.db-side-nav a[href^="#"]:not([data-link])')];
-// While a click's smooth scroll is still moving, the page is briefly near
-// the top, which would flip the highlight back to Overview.
-let clickedAt = 0;
-function markActive(id) {
-  for (const a of sideLinks) a.classList.toggle("on", a.getAttribute("href") === `#${id}`);
-}
-for (const a of sideLinks) {
-  a.addEventListener("click", (e) => {
-    e.preventDefault();
-    const id = a.getAttribute("href").slice(1);
-    const target = document.getElementById(id);
-    if (!target) return;
-    clickedAt = Date.now();
-    if (id === "top") window.scrollTo({ top: 0, behavior: "smooth" });
-    else target.scrollIntoView({ behavior: "smooth", block: "start" });
-    markActive(id);
-    if (id !== "top") {
-      target.classList.remove("db-flash");
-      void target.offsetWidth;
-      target.classList.add("db-flash");
-      setTimeout(() => target.classList.remove("db-flash"), 1500);
-    }
-  });
-}
-// The highlight follows clicks rather than scrolling: "What to fix" and
-// "Ask the agent" sit side by side at the same height, so the scroll
-// position can't say which one is being read. Back at the top, it's the
-// overview again.
-window.addEventListener(
-  "scroll",
-  () => {
-    if (window.scrollY < 40 && Date.now() - clickedAt > 1200) markActive("top");
-  },
-  { passive: true },
-);
 
 wireLinks();
 load();

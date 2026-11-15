@@ -149,3 +149,7 @@ Three additions for the video. When the agent makes a change, it is now shown wo
 > [screenshot of the preview's right-hand column] this menu just feels wayyy too cluitered. spend some time thinking about how to make it better
 
 The column had five cards open at once, the same "nothing goes live until you approve" message three times, and a second red box under the agent's log. It is now two cards: **Your changes** (one line per change with ×, then Approve and publish) and **Make a change**, with tabs for **Ask the agent**, **Fixes** and **Ideas**, so only one way of changing the page is open at a time. The agent's log opens where the request came from, and a refusal shows inside it.
+
+> please do that for the entire flow. i tneeds to feel REALLY simple to understand
+
+Every page now follows one idea: the flow is three steps, and each page says which one you're on. The dark Demo bar and the dashboard's side menu are gone (keys 1–4 still switch pages for presenting), and the pages' tabs became a step bar, **1 What to fix → 2 Preview and approve → 3 Results**. The home page went from eight sections to five (the walkthrough that repeated How it works, and the A/B, Shopify and pricing panels, became three questions). Step 1 says what the check found in one sentence and names each problem as a problem. Step 2 lost the repeated badges and the page address. Step 3 answers first, in a sentence, then three numbers and one chart, with every day folded away. After approving, "Next: see the results →" leads to step 3.

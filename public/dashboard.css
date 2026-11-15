@@ -481,3 +481,81 @@ body.ql-app {
   flex-wrap: wrap;
   gap: 10px;
 }
+
+/* ---- step 1, kept to one screen (15 Nov) ---- */
+
+/* No side menu: the page fits on one screen, and the step bar says where
+   you are. */
+.db--plain {
+  display: block;
+}
+
+.db--plain .db-main {
+  max-width: 1080px;
+}
+
+.db-head {
+  display: block;
+  margin-bottom: 22px;
+}
+
+.db-summary {
+  margin: 8px 0 0;
+  font-size: 18px;
+  color: var(--ql-ink-2);
+}
+
+p.db-meta {
+  display: block;
+  margin: 6px 0 0;
+  font-size: 13.5px;
+}
+
+.db-warn {
+  color: var(--ql-fix);
+  font-weight: 600;
+}
+
+#ask-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+#ask-form .ql-btn {
+  align-self: flex-start;
+}
+
+.db-live {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  border-color: #bfe3cf;
+  background: var(--ql-ok-tint);
+}
+
+.db-live p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.db-live[hidden] {
+  display: none;
+}
+
+.db-how {
+  padding: 0 4px;
+}
+
+.db-how summary {
+  font-size: 14px;
+  color: var(--ql-muted);
+  cursor: pointer;
+}
+
+.db-how .db-activity {
+  margin-top: 12px;
+}

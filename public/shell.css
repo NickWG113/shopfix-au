@@ -72,20 +72,38 @@
   color: var(--ql-brand);
 }
 
+/* The three steps of the flow, in order, with the one you're on lit up.
+   The same on every page after the home page, so it's always clear where
+   you are and what comes next. */
 .ql-tabs {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 26px;
 }
 
 .ql-tabs a {
-  padding: 8px 14px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
   border-radius: 999px;
-  color: var(--ql-ink-2);
+  color: var(--ql-muted);
   font-size: 15px;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.ql-tabs a + a::before {
+  content: "→";
+  position: absolute;
+  left: -22px;
+  color: #b9b8c6;
+  pointer-events: none;
 }
 
 .ql-tabs a:hover {
+  color: var(--ql-ink);
   background: var(--ql-bg);
 }
 
@@ -93,6 +111,23 @@
   background: var(--ql-brand-tint);
   color: var(--ql-brand-dark);
   font-weight: 600;
+}
+
+.ql-step-n {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ql-tabs a.on .ql-step-n {
+  border-color: var(--ql-brand);
+  background: var(--ql-brand);
+  color: #ffffff;
 }
 
 .ql-store-pill {
@@ -146,6 +181,13 @@
     padding: 10px 16px;
   }
   .ql-store-pill {
+    display: none;
+  }
+  .ql-tabs {
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .ql-tabs a + a::before {
     display: none;
   }
 }

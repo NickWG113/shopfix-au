@@ -10,18 +10,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
+  <header class="ql-bar">
     <a class="ql-logo" href="./"><span class="ql-logo-mark" aria-hidden="true">↑</span><span>QuickLift<span class="ql-logo-tld">.ai</span></span></a>
-    <nav class="ql-tabs" aria-label="Pages">
-      <a href="dashboard" id="tab-dashboard">Dashboard</a>
-      <a href="#" class="on">Preview and approve</a>
-      <a href="results" id="tab-results">Daily results</a>
+    <nav class="ql-tabs" aria-label="Steps">
+      <a href="dashboard" id="tab-dashboard"><span class="ql-step-n">1</span>What to fix</a>
+      <a href="#" class="on" aria-current="step"><span class="ql-step-n">2</span>Preview and approve</a>
+      <a href="results" id="tab-results"><span class="ql-step-n">3</span>Results</a>
     </nav>
-    <form id="check-form" class="check-form">
-      <input id="domain" name="domain" type="text" inputmode="url" autocomplete="off"
-             placeholder="Your Shopify store, e.g. yourstore.com.au" required>
-      <button type="submit" id="check-btn">Check store</button>
-    </form>
+    <span class="ql-store-pill" id="store-pill" hidden></span>
   </header>
 
   <!-- Laid out like a review: what you're looking at, the page as it is
@@ -29,13 +25,13 @@
        for making more changes. -->
   <main id="app" class="review">
     <section id="intro" class="card intro">
-      <h1>Try a change on your store’s real page, then approve it.</h1>
-      <ol>
-        <li>Paste a store address above.</li>
-        <li>See what an Australian shopper would miss.</li>
-        <li>Switch fixes on, or describe your own change, and see your page before and after.</li>
-      </ol>
-      <p class="muted">Reads only public pages. Nothing changes on the store unless you approve it.</p>
+      <h1>Which store?</h1>
+      <p class="muted">Type a Shopify store’s address to see its page, try changes on it, and approve them.</p>
+      <form id="check-form" class="check-form">
+        <input id="domain" name="domain" type="text" inputmode="url" autocomplete="off"
+               placeholder="yourstore.com.au" required>
+        <button type="submit" id="check-btn">Check store</button>
+      </form>
     </section>
 
     <section class="review-head" id="review-head" hidden>
@@ -82,9 +78,8 @@
         </div>
 
         <div class="stage-foot">
-          <code id="path">/</code>
           <label class="toggle"><input type="checkbox" id="highlight" checked> Outline what changed</label>
-          <label class="toggle" title="Turn off if a store's page jumps away or looks broken in the preview"><input type="checkbox" id="scripts" checked> Theme scripts</label>
+          <label class="toggle" title="Turn off if a store's page jumps away or looks broken in the preview"><input type="checkbox" id="scripts" checked> Store’s own scripts (turn off if the page looks broken)</label>
         </div>
       </section>
 
@@ -104,6 +99,7 @@
               <button type="button" id="discard-btn" class="text-btn">Discard all</button>
             </div>
             <p class="decision-note" id="publish-msg">Nothing goes live until you approve, and you can undo it.</p>
+            <a id="to-results" class="next-step" href="results" hidden>Next: see the results →</a>
             <button type="button" id="undo-btn" class="text-btn small" hidden>Undo published changes</button>
           </div>
           <details class="code">
