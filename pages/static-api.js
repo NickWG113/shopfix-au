@@ -258,11 +258,11 @@
   // Short names for the requests the demo is ready for, in the same order
   // as EXTRA_REQUESTS; the full request is what gets sent.
   const CHIP_NAMES = [
+    "Christmas cut-off in the top bar",
+    "Red top bar",
     "Button says “Add to bag”",
-    "New announcement bar text",
-    "Shipping line under the price",
-    "Returns line under the button",
-    "Bigger, brighter Add to cart",
+    "Gift wrapping note",
+    "Phone number under the button",
     "Fake 5-star reviews (it’ll refuse)",
   ];
 

@@ -199,3 +199,13 @@ The undone change is no longer struck through; it keeps its grey text, its Loser
 > also., the left side here And these suggested improvements should literally only be things that like are ideas and that they haven't done yet. So the fact that you say fix live should not be there. It's just like, these are ideas that you can try. And then we should have preview the fix on every single one of those. Does that make sense?
 
 The simulated agent learned to change wording ("Change the Add to cart button to say Add to bag", "Change the announcement bar at the top to say …"), and the suggested requests are now everyday changes, mostly wording. Suggested improvements list only ideas not tried yet (an approved one moves to the change history), each with Preview the fix: a ready-made fix, or an honest change by the agent, such as a line inviting real customers to leave a review.
+
+> [screenshot of the revenue chart] need to make these wins more prominent
+
+The winners now lift sales by about 15% and 10%, and each change's effect is written over the first bar it touched: green "+15%" and "+10%", red "−25%" for the loser. The sample's headline is now about +25%.
+
+> [screenshot of the agent's suggested requests] this also isnt things that arent like test worth. im talking the minor things people would change on their shop
+
+> does this make sense?
+
+The suggested requests are now routine shop edits rather than experiments: a Christmas cut-off in the top bar, a red top bar, "Add to bag" on the button, a gift-wrapping note, a phone number under the button (plus the fake-reviews request it refuses). The simulated agent learned to recolour the announcement bar for this.

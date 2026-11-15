@@ -54,6 +54,9 @@ const TARGETS = {
   },
 };
 
+// The whole announcement bar, for recolouring it (its text is above).
+const ANNOUNCEMENT_BAR = ".announcement-bar,.AnnouncementBar,#shopify-section-announcement-bar,.topbar";
+
 const COLOURS = {
   "bright green": "#16a34a",
   green: "#15803d",
@@ -134,6 +137,19 @@ export function mockChange(request, pagePath = "/") {
   const css = [];
   const script = [];
   const did = [];
+
+  // Recolouring the announcement bar: the whole bar, with white text.
+  if (target === "announcement" && colourName && !words) {
+    const hex = COLOURS[colourName];
+    const bar = JSON.stringify(ANNOUNCEMENT_BAR);
+    return {
+      summary: `The announcement bar is now ${colourName}.`,
+      css: `${ANNOUNCEMENT_BAR}{background:${hex}!important;border-color:${hex}!important}` +
+        ANNOUNCEMENT_BAR.split(",").map((s) => `${s} *`).join(",") + `{color:${colourName === "yellow" ? "#111" : "#fff"}!important}`,
+      js: `[document.querySelector(${bar})].filter(Boolean).forEach(function(el){el.setAttribute('data-shopfix-ai','')});`,
+      warning: "",
+    };
+  }
 
   // Restyling the target.
   if (target && (colourName || bigger || bolder || rounded)) {

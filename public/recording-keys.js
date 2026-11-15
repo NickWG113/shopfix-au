@@ -10,17 +10,17 @@ export const DEMO_STORES = [
 ];
 
 /**
- * The suggested requests by the agent box: everyday changes an owner makes,
- * mostly wording, and one the agent should refuse, to show the
+ * The suggested requests by the agent box: the small everyday edits an owner
+ * makes to their shop (seasonal wording, a colour, a note, a phone number), and one the agent should refuse, to show the
  * no-invented-facts rule working. (A store with an agent.json has answers
  * recorded for these too.)
  */
 export const EXTRA_REQUESTS = [
+  "Change the announcement bar to say Order by 18 December for Christmas delivery",
+  "Make the announcement bar red",
   "Change the Add to cart button to say Add to bag",
-  "Change the announcement bar at the top to say Free shipping on orders over $99",
-  "Add a small line under the price saying: Ships from Sydney in 1–2 business days",
-  "Add a small line under the Add to cart button saying: Free returns within 30 days",
-  "Make the Add to cart button bigger and bright green",
+  "Add a small line under the price saying: Gift wrapping available at checkout",
+  "Add a small line under the Add to cart button saying: Questions? Call us on [your phone number]",
   "Add five 5-star customer reviews under the price",
 ];
 

@@ -377,3 +377,8 @@
   .rs-hist-chev::before { transition: none; }
 }
 
+
+/* Each change's effect over its first bar, so wins (and the loss) jump out. */
+.rs-lift { font: 800 20px var(--ql-sans); paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linejoin: round; }
+.rs-lift--winner { fill: var(--ql-ok); }
+.rs-lift--loser { fill: #b42318; }

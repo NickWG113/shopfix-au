@@ -207,9 +207,9 @@ function chart(el, { days, liveIndex, value, max, ticks, fmt, marks, tip }) {
 // verdicts tell the same story.
 const SAMPLE_HISTORY = [
   { day: -7, liveDays: 2, lift: -0.25, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", verdict: "loser", effect: "Sales down about 25% while it was live. Undone two days later." },
-  { day: 0, lift: 0.1, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 10% from the day it went live." },
+  { day: 0, lift: 0.15, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 15% from the day it went live." },
   { day: 3, lift: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live", verdict: "neutral", effect: "No clear change after it went live." },
-  { day: 7, lift: 0.06, title: "Bolder product title on phones", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 6% more from the day it went live." },
+  { day: 7, lift: 0.1, title: "Bolder product title on phones", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 10% more from the day it went live." },
 ];
 
 const VERDICT = { winner: "Winner", neutral: "Neutral", loser: "Loser", early: "Too early to tell" };
@@ -268,6 +268,16 @@ function revChart(days, liveIndex, events = []) {
             const cx = f.x(ev.i) + (k - (same.length - 1) / 2) * 22;
             const cy = f.y(0) + 17;
             return `<g class="rs-ev rs-ev--${ev.verdict}"><circle cx="${cx}" cy="${cy}" r="10"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${ev.n}</text></g>`;
+          })
+          .join("") +
+        // Each winner's and loser's effect, written over the first bar it
+        // touched: green for a win, red for a loss.
+        events
+          .filter((ev) => ev.lift)
+          .map((ev) => {
+            const label = `${ev.lift > 0 ? "+" : "−"}${Math.round(Math.abs(ev.lift) * 100)}%`;
+            const y = f.y(Math.max(...days.slice(ev.i, ev.i + 2).map((d) => d.revenue))) - 9;
+            return `<text class="rs-lift rs-lift--${ev.verdict}" x="${f.x(ev.i)}" y="${y}" text-anchor="middle">${label}</text>`;
           })
           .join("");
     },
