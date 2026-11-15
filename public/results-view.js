@@ -17,8 +17,7 @@ const DAYS = 28; // full days shown, ending yesterday
 const LIVE_AFTER = 14; // the changes went live at the start of day 14
 const SAMPLE = {
   visitsPerDay: 171, // A$100k a year at A$80 an order and 2.0%
-  convBefore: 0.02,
-  convAfter: 0.021, // the 5% relative lift used in the proof of value
+  convBefore: 0.02, // the changes in SAMPLE_HISTORY add about 5% on top, as in the proof of value
   order: 80,
 };
 // Weekends bring more visits (Sunday first, as getDay counts).
@@ -48,19 +47,43 @@ function wobble(rand, n, size) {
   return all;
 }
 
+// How much the changes in the history lift (or cut) the share of visits that
+// buy on day i: each one from the day it went live, until it was undone.
+// The chart then shows the history: the dip while the loser was live, the
+// step up with each winner, nothing for the neutral one.
+function liftOn(i) {
+  let m = 1;
+  for (const h of SAMPLE_HISTORY) {
+    const from = LIVE_AFTER + h.day;
+    const to = h.liveDays ? from + h.liveDays : Infinity;
+    if (i >= from && i < to) m *= 1 + h.lift;
+  }
+  return m;
+}
+
 function buildSample(store) {
   const rand = seeded(store);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const days = [];
-  // Every kind of daily noise cancels out within each two weeks, so the two
-  // periods differ by the 5% lift the sample is built on, not by luck.
-  const both = (size) => [...wobble(rand, LIVE_AFTER, size), ...wobble(rand, DAYS - LIVE_AFTER, size)];
-  const convWobble = both(0.35);
-  const visitWobble = both(0.12);
-  const orderWobble = both(0.15);
+  // Small daily noise that cancels out within each two weeks, so what the
+  // chart shows is the changes, and the weekly rhythm of a real store
+  // (busier weekends), not luck.
+  // It cancels out within each stretch between changes, so the average day
+  // in each stretch is what that change did, and nothing else.
+  const cuts = new Set([0, LIVE_AFTER, DAYS]);
+  for (const h of SAMPLE_HISTORY) {
+    cuts.add(LIVE_AFTER + h.day);
+    if (h.liveDays) cuts.add(LIVE_AFTER + h.day + h.liveDays);
+  }
+  const edges = [...cuts].filter((i) => i >= 0 && i <= DAYS).sort((a, b) => a - b);
+  const both = (size) => edges.slice(1).flatMap((to, k) => wobble(rand, to - edges[k], size));
+  const convWobble = both(0.08);
+  const visitWobble = both(0.05);
+  const orderWobble = both(0.05);
   // Orders are whole numbers: carrying the fractions from day to day keeps
-  // each period's total true to its rate.
+  // each period's total true to its rate. Revenue follows the expected
+  // orders, so a day with one order more or less doesn't jump.
   let carry = 0;
   for (let i = 0; i < DAYS; i++) {
     const date = new Date(today);
@@ -68,18 +91,18 @@ function buildSample(store) {
     const after = i >= LIVE_AFTER;
     if (i === LIVE_AFTER) carry = 0;
     const visits = Math.round(SAMPLE.visitsPerDay * WEEKDAY[date.getDay()] * (1 + visitWobble[i]));
-    const rate = (after ? SAMPLE.convAfter : SAMPLE.convBefore) * (1 + convWobble[i]);
-    const exact = visits * rate + carry;
+    const expected = visits * SAMPLE.convBefore * liftOn(i) * (1 + convWobble[i]);
+    const exact = expected + carry;
     const orders = Math.max(0, Math.round(exact));
     carry = exact - orders;
-    const revenue = Math.round(orders * SAMPLE.order * (1 + orderWobble[i]));
+    const revenue = Math.round(expected * SAMPLE.order * (1 + orderWobble[i]));
     days.push({ date, visits, orders, revenue, after });
   }
   // Today, up to now.
   const now = new Date();
   const part = Math.max(0.05, (now.getHours() * 60 + now.getMinutes()) / 1440);
   const visits = Math.round(SAMPLE.visitsPerDay * WEEKDAY[today.getDay()] * part);
-  const orders = Math.round(visits * SAMPLE.convAfter);
+  const orders = Math.round(visits * SAMPLE.convBefore * liftOn(DAYS));
   const todayRow = { date: today, visits, orders, revenue: Math.round(orders * SAMPLE.order), after: true };
   return { days, today: todayRow, liveDate: days[LIVE_AFTER].date };
 }
@@ -178,11 +201,14 @@ function chart(el, { days, liveIndex, value, max, ticks, fmt, marks, tip }) {
 // before: a winner (revenue up), neutral (no clear change) or a loser
 // (revenue down; that's the one that was undone). A change made today is
 // "too early to tell": one day of a small store's sales proves nothing.
+// lift is what each change does to the share of visits that buy, and the
+// sample's figures are built from it (liftOn), so the chart and the
+// verdicts tell the same story.
 const SAMPLE_HISTORY = [
-  { day: -6, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", verdict: "loser", effect: "Revenue down 4% while it was live. Undone two days later." },
-  { day: 0, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live", verdict: "winner", effect: "Revenue up 6% the week after." },
-  { day: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live", verdict: "neutral", effect: "No clear change the week after." },
-  { day: 5, title: "Bolder product title on phones", source: "Asked the agent", status: "live", verdict: "winner", effect: "Revenue up 3% the week after." },
+  { day: -7, liveDays: 2, lift: -0.1, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", verdict: "loser", effect: "Sales down about 10% while it was live. Undone two days later." },
+  { day: 0, lift: 0.04, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 4% from the day it went live." },
+  { day: 3, lift: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live", verdict: "neutral", effect: "No clear change after it went live." },
+  { day: 7, lift: 0.02, title: "Bolder product title on phones", source: "Asked the agent", status: "live", verdict: "winner", effect: "Sales up about 2% more from the day it went live." },
 ];
 
 const VERDICT = { winner: "Winner", neutral: "Neutral", loser: "Loser", early: "Too early to tell" };
@@ -208,6 +234,31 @@ function historyFor(days, live) {
 
 function revChart(days, liveIndex, events = []) {
   const el = $("#chart-rev");
+  // Where the level can change: each change going live, and the loser
+  // being undone.
+  const cuts = new Set([0, days.length]);
+  for (const ev of events) {
+    cuts.add(ev.i);
+    if (ev.liveDays) cuts.add(ev.i + ev.liveDays);
+  }
+  const edges = [...cuts].filter((i) => i >= 0 && i <= days.length).sort((a, b) => a - b);
+  const meanWeekday = WEEKDAY.reduce((s, v) => s + v, 0) / WEEKDAY.length;
+  const levels = [];
+  for (let s = 0; s < edges.length - 1; s++) {
+    const span = days.slice(edges[s], edges[s + 1]);
+    const avg = (span.reduce((t, d) => t + d.revenue / WEEKDAY[d.date.getDay()], 0) / span.length) * meanWeekday;
+    levels.push({ from: edges[s], to: edges[s + 1], avg });
+  }
+  const levelAt = (i) => levels.find((l) => i >= l.from && i < l.to)?.avg;
+  const stepLine = (f, band) => {
+    let d = "";
+    levels.forEach((l, k) => {
+      const x0 = f.x(l.from) - band / 2;
+      const x1 = f.x(l.to - 1) + band / 2;
+      d += `${k ? "L" : "M"}${x0},${f.y(l.avg)}H${x1}`;
+    });
+    return `<path class="rs-step" d="${d}"/>`;
+  };
   el.dataset.label = "Daily revenue in Australian dollars, before and after the changes went live";
   chart(el, {
     days,
@@ -232,6 +283,10 @@ function revChart(days, liveIndex, events = []) {
           return path ? `<path class="rs-bar ${d.after ? "rs-bar--after" : "rs-bar--before"}" d="${path}"/>` : "";
         })
         .join("") +
+        // The average day between changes, with busy weekends evened out,
+        // as a step line over the bars: it drops while a loser was live and
+        // steps up with each winner, which the daily bars alone hide.
+        stepLine(f, band) +
         // Each change in the history, numbered, on the day it happened.
         // Two on the same day sit side by side.
         events
@@ -246,7 +301,7 @@ function revChart(days, liveIndex, events = []) {
     },
     tip: (d, i) => {
       const here = events.filter((ev) => ev.i === i);
-      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}: ${VERDICT[ev.verdict].toLowerCase()}`).join("");
+      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders<br>Average day at the time: ${money(levelAt(i))}` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}: ${VERDICT[ev.verdict].toLowerCase()}`).join("");
     },
   });
 }
@@ -291,15 +346,22 @@ export function renderResults(store, live) {
     .join("");
 
   // Newest first: what the owner approved today, then the sample's past.
+  // One line each (number, change, verdict); click it for when, where it
+  // came from and what it did.
   const row = (h) => `
     <li class="rs-hist-item rs-hist-item--${h.status} rs-hist-item--${h.verdict}">
-      <span class="rs-hist-n">${h.n ?? "✓"}</span>
-      <div>
-        <div class="rs-hist-title">${esc(h.title)}</div>
-        <div class="rs-hist-meta">${h.sample ? esc(shortDate(h.date)) : "Today"} · ${esc(h.source)} · ${h.status === "live" ? "Live" : "Undone"}</div>
-      </div>
-      <div class="rs-hist-effect">${esc(h.effect)}</div>
-      <span class="rs-verdict rs-verdict--${h.verdict}">${VERDICT[h.verdict]}</span>
+      <details>
+        <summary>
+          <span class="rs-hist-n">${h.n ?? "✓"}</span>
+          <span class="rs-hist-title">${esc(h.title)}</span>
+          <span class="rs-verdict rs-verdict--${h.verdict}">${VERDICT[h.verdict]}</span>
+          <span class="rs-hist-chev" aria-hidden="true"></span>
+        </summary>
+        <div class="rs-hist-more">
+          <div class="rs-hist-meta">${h.sample ? esc(shortDate(h.date)) : "Today"} · ${esc(h.source)} · ${h.status === "live" ? "Live" : "Undone"}</div>
+          <div class="rs-hist-effect">${esc(h.effect)}</div>
+        </div>
+      </details>
     </li>`;
   $("#history").innerHTML = [...history.yours, ...history.past.slice().reverse()].map(row).join("");
 }

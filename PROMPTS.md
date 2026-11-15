@@ -179,3 +179,9 @@ The dashboard is now the one page: **How your store is doing** (the results, sam
 > [screenshot of the change history] lets also say if a test was a winner, neutra or a loser.
 
 Each change now has a verdict from the week after it went live against the week before: **Winner**, **Neutral** or **Loser** (the undone one), with the effect in words, and **Too early to tell** for a change approved today. The chart's markers take the same colours, and the history moved under the chart as a wide list, one change per line.
+
+> love that maybe just keep it side by side and let it expand or something.
+
+> also make the graph more acccurately reflect
+
+The history is back beside the chart, one line per change (number, change, verdict), and clicking a change opens its details. The sample figures are now built from the history: each change lifts or cuts sales from the day it went live (the loser only while it was live), with the random noise cancelling out between changes. A black line over the bars shows the average day between changes, weekends evened out, so the dip and the steps line up with the numbered markers. The total still comes to about the 5% the proof of value assumes.

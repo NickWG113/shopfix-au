@@ -629,8 +629,20 @@ p.db-meta {
   white-space: nowrap;
 }
 
-/* The chart full width, the change history under it as a wide list. */
+/* The chart and the change history side by side; the history grows as
+   its changes are opened. */
 .db-section .rs-grid {
-  grid-template-columns: 1fr;
-  gap: 0;
+  grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.db-section .rs-grid .rs-card {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1000px) {
+  .db-section .rs-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -329,22 +329,55 @@
 .rs-ev--loser circle { stroke: #b42318; }
 .rs-ev--loser text { fill: #b42318; }
 
-/* One change per line on a wide screen: number, what and when, effect,
-   verdict. Stacks on a phone. */
+/* Side by side with the chart: one line per change (number, change,
+   verdict), and a click opens when, where from and what it did. */
 .rs-hist-item {
-  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 1fr) auto;
+  display: block;
+  padding: 0;
+}
+
+.rs-hist-item summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 10px;
   align-items: center;
+  padding: 9px 0;
+  list-style: none;
+  cursor: pointer;
 }
 
-.rs-hist-effect {
-  margin-top: 0;
+.rs-hist-item summary::-webkit-details-marker {
+  display: none;
 }
 
-@media (max-width: 760px) {
-  .rs-hist-item {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
-  .rs-hist-effect {
-    grid-column: 2 / 4;
-  }
+.rs-hist-item summary:hover .rs-hist-title {
+  color: var(--ql-brand-dark);
 }
+
+.rs-hist-item:first-child summary {
+  padding-top: 2px;
+}
+
+.rs-hist-chev::before {
+  content: "›";
+  display: inline-block;
+  color: var(--ql-muted);
+  font-size: 16px;
+  transition: transform 0.15s;
+}
+
+.rs-hist-item details[open] .rs-hist-chev::before {
+  transform: rotate(90deg);
+}
+
+.rs-hist-more {
+  padding: 0 0 10px 30px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rs-hist-chev::before { transition: none; }
+}
+
+/* The average day between changes (weekends evened out), over the bars. */
+.rs-step { fill: none; stroke: var(--ql-ink); stroke-width: 2.5; stroke-linejoin: round; }
+.rs-key--step { width: 18px; height: 0; border-top: 2.5px solid var(--ql-ink); }
