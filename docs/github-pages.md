@@ -11,7 +11,7 @@ GitHub Pages can only serve files, so the online copy is the same front end with
 |---|---|---|
 | Store pages and checks | Saved copies of three stores' home and product pages (Toyworld, Mr Simple, Culture Kings), from 15 Nov 2026 (`recording/`) | Read live, any store |
 | Ready-made fixes | The same `lib/fixes.js` code, run in the browser on the saved pages | Same |
-| Agent: ideas and "Describe a change" | **Mocked** (`pages/mock-agent.js`). It reads the request for what to change (button, announcement bar, title, price, product cards), a colour, bigger, bolder, rounded, on phones, new wording "to say …", and a line of text "saying …", then writes the CSS and JavaScript itself. It refuses requests for fake reviews, timers or discounts, as the real agent does. | Claude, live |
+| Agent: ideas and "Describe a change" | **Mocked** (`pages/mock-agent.js`). It builds whole sections: a reviews section with star ratings (example reviews, labelled), a photo gallery from the product's own photos, a "bought in the last 30 days" line, trust badges under the button, and Bestseller badges on the home page. It also reads a request for what to change (button, announcement bar, title, price, product cards), a colour, bigger, bolder, rounded, on phones, new wording "to say …", and a line of text "saying …", then writes the CSS and JavaScript itself. It refuses requests for fake reviews, timers or discounts, as the real agent does. | Claude, live |
 | Results (top of the dashboard) | Sample figures, labelled on the page, for a store making about A$100k a year (`public/results-view.js`) | The same sample: reading real figures from Shopify's analytics isn't built yet |
 | Publish and Undo | **Acted out.** Approve and publish says what would go live, the dashboard shows it as live (in that browser only), and Undo takes it off. Nothing is written anywhere. | Writes to a dev store's theme |
 
@@ -19,6 +19,7 @@ Every idea and suggested request is answered by the mock. (A store can also have
 
 ## Things to try
 
+- On a product page, try *"Add a reviews section with star ratings"*, *"Show all the product photos in a big photo gallery"* or *"Add trust badges under the Add to cart button"*.
 - Type your own request, e.g. *"Make the Add to cart button rounded and purple, and add a line under it saying Free returns within 30 days"*.
 - Ask for something it should refuse: *"Add five 5-star reviews under the price"*.
 - Switch on one of the agent's ideas in the **Ideas** tab.

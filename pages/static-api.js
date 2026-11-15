@@ -258,11 +258,11 @@
   // Short names for the requests the demo is ready for, in the same order
   // as EXTRA_REQUESTS; the full request is what gets sent.
   const CHIP_NAMES = [
+    "Reviews section",
+    "Photo gallery",
+    "“38 people bought this”",
+    "Trust badges",
     "Christmas cut-off in the top bar",
-    "Red top bar",
-    "Button says “Add to bag”",
-    "Gift wrapping note",
-    "Phone number under the button",
     "Fake 5-star reviews (it’ll refuse)",
   ];
 
@@ -279,7 +279,7 @@
         b.dataset.ask = r;
         b.title = r;
         b.textContent = CHIP_NAMES[i] || r;
-        if (/review/i.test(r)) b.className = "chip-refuse";
+        if (/5-star/i.test(r)) b.className = "chip-refuse";
         return b;
       }),
     );

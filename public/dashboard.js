@@ -33,8 +33,8 @@ const PRIORITY = {
   shipping: "high",
   trust: "medium",
   sticky: "medium",
-  photos: "medium",
-  reviews: "medium",
+  photos: "high",
+  reviews: "high",
 };
 const RANK = { high: 0, medium: 1 };
 
@@ -46,18 +46,59 @@ const PROBLEM = {
   aud: "Prices aren’t shown in Australian dollars",
   bnpl: "No Afterpay or Zip near the price",
   shipping: "Delivery cost isn’t clear up front",
-  reviews: "No customer reviews on products",
+  reviews: "No reviews or star ratings on products",
   trust: "Nothing says you’re Australian, or how returns work",
-  photos: "Too few product photos",
+  photos: "Product photos are small and few",
   sticky: "Add to cart scrolls out of reach on phones",
 };
 
-// Ideas with no ready-made fix still get a preview: the agent makes an
-// honest change for them (never fake reviews), shown on a product page.
+// Ideas with no ready-made fix still get a preview: the agent builds the
+// change on a product page (never fake reviews: it shows the store's real
+// ones). done is what the change is called once it's approved, so it leaves
+// this list for the change history.
 const AGENT_FIX = {
-  reviews: "Add a small line under the Add to cart button saying: Bought this? Tell other shoppers what you think and leave a review",
-  photos: "Add a small line under the price saying: Size and what is in the box: [your details]. Want more photos? Just ask us",
+  reviews: {
+    ask: "Add a reviews section with star ratings, showing real reviews from our reviews app",
+    done: "Added a reviews section, with star ratings under the title.",
+    detail: "Shoppers trust other shoppers. Stars under the title and a row of reviews by the button, from a reviews app (Judge.me has a free plan). Only real reviews, never made-up ones.",
+  },
+  photos: {
+    ask: "Show all the product photos in a big photo gallery under the product",
+    done: "Added a photo gallery under the product.",
+  },
 };
+
+// The agent's own ideas, beyond the check: the big changes that help a
+// small store sell, each previewed on the store's page.
+const AGENT_IDEAS = [
+  {
+    id: "proof",
+    sev: "high",
+    title: "Nothing shows that people buy here",
+    detail: "A first-time shopper looks for signs that others buy from you. A line under the price saying how many people bought it lately, from your real orders, does that.",
+    ask: "Show how many people bought this in the last 30 days, from our real orders",
+    page: "product",
+    done: "Added a line under the price saying how many people bought it lately.",
+  },
+  {
+    id: "badges",
+    sev: "medium",
+    title: "Nothing by the button says checkout is safe",
+    detail: "Secure checkout, pay later and local shipping, as badges right under Add to cart, where the shopper decides.",
+    ask: "Add trust badges under the Add to cart button",
+    page: "product",
+    done: "Added trust badges under the Add to cart button.",
+  },
+  {
+    id: "bestseller",
+    sev: "medium",
+    title: "Your best sellers look like everything else",
+    detail: "Bestseller badges on the home page point new shoppers to what other people buy, from your real sales.",
+    ask: "Add Bestseller badges to our best sellers",
+    page: null,
+    done: "Added Bestseller badges to your top-selling products.",
+  },
+];
 
 // Ideas only the owner can do, in Shopify's settings: no preview possible.
 const NO_FIX = {
@@ -150,7 +191,10 @@ function render(checks, config, live = []) {
   // Only ideas the owner hasn't tried: one they've approved is in the
   // change history now, not here.
   liveFixes = new Set(fails.filter((c) => c.fix && live.includes(config.presets[c.fix]?.label)).map((c) => c.fix));
-  const ideas = fails.filter((c) => !liveFixes.has(c.fix));
+  const ideas = [
+    ...fails.filter((c) => !liveFixes.has(c.fix) && !live.includes(AGENT_FIX[c.id]?.done)),
+    ...AGENT_IDEAS.filter((a) => !live.includes(a.done)),
+  ].sort((x, y) => RANK[sevOf(x)] - RANK[sevOf(y)]);
 
   // The whole list in one sentence.
   const lookGood = `${ok.length} ${ok.length === 1 ? "thing already looks" : "things already look"} good.`;
@@ -198,12 +242,23 @@ function render(checks, config, live = []) {
   }
 }
 
+// High or medium: an agent idea says its own, a check's comes from PRIORITY.
+function sevOf(c) {
+  return c.sev ?? PRIORITY[c.id] ?? "medium";
+}
+
 function findingRow(c) {
-  const sev = PRIORITY[c.id] ?? "medium";
+  const sev = sevOf(c);
   // Every idea that can be shown on the page gets a preview: a ready-made
   // fix, or an honest change the agent makes. Only settings-only ones
   // (prices in AUD, the password page) say what to do instead.
-  const preview = c.fix ? previewUrl({ fix: c.fix }) : AGENT_FIX[c.id] ? previewUrl({ ask: AGENT_FIX[c.id], page: "product" }) : null;
+  const preview = c.fix
+    ? previewUrl({ fix: c.fix })
+    : AGENT_FIX[c.id]
+      ? previewUrl({ ask: AGENT_FIX[c.id].ask, page: "product" })
+      : c.ask
+        ? previewUrl(c.page ? { ask: c.ask, page: c.page } : { ask: c.ask })
+        : null;
   const action = preview
     ? `<div class="db-f-action"><a class="ql-btn" href="${esc(preview)}">Preview the fix</a></div>`
     : NO_FIX[c.id]
@@ -212,7 +267,7 @@ function findingRow(c) {
   return `
     <li>
       <div class="db-f-title"><span class="db-sev db-sev--${sev}">${sev === "high" ? "High" : "Medium"}</span>${esc(PROBLEM[c.id] || c.title)}</div>
-      <div class="db-f-detail">${esc(c.detail)}</div>
+      <div class="db-f-detail">${esc(AGENT_FIX[c.id]?.detail ?? c.detail)}</div>
       ${action}
     </li>`;
 }

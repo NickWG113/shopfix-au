@@ -29,8 +29,8 @@ Before recording:
 
 - The step bar at the top: **1 Dashboard → 2 Preview and approve**. **Say:** "Two steps. The dashboard is the one page an owner checks: how the store is doing, and what to improve next."
 - **How your store is doing** at the top. **Say:** "Nothing is live yet, so this is a sample, and it says so. We'll come back to it once a change is live."
-- Scroll to **Suggested improvements**: "4 ideas to try, most important first. 3 things already look good." Each idea is named plainly: delivery cost isn't clear up front, no customer reviews, nothing says it's Australian, too few photos. Every one has **Preview the fix**.
-- **Say:** "It reads only public pages: the home page, the product feed and one product page. No login or app install is needed. Even reviews get an honest fix: a line inviting real customers to leave one. It never adds fake reviews."
+- Scroll to **Suggested improvements**: "7 ideas to try, most important first. 3 things already look good." The big ones lead: delivery cost isn't clear up front, no reviews or star ratings, product photos small and few, nothing shows that people buy here. Then trust badges by the button and bestseller badges. Every one has **Preview the fix**.
+- **Say:** "It reads only public pages: the home page, the product feed and one product page. No login or app install is needed. Reviews get a proper reviews section, but only ever with the store's real reviews. It never makes them up."
 - Open **Already looking good** to show what passed.
 
 ---
@@ -50,7 +50,7 @@ Before recording:
 The agentic feature, part one. Take your time.
 
 - Press **Product page** above the preview, then open the **Ideas** tab on the right. **Say:** "The agent looks at this exact page the way a first-time shopper on a phone would, and suggests changes."
-- Read one idea aloud, such as **Make the price easier to see**, then switch it on. **The agent at work** opens right above the ideas and, a moment later, the change is on the page under **With your changes**.
+- Read one idea aloud, such as **Show your reviews, with star ratings**, then switch it on. **The agent at work** opens right above the ideas and, a moment later, stars appear under the product title and a row of reviews you can swipe sits under Add to cart. Point at the yellow "Example reviews" tag: "In the demo these are examples. Published, it shows only the store's real reviews."
 - **Say:** "One click from an idea to the change on the store's own page. Nothing is live yet."
 
 ---
@@ -59,7 +59,7 @@ The agentic feature, part one. Take your time.
 
 The agentic feature, part two: the owner asks for something in their own words, and the agent does a developer's job.
 
-- Open the **Ask the agent** tab and type: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."* Then press the chip **Button says "Add to bag"** to show an everyday wording change.
+- Open the **Ask the agent** tab and press the chips **Photo gallery**, **"38 people bought this"** and **Trust badges** one after another. Each adds a whole section: a photo gallery you can swipe, a line under the price saying how many people bought it lately, and badges under the button for secure checkout, Afterpay and shipping from Australia. Then type your own: *"Make the Add to cart button bright green."*
 - Point at **The agent at work** as it goes. **Say:** "It reads the page, finds what to change in the store's own theme, these class names here, and writes the CSS and JavaScript. You're watching it write the code."
 - The page scrolls to the green Add To Cart button and the new line. **Say:** "No developer, no ticket, no waiting a week. And it works to rules: it never invents reviews, discounts, countdown timers or claims about the business."
 - Prove the rule: press the chip **Fake 5-star reviews (it'll refuse)**. The log stops with a **!** and the reason, in red. **Say:** "It refuses, and explains why: fake reviews break Australian Consumer Law."

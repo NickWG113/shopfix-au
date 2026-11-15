@@ -16,9 +16,9 @@ function esc(s) {
 const DAYS = 28; // full days shown, ending yesterday
 const LIVE_AFTER = 14; // the changes went live at the start of day 14
 const SAMPLE = {
-  visitsPerDay: 171, // A$100k a year at A$80 an order and 2.0%
+  visitsPerDay: 342, // A$100k a year at A$40 an order (a toy shop) and 2.0%
   convBefore: 0.02, // the changes in SAMPLE_HISTORY lift it from there
-  order: 80,
+  order: 40,
 };
 // Weekends bring more visits (Sunday first, as getDay counts).
 // Kept gentle so the changes in the history stand out in the daily bars.
@@ -60,6 +60,19 @@ function liftOn(i) {
     if (i >= from && i < to) m *= 1 + h.lift;
   }
   return m;
+}
+
+// The hover's line on what the changes live that day are doing to sales,
+// the same figure the chart's labels and the history give.
+function liftNote(i) {
+  const on = SAMPLE_HISTORY.map((h, k) => ({ ...h, n: k + 1 })).filter((h) => {
+    const from = LIVE_AFTER + h.day;
+    return h.lift && i >= from && i < (h.liveDays ? from + h.liveDays : Infinity);
+  });
+  if (!on.length) return i < LIVE_AFTER ? "Before the changes" : "No change in sales";
+  const m = liftOn(i) - 1;
+  const which = on.length === 1 ? `change ${on[0].n}` : `changes ${on.map((h) => h.n).join(" and ")}`;
+  return `<span class="${m >= 0 ? "rs-tip-up" : "rs-tip-down"}">${m >= 0 ? "▲ +" : "▼ −"}${Math.round(Math.abs(m) * 100)}% sales</span> from ${which}`;
 }
 
 function buildSample(store) {
@@ -283,7 +296,7 @@ function revChart(days, liveIndex, events = []) {
     },
     tip: (d, i) => {
       const here = events.filter((ev) => ev.i === i);
-      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}: ${VERDICT[ev.verdict].toLowerCase()}`).join("");
+      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders, ${money(d.revenue / (d.orders || 1))} each<br>${liftNote(i)}` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}: ${VERDICT[ev.verdict].toLowerCase()}`).join("");
     },
   });
 }

@@ -10,17 +10,17 @@ export const DEMO_STORES = [
 ];
 
 /**
- * The suggested requests by the agent box: the small everyday edits an owner
- * makes to their shop (seasonal wording, a colour, a note, a phone number), and one the agent should refuse, to show the
- * no-invented-facts rule working. (A store with an agent.json has answers
- * recorded for these too.)
+ * The suggested requests by the agent box: the big changes that sell (reviews,
+ * a photo gallery, showing that people buy it, trust badges), one everyday
+ * edit, and one the agent should refuse, to show the no-invented-facts rule
+ * working. (A store with an agent.json has answers recorded for these too.)
  */
 export const EXTRA_REQUESTS = [
+  "Add a reviews section with star ratings, showing real reviews from our reviews app",
+  "Show all the product photos in a big photo gallery under the product",
+  "Show how many people bought this in the last 30 days, from our real orders",
+  "Add trust badges under the Add to cart button",
   "Change the announcement bar to say Order by 18 December for Christmas delivery",
-  "Make the announcement bar red",
-  "Change the Add to cart button to say Add to bag",
-  "Add a small line under the price saying: Gift wrapping available at checkout",
-  "Add a small line under the Add to cart button saying: Questions? Call us on [your phone number]",
   "Add five 5-star customer reviews under the price",
 ];
 

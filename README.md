@@ -25,15 +25,16 @@ approve**.
   early to tell** for one made today; click one for when, where from and
   what it did; numbered and coloured to match markers on the chart). The
   sample figures are built from the history, so the daily bars drop while
-  the loser was live and step up with each winner (a good case: about +17%,
+  the loser was live and step up with each winner (a good case: about +25%,
   where the proof of value plans on 5%).
   **Sample data**, labelled on the page (a store making about A$100k a year);
   connected to a store it would read these from Shopify's analytics. Below,
   **Suggested improvements**: only ideas not tried yet (an approved one moves
   to the change history), each with **Preview the fix**: a ready-made fix, or
-  an honest change the agent makes (for reviews, a line inviting real
-  customers to leave one). Beside them, the agent for any other change, with
-  everyday suggestions such as the button's wording and the announcement bar.
+  a section the agent builds: a reviews section (real reviews only), a photo
+  gallery, a "bought in the last 30 days" line, trust badges, Bestseller
+  badges. Beside them, the agent for any other change, with those as
+  suggested requests.
 - `/preview?store=…` — step 2, the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"

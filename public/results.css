@@ -138,6 +138,8 @@
 }
 
 .rs-tip b { display: block; }
+.rs-tip-up { color: #6ee7a8; font-weight: 700; }
+.rs-tip-down { color: #ff9b8f; font-weight: 700; }
 
 
 .rs-grid {

@@ -10,13 +10,13 @@ Material for the deck's proof-of-value section. It has three parts, and each one
 
 ## 1. What it could be worth: a worked example
 
-**The store.** It's an Australian Shopify store making **A$100,000 a year**, which sits in our target range of five to six figures. Its average order is A$80 and 2.0% of visits end in a sale. Those are typical small-store figures, chosen to make the arithmetic easy to follow.
+**The store.** It's an Australian Shopify store making **A$100,000 a year**, which sits in our target range of five to six figures. Its average order is A$40, typical for a toy or gift shop, and 2.0% of visits end in a sale. Those are typical small-store figures, chosen to make the arithmetic easy to follow.
 
 | | Before | After a 5% relative lift |
 |---|---|---|
-| Visits a year | 62,500 | 62,500 (no extra traffic needed) |
+| Visits a year | 125,000 | 125,000 (no extra traffic needed) |
 | Visits that buy | 2.0% | 2.1% |
-| Orders a year | 1,250 | 1,312 |
+| Orders a year | 2,500 | 2,625 |
 | Revenue a year | A$100,000 | **A$105,000** |
 | Extra revenue | | **+A$5,000** |
 
@@ -36,7 +36,7 @@ The 5% figure is an assumption. That's why the slide should show a range rather 
 ### Why the lift is plausible, and the honest caveats
 
 - Every fix QuickLift offers comes from published usability research (docs/best-practices.md). One example: Baymard lists surprise costs, such as delivery, as the most common reason shoppers abandon a checkout after "just browsing". The research says *what* to fix. It doesn't promise a percentage, so 1–5% is our assumption.
-- A store with 62,500 visits a year can't prove a lift of a few percent with its own A/B test. That is exactly why these stores need changes that are already known to work, and it's our core argument.
+- A store with 125,000 visits a year can't prove a lift of a few percent with its own A/B test. That is exactly why these stores need changes that are already known to work, and it's our core argument.
 - Revenue isn't profit. At a 40% gross margin, A$5,000 of extra sales is about A$2,000 of extra profit. Say so on the slide before a judge asks.
 - **Where this number belongs:** in the deck only. QuickLift itself never shows an owner a predicted lift or a research figure (PROMPTS.md, "No research numbers shown to owners"). That's a design decision worth naming in the deck.
 

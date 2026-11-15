@@ -209,3 +209,15 @@ The winners now lift sales by about 15% and 10%, and each change's effect is wri
 > does this make sense?
 
 The suggested requests are now routine shop edits rather than experiments: a Christmas cut-off in the top bar, a red top bar, "Add to bag" on the button, a gift-wrapping note, a phone number under the button (plus the fake-reviews request it refuses). The simulated agent learned to recolour the announcement bar for this.
+
+> [screenshot of the chart] i like this but the hover state does not reflect the % increase we need mor orders lower aov
+
+Hovering over a day now says what the changes live that day are doing to sales, the same figure as the chart's labels: "▲ +26% sales from changes 2 and 4", or "▼ −25% sales from change 1" while the loser was live. It also gives the day's average order. The sample store now sells more, smaller orders: A$40 an order (a toy shop) and about twice the visits, so the same A$100,000 a year is about 7 orders a day before the changes and 9 after. The proof of value's worked example uses the same figures.
+
+> i also want the changes suggestyed changes to be better. can we ahve somethig like reviews, an image gallery, socail proof, this kinda vibe? i need BIT HITTERS
+
+The simulated agent now builds whole sections, not just restyles: a reviews section with stars under the title, a photo gallery from the product's own photos, a "38 people bought this in the last 30 days" line under the price, trust badges under Add to cart, and Bestseller badges on the home page. The reviews are examples, labelled as such on the page; the agent's note says that, once published, only the store's real reviews from its reviews app show. The fake-reviews request is still refused. These lead the dashboard's suggested improvements, the agent's ideas and the suggested requests.
+
+> can we make the reviews side scroll please
+
+The reviews are a row you swipe sideways on a phone, with arrows on a computer; so is the photo gallery. Both sit right under the Add to cart button rather than below the long description.

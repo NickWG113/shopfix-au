@@ -141,9 +141,17 @@ function fixControl(id, why = "") {
     </li>`;
 }
 
+const AGENT_BUILDS = new Map([
+  ["reviews", "A reviews section, with star ratings"],
+  ["photos", "A photo gallery from every angle"],
+]);
+
 function renderChecks() {
   const fixable = state.checks.filter((c) => c.status === "fail" && c.fix);
-  const needsOwner = state.checks.filter((c) => c.status === "fail" && !c.fix);
+  // Reviews and photos have no ready-made fix, but the agent builds them
+  // (a reviews section, a photo gallery): its Ideas tab has them.
+  const forAgent = state.checks.filter((c) => c.status === "fail" && !c.fix && AGENT_BUILDS.has(c.id));
+  const needsOwner = state.checks.filter((c) => c.status === "fail" && !c.fix && !AGENT_BUILDS.has(c.id));
   const passed = state.checks.filter((c) => c.status === "pass");
   const unsure = state.checks.filter((c) => c.status === "unknown");
   // Fixes for things the store already does well are still on offer (a
@@ -157,6 +165,12 @@ function renderChecks() {
   let html = fixable.length
     ? `<ul class="fix-list">${fixable.map((c) => fixControl(c.fix, PROBLEM[c.id] || c.title)).join("")}</ul>`
     : `<p class="panel-lede">Nothing to fix from our checks. Try the agent, or the extra fixes below.</p>`;
+  if (forAgent.length) {
+    html += fold(
+      `The agent builds these (${forAgent.length})`,
+      `<ul class="fold-list">${forAgent.map((c) => `<li><b>${esc(AGENT_BUILDS.get(c.id))}</b><span>Open the Ideas tab, or ask the agent.</span></li>`).join("")}</ul>`,
+    );
+  }
   if (needsOwner.length) html += fold(`Needs you, not a fix (${needsOwner.length})`, `<ul class="fold-list">${needsOwner.map(line).join("")}</ul>`);
   if (extra.length) {
     // Kept open while one of them is on, so it can be found and switched off.
