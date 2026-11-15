@@ -7,16 +7,17 @@
 // - The stores' pages and checks were read for real, on the date recorded.
 // - The ready-made fixes run for real: lib/fixes.js is loaded here and
 //   builds the same code the server would, applied to the recorded page.
-// - The agent's ideas and changes are Claude's real answers to those pages,
-//   recorded once. Only requests that were recorded can be replayed, so the
-//   pages show those requests to click.
+// - The agent is mocked (mock-agent.js): no AI and no network, it writes
+//   the change in the browser from what the request asks for. Where an
+//   answer was recorded once from the real agent (frankbody.com's ideas and
+//   suggested requests), that recorded answer is played back instead.
 // - Publish needs a store's admin token, so it only works in the full app.
 (function () {
   "use strict";
 
   const realFetch = window.fetch.bind(window);
   const here = (p) => new URL(p, document.baseURI).href;
-  const modules = Promise.all([import(here("fixes.js")), import(here("recording-keys.js"))]);
+  const modules = Promise.all([import(here("fixes.js")), import(here("recording-keys.js")), import(here("mock-agent.js"))]);
   const cache = new Map();
   const REPO = "https://github.com/NickWG113/shopfix-au";
 
@@ -57,16 +58,15 @@
     return hit.domain;
   }
 
+  // Recorded answers for this store, if any; empty when there are none, and
+  // the mock answers instead.
   async function agentFor(domain) {
-    const agent = await getJson(`recording/${await recordedStore(domain)}/agent.json`);
-    if (agent && Object.keys(agent.ideas || {}).length) return agent;
-    const withAgent = ((await getJson("recording/manifest.json")) || []).filter((m) => m.agent).map((m) => m.domain);
-    throw new Shown(
-      withAgent.length
-        ? `The agent's answers weren't recorded for this store. Try the agent on ${withAgent.join(" or ")}. The ready-made fixes work here.`
-        : "The agent's answers weren't recorded for this online demo.",
-    );
+    return (await getJson(`recording/${await recordedStore(domain)}/agent.json`)) || { ideas: {}, changes: {} };
   }
+
+  // The mock answers straight away; a short pause makes it read as the agent
+  // working rather than a page that didn't notice the click.
+  const thinking = () => new Promise((r) => setTimeout(r, 1200 + Math.random() * 800));
 
   const routes = {
     async config() {
@@ -122,27 +122,21 @@
     },
 
     async ideas(body) {
+      const { mockIdeas } = (await modules)[2];
       const agent = await agentFor(body.domain);
-      const ideas = agent.ideas[body.path || "/"];
-      if (!ideas) throw new Shown("The agent's ideas were recorded for the home page and one product page only.");
-      return { ideas };
+      await thinking();
+      return { ideas: agent.ideas[body.path || "/"] || mockIdeas(body.path || "/") };
     },
 
     async "ai-change"(body) {
       const { requestKey } = (await modules)[1];
+      const { mockChange } = (await modules)[2];
       const request = String(body.request || "").trim();
       if (!request) throw new Shown("Describe the change you want.");
       const agent = await agentFor(body.domain);
-      const change = agent.changes[body.path || "/"]?.[requestKey(request)];
-      if (!change) {
-        throw new Shown(
-          "This online demo replays the agent's recorded answers, so it only knows the requests shown under the box and the ideas for this page. Run QuickLift on your own computer to ask for anything.",
-        );
-      }
-      // A short pause so the change doesn't land before the button has said
-      // it's working. The real agent takes about ten seconds; we don't pretend.
-      await new Promise((r) => setTimeout(r, 900));
-      return { ...change, request };
+      const recorded = agent.changes[body.path || "/"]?.[requestKey(request)];
+      await thinking();
+      return { ...(recorded || mockChange(request, body.path || "/")), request };
     },
 
     async publish() {
@@ -179,12 +173,16 @@
     bar.className = "ql-recorded";
     bar.innerHTML =
       `<strong>Online demo.</strong> Four Australian stores, recorded 15 November 2026. ` +
-      `The fixes run live on the recorded pages; the agent's real answers are played back from the recording. ` +
-      `<a href="${REPO}#readme" target="_blank" rel="noopener">Run the full app</a>`;
+      `Everything runs in your browser on saved copies of their pages, with a mocked agent, so nothing touches the real stores. ` +
+      `<a href="${REPO}#readme" target="_blank" rel="noopener">Run the full app</a>` +
+      `<button type="button" class="ql-recorded-x" aria-label="Hide this note">×</button>`;
+    bar.querySelector(".ql-recorded-x").addEventListener("click", () => bar.remove());
     const style = document.createElement("style");
     style.textContent = `
 .ql-recorded{background:#efedfc;color:#2a2194;font:14px/1.45 "Funnel Sans",system-ui,sans-serif;padding:8px 16px;text-align:center;border-bottom:1px solid #d9d5f7}
 .ql-recorded a{color:#2a2194;font-weight:600}
+.ql-recorded{position:relative;padding-right:40px}
+.ql-recorded-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:none;color:#2a2194;font-size:20px;line-height:1;cursor:pointer}
 .ql-try{margin:10px 0 0;font:14px/1.6 "Funnel Sans",system-ui,sans-serif;color:inherit;opacity:.85}
 .ql-try a{color:inherit;font-weight:600;margin-right:10px;white-space:nowrap}
 .ql-replay{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
@@ -213,7 +211,7 @@
     const { EXTRA_REQUESTS } = (await modules)[1];
     const box = document.createElement("div");
     box.className = "ql-replay";
-    box.innerHTML = `<p>Recorded requests (or switch on one of the agent's ideas):</p>`;
+    box.innerHTML = `<p>Try one of these, or type your own:</p>`;
     for (const r of EXTRA_REQUESTS) {
       const b = document.createElement("button");
       b.type = "button";

@@ -2,7 +2,7 @@
 
 **Length:** about 8½ minutes, under the 10-minute limit with room to spare.
 **Use cases shown:** five. The brief asks for at least three, including the agentic feature (use case 3).
-**Record on the full app running locally** (`npm start`, then http://localhost:3010). The online copy on GitHub Pages replays recorded agent answers, so it can't show the agent taking a request typed in your own words. The full app needs Anthropic API credit; the account ran out on 15 November, so top it up first. If you can't, record on the online copy and use its recorded-request buttons instead. Frank Body has all of them.
+**Record on the online demo:** https://nickwg113.github.io/shopfix-au/. Everything in it is mocked, so it needs no API credit and can't go wrong on the day. You can type your own requests to the agent; docs/github-pages.md lists the kinds of request the mock understands. Press × on the purple "Online demo" banner if you don't want it in shot.
 
 Before recording:
 
@@ -58,15 +58,15 @@ This is the most important part of the video. Take your time.
 **Part B: the owner asks in plain English (1 min 30 s).**
 
 - Type in your own words, for example: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."*
-- While it works (about 10 seconds), **say:** "It reads an outline of this page, writes the change against the store's own theme classes, and checks it against our rules. It never invents reviews, discounts, countdown timers or other claims about the business."
-- When the change appears, open **Show the code**. **Say:** "It's real CSS and JavaScript, not a mock-up."
+- While it works (a couple of seconds), **say:** "It reads an outline of this page, writes the change against the store's own theme classes, and checks it against our rules. It never invents reviews, discounts, countdown timers or other claims about the business."
+- When the change appears, open **Show the code**. **Say:** "It's real CSS and JavaScript, running on the store's page."
 - Optionally ask for something it should refuse, like *"add five 5-star reviews"*, and show its warning. That proves the rule is real.
 
 ---
 
 ## Use case 4: publish and undo on a real store (1 min)
 
-Do this only if the dev store is set up on the live link; otherwise skip it and use the time on use case 3.
+The online demo can't publish, so skip this unless you also record a short clip of the full app publishing to a dev store. Otherwise spend the time on use case 3, and just point at **Approve and publish** and say what it does.
 
 - Press **Approve and publish**. Reload the dev store in the other tab and show the change live.
 - Press **Undo**, then reload. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits."

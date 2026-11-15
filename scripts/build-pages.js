@@ -4,7 +4,8 @@
 //
 // No network and no API key: it only copies files. The pages are the same
 // ones the server sends (public/), plus pages/static-api.js, which answers
-// their api/... calls from the recording made by scripts/record-demo.js.
+// their api/... calls from the recording made by scripts/record-demo.js and
+// the mocked agent in pages/mock-agent.js.
 // GitHub Actions runs this on every push to main (.github/workflows/pages.yml).
 
 import fs from "node:fs/promises";
@@ -21,6 +22,7 @@ await fs.rm(out, { recursive: true, force: true });
 await fs.cp(path.join(root, "public"), out, { recursive: true, filter: (src) => !SKIP.has(path.basename(src)) });
 await fs.copyFile(path.join(root, "lib", "fixes.js"), path.join(out, "fixes.js"));
 await fs.copyFile(path.join(root, "pages", "static-api.js"), path.join(out, "static-api.js"));
+await fs.copyFile(path.join(root, "pages", "mock-agent.js"), path.join(out, "mock-agent.js"));
 await fs.cp(path.join(root, "recording"), path.join(out, "recording"), { recursive: true });
 // GitHub Pages would otherwise run Jekyll, which skips some files.
 await fs.writeFile(path.join(out, ".nojekyll"), "");
@@ -36,18 +38,5 @@ for (const name of await fs.readdir(out)) {
   pages++;
 }
 
-// Which stores have the agent's answers recorded, so the replay can point
-// someone to one that does rather than just failing.
-const manifest = [];
-for (const domain of await fs.readdir(path.join(out, "recording"))) {
-  const agent = await fs
-    .readFile(path.join(out, "recording", domain, "agent.json"), "utf8")
-    .then((t) => Object.keys(JSON.parse(t).ideas || {}).length > 0)
-    .catch(() => false);
-  manifest.push({ domain, agent });
-}
-await fs.writeFile(path.join(out, "recording", "manifest.json"), JSON.stringify(manifest));
-
-console.log(
-  `_site/ built: ${pages} pages, ${manifest.length} recorded stores (agent recorded on ${manifest.filter((m) => m.agent).map((m) => m.domain).join(", ") || "none"}).`,
-);
+const stores = (await fs.readdir(path.join(out, "recording"))).length;
+console.log(`_site/ built: ${pages} pages, ${stores} recorded stores, mocked agent.`);

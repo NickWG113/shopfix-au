@@ -128,6 +128,8 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 
 > github
 
-We chose a recorded copy on GitHub Pages over a paid server: the fixes run live on recorded store pages, and the agent's real answers are played back.
+> why are you using api credit? i font want anything actually live i just want to mock it all
 
-What came out of it: the online demo on GitHub Pages (`pages/static-api.js`, `scripts/record-demo.js`, `scripts/build-pages.js`, `docs/github-pages.md`), a shared sign-in for when the full app is hosted (`lib/auth.js`), the proof-of-value working (`docs/proof-of-value.md`), and the demo video script (`docs/demo-video-script.md`).
+So the online copy is fully mocked: saved store pages, the fixes running in the browser, and a mocked agent that writes simple changes from the request's wording (`pages/mock-agent.js`), with no API calls.
+
+What came out of it: the mocked online demo on GitHub Pages (`pages/static-api.js`, `pages/mock-agent.js`, `scripts/record-demo.js`, `scripts/build-pages.js`, `docs/github-pages.md`), a shared sign-in for when the full app is hosted (`lib/auth.js`), the proof-of-value working (`docs/proof-of-value.md`), and the demo video script (`docs/demo-video-script.md`).

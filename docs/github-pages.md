@@ -1,37 +1,34 @@
 # The online demo on GitHub Pages
 
 **Link:** https://nickwg113.github.io/shopfix-au/
-**No sign-in needed.**
+**No sign-in needed. Nothing in it is live**: no server, no AI calls, and nothing touches the real stores.
 
-## Why it's a recording
+## How it works
 
-GitHub Pages can only serve files. QuickLift's server does two things a page of files can't:
-
-- **It reads store pages.** A browser isn't allowed to fetch frankbody.com from another site, so the server fetches the page instead.
-- **It calls Claude.** Those calls need our API key, which must never be in a public page.
-
-So the online copy is the same front end with the server replayed. `pages/static-api.js` answers the pages' `api/...` calls from files saved in `recording/`.
-
-## What's real and what's replayed
+GitHub Pages can only serve files, so the online copy is the same front end with the server replaced by `pages/static-api.js`. That file answers the pages' `api/...` calls in the browser:
 
 | Part | Online demo | Full app (`npm start`) |
 |---|---|---|
-| Store pages and checks | Real, read on 15 Nov 2026 | Read live, any store |
-| Ready-made fixes | **Live**: the same `lib/fixes.js` code runs in the browser | Live |
-| Agent's ideas for a page | Claude's real answers, played back | Asked live |
-| "Describe a change" | Recorded requests only, shown as buttons | Anything the owner types |
+| Store pages and checks | Saved copies of four stores' home and product pages, from 15 Nov 2026 (`recording/`) | Read live, any store |
+| Ready-made fixes | The same `lib/fixes.js` code, run in the browser on the saved pages | Same |
+| Agent: ideas and "Describe a change" | **Mocked** (`pages/mock-agent.js`). It reads the request for what to change (button, title, price, product cards), a colour, bigger, bolder, rounded, on phones, and a line of text "saying …", then writes the CSS and JavaScript itself. It refuses requests for fake reviews, timers or discounts, as the real agent does. | Claude, live |
 | Publish and Undo | Not available | Writes to a dev store's theme |
 
-The agent was recorded on **frankbody.com** (home page and one product page, 26 answers). That includes one refusal: "Add five 5-star customer reviews" is declined because the reviews would be fake. Toyworld, Mr Simple and Culture Kings have their pages and checks recorded, so the fixes work there, but the agent wasn't recorded for them: the API credit ran out partway. Add credit and run the recorder again to fill them in.
+On frankbody.com, the agent's ideas and the suggested requests play back answers saved once from the real agent. Everything else, on every store and anything typed, uses the mock.
+
+## Things to try
+
+- Type your own request, e.g. *"Make the Add to cart button rounded and purple, and add a line under it saying Free returns within 30 days"*.
+- Ask for something it should refuse: *"Add five 5-star reviews under the price"*.
+- Switch on one of the agent's ideas in "More ideas for this page".
 
 ## Updating it
 
 ```bash
-node --env-file=.env scripts/record-demo.js          # every store in public/recording-keys.js
-node --env-file=.env scripts/record-demo.js toyworld.com.au
-node scripts/build-pages.js                           # builds _site/ to check locally
+node scripts/record-demo.js              # re-save pages and checks for every store in public/recording-keys.js
+node scripts/build-pages.js              # build _site/ to check locally
 ```
 
-The recorder skips what's already recorded. Delete a store's folder in `recording/` to record it again from scratch. Pushing to `main` publishes it (`.github/workflows/pages.yml`).
+Neither needs an API key. Pushing to `main` publishes the site (`.github/workflows/pages.yml`).
 
-The recorded pages are copies of public store pages, kept only so the demo can show fixes on them. Their pictures, fonts and styles still load from each store's own site.
+The saved pages are copies of public store pages, kept only so the demo can show fixes on them. Their pictures, fonts and styles still load from each store's own site.

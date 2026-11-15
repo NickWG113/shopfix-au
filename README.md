@@ -5,10 +5,9 @@ Australian shopper looks for, then lets you switch fixes on — or describe your
 own change in plain English — and watch the store's real page update live.
 
 **Try it online:** https://nickwg113.github.io/shopfix-au/. No sign-in. It's a
-recorded copy of four stores: the fixes run live, and the agent's real answers
-are played back. [docs/github-pages.md](docs/github-pages.md) explains what's
-live and what's replayed. To check any store and talk to the agent live, run
-it locally (below).
+mocked copy: four stores' pages saved on 15 Nov 2026, the fixes running in the
+browser, and a mocked agent, with nothing live. [docs/github-pages.md](docs/github-pages.md)
+explains how. To check any store with the real agent, run it locally (below).
 
 ## Pages
 
