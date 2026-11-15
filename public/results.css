@@ -1,0 +1,195 @@
+/* Daily results (results.html). Builds on dashboard.css: same shell, side
+   navigation, cards and tiles. One series per chart, in QuickLift violet;
+   axes and grid stay quiet so the data reads first. */
+
+.rs-sample {
+  background: var(--ql-fix-tint);
+  color: var(--ql-fix);
+  font-weight: 600;
+}
+
+.rs-note {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #f3d9c8;
+  border-radius: 12px;
+  background: #fff8f3;
+  color: var(--ql-ink-2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.rs-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.rs-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.rs-tile b {
+  font-size: 30px;
+}
+
+.rs-tile-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ql-muted);
+}
+
+.rs-delta {
+  font-size: 13px;
+  color: var(--ql-muted);
+  line-height: 1.4;
+}
+
+.rs-up { color: var(--ql-ok); font-weight: 600; }
+.rs-down { color: var(--ql-fix); font-weight: 600; }
+
+.rs-tile--today b { color: var(--ql-brand); }
+
+.rs-tiles-note {
+  margin: 8px 0 20px;
+  font-size: 13px;
+}
+
+.rs-card {
+  margin-bottom: 20px;
+}
+
+.rs-legend {
+  display: flex;
+  gap: 18px;
+  margin: -4px 0 6px;
+  font-size: 13px;
+  color: var(--ql-muted);
+}
+
+.rs-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.rs-key { display: inline-block; }
+.rs-key--dot { width: 9px; height: 9px; border-radius: 50%; background: #a9a2ee; }
+.rs-key--line { width: 18px; height: 2px; background: var(--ql-brand); }
+.rs-key--before { width: 10px; height: 12px; border-radius: 3px 3px 0 0; background: #c9c5f3; }
+.rs-key--after { width: 10px; height: 12px; border-radius: 3px 3px 0 0; background: var(--ql-brand); }
+
+.rs-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.rs-gridline { stroke: #ececf3; stroke-width: 1; }
+.rs-axis { fill: var(--ql-muted); font: 12px var(--ql-sans); }
+.rs-live-line { stroke: var(--ql-ink-2); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.rs-live-text { fill: var(--ql-ink-2); font: 600 12px var(--ql-sans); }
+.rs-avg { fill: none; stroke: var(--ql-brand); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.rs-dot { fill: #a9a2ee; stroke: #ffffff; stroke-width: 2; }
+.rs-bar--before { fill: #c9c5f3; }
+.rs-bar--after { fill: var(--ql-brand); }
+.rs-cross { stroke: var(--ql-muted); stroke-width: 1; }
+.rs-hit { fill: transparent; cursor: crosshair; }
+
+.rs-tip {
+  position: absolute;
+  z-index: 60;
+  max-width: 240px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #14122b;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.45;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(20, 18, 43, 0.25);
+}
+
+.rs-tip b { display: block; }
+
+
+.rs-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.rs-table-wrap {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.rs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rs-table th,
+.rs-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--ql-line);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.rs-table th:first-child { text-align: left; font-weight: 500; }
+.rs-table thead th { position: sticky; top: 0; background: var(--ql-card); font-size: 12.5px; color: var(--ql-muted); font-weight: 600; }
+.rs-row-live th, .rs-row-live td { background: var(--ql-brand-tint); }
+
+.rs-flag {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--ql-brand);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rs-live {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.rs-live li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ql-line);
+  font-size: 14.5px;
+}
+
+.rs-live li .db-muted { white-space: nowrap; font-size: 13px; }
+
+.rs-read {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ql-ink-2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.rs-read li + li { margin-top: 8px; }
+
+@media (max-width: 1000px) {
+  .rs-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rs-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+  .rs-tiles { grid-template-columns: 1fr; }
+}

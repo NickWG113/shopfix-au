@@ -15,6 +15,7 @@
     <nav class="ql-tabs" aria-label="Pages">
       <a href="dashboard" id="tab-dashboard">Dashboard</a>
       <a href="#" class="on">Preview and approve</a>
+      <a href="results" id="tab-results">Daily results</a>
     </nav>
     <form id="check-form" class="check-form">
       <input id="domain" name="domain" type="text" inputmode="url" autocomplete="off"
@@ -118,6 +119,13 @@
             <textarea id="ai-request" rows="3" placeholder="e.g. Make the Add to cart button green and bigger"></textarea>
             <button type="submit" id="ai-btn">Make this change</button>
           </form>
+          <!-- The agent at work, like a developer's log: what it read, what it
+               found to change, and the code as it writes it. -->
+          <div id="ai-dev" class="ai-dev" hidden>
+            <p class="ai-dev-head">The agent at work</p>
+            <ol id="ai-log" class="ai-log" aria-live="polite"></ol>
+            <pre id="ai-code" class="ai-code" hidden></pre>
+          </div>
           <p id="ai-msg" class="ai-msg" role="status" hidden></p>
           <p id="ai-off" class="muted" hidden>AI changes are off (no ANTHROPIC_API_KEY set on the server).</p>
         </section>

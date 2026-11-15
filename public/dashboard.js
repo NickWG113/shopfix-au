@@ -54,6 +54,7 @@ function previewUrl(extra = {}) {
 
 function wireLinks() {
   for (const a of document.querySelectorAll('[data-link="preview"]')) a.href = previewUrl();
+  for (const a of document.querySelectorAll('[data-link="results"]')) a.href = `results?${new URLSearchParams({ store: store?.domain || domain })}`;
   for (const a of document.querySelectorAll('[data-link="dashboard"]')) a.href = location.pathname + location.search;
 }
 
@@ -221,7 +222,7 @@ $("#recheck").addEventListener("click", load);
 // Most of the dashboard fits on one screen, so a plain jump to a section
 // that's already visible looked like the link did nothing. Each link now
 // scrolls if it needs to and briefly lights up its section.
-const sideLinks = [...document.querySelectorAll('.db-side-nav a[href^="#"]')];
+const sideLinks = [...document.querySelectorAll('.db-side-nav a[href^="#"]:not([data-link])')];
 // While a click's smooth scroll is still moving, the page is briefly near
 // the top, which would flip the highlight back to Overview.
 let clickedAt = 0;

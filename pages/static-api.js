@@ -92,7 +92,8 @@
       const domain = await recordedStore(body.domain);
       const data = await getJson(`recording/${domain}/check.json`);
       if (!data) throw new Shown(`The recording for ${domain} is missing.`);
-      return { store: data.store, checks: data.checks, live: liveCount(domain) };
+      const liveItems = liveList(domain);
+      return { store: data.store, checks: data.checks, live: liveItems.length, liveItems };
     },
 
     async preview(body) {
@@ -153,9 +154,14 @@
 
     async publish(body) {
       const domain = await recordedStore(body.domain);
-      const n = (body.presets?.length || 0) + (body.custom?.length || 0);
+      const { PRESETS } = (await modules)[0];
+      const items = [
+        ...(body.presets || []).map((p) => PRESETS[p.id]?.label).filter(Boolean),
+        ...(body.custom || []).map((c) => c.summary).filter(Boolean),
+      ];
+      const n = items.length;
       if (!n) throw new Shown("There's nothing to publish yet.");
-      setLive(domain, n);
+      setLive(domain, items);
       return {
         store: domain,
         demo: true,
@@ -166,23 +172,24 @@
     },
     async undo(body) {
       const domain = await recordedStore(body.domain);
-      setLive(domain, 0);
+      setLive(domain, []);
       return { store: domain, demo: true, note: `Undone: the snippet on ${domain} is empty again, and the store is back to how it was.` };
     },
   };
 
   // What the demo has "published", per store, so the dashboard's "live on
   // your store" can count it. This browser only; nothing leaves it.
-  function liveCount(domain) {
+  function liveList(domain) {
     try {
-      return Number(localStorage.getItem(`ql:demo-live:${domain}`)) || 0;
+      const list = JSON.parse(localStorage.getItem(`ql:demo-live:${domain}`) || "[]");
+      return Array.isArray(list) ? list.map(String) : [];
     } catch {
-      return 0;
+      return [];
     }
   }
-  function setLive(domain, n) {
+  function setLive(domain, items) {
     try {
-      if (n) localStorage.setItem(`ql:demo-live:${domain}`, String(n));
+      if (items.length) localStorage.setItem(`ql:demo-live:${domain}`, JSON.stringify(items));
       else localStorage.removeItem(`ql:demo-live:${domain}`);
     } catch {
       // Storage blocked: the dashboard just shows 0.

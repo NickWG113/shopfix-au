@@ -1,14 +1,14 @@
 # Demo video: script and shot list
 
-**Length:** about 8½ minutes, under the 10-minute limit with room to spare.
-**Use cases shown:** five. The brief asks for at least three, including the agentic feature (use case 3).
+**Length:** about 9½ minutes, under the 10-minute limit.
+**Use cases shown:** six. The brief asks for at least three, including the agentic feature. The three to give most time: the agent turning an idea into a change (use case 3), the agent as an AI developer (use case 4), and daily results (use case 6).
 **Record on the online demo:** https://nickwg113.github.io/shopfix-au/. Everything in it is mocked, so it needs no API credit and can't go wrong on the day. You can type your own requests to the agent; docs/github-pages.md lists the kinds of request the mock understands. Press × on the purple "Online demo" banner if you don't want it in shot.
 
 Before recording:
 
 - Run each store through once, so pages load quickly on camera.
 - Use browser zoom at 110–125% so text is readable on a laptop screen. Hide bookmarks. Close other tabs.
-- Press × on the dark Demo bar if you don't want it in shot. Keys 1, 2 and 3 still switch pages.
+- Press × on the dark Demo bar if you don't want it in shot. Keys 1 to 4 still switch pages.
 
 ---
 
@@ -45,25 +45,28 @@ Before recording:
 
 ---
 
-## Use case 3: the agent (agentic feature) (2 min 30 s)
+## Use case 3: an idea, then the agent makes it (1 min 15 s)
 
-This is the most important part of the video. Take your time.
+The agentic feature, part one. Take your time.
 
-**Part A: the agent suggests changes (1 min).**
-
-- Open **More ideas for this page**. **Say:** "The agent looks at this exact page the way a first-time shopper on a phone would, and suggests 6–8 changes, each one naming a real button or section on this page."
-- Switch one idea on and show it appear in place.
-
-**Part B: the owner asks in plain English (1 min 30 s).**
-
-- Type in your own words, for example: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."*
-- While it works (a couple of seconds), **say:** "It reads an outline of this page, writes the change against the store's own theme classes, and checks it against our rules. It never invents reviews, discounts, countdown timers or other claims about the business."
-- When the change appears, open **Show the code**. **Say:** "It's real CSS and JavaScript, running on the store's page."
-- Optionally ask for something it should refuse, like *"add five 5-star reviews"*, and show its warning. That proves the rule is real.
+- On a product page, scroll to **More ideas for this page**. **Say:** "The agent looks at this exact page the way a first-time shopper on a phone would, and suggests changes, each one naming a real button or section on this page."
+- Read one idea aloud, then switch it on. The column jumps to **The agent at work** and, a moment later, the change is on the page under **With your changes**, beside **Now**.
+- **Say:** "One click from an idea to the change on the store's own page. Nothing is live yet."
 
 ---
 
-## Use case 4: approve, publish and undo (1 min)
+## Use case 4: the agent as an AI developer (1 min 45 s)
+
+The agentic feature, part two: the owner asks for something in their own words, and the agent does a developer's job.
+
+- Type, for example: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."* Press **Make this change**.
+- Point at **The agent at work** as it goes. **Say:** "It reads the page, finds what to change in the store's own theme, these class names here, and writes the CSS and JavaScript. You're watching it write the code."
+- When it finishes, the page scrolls to the change. **Say:** "No developer, no ticket, no waiting a week. And it works to rules: it never invents reviews, discounts, countdown timers or claims about the business."
+- Prove the rule: press the chip **Add five 5-star customer reviews under the price**. The log stops with a **!**, and the reason stays under the request. **Say:** "It refuses, and explains why: fake reviews break Australian Consumer Law."
+
+---
+
+## Use case 5: approve, publish and undo (1 min)
 
 The online demo acts this out: nothing is written to the real store, but every step shows.
 
@@ -76,18 +79,26 @@ In the full app with a dev store connected, this writes to the real theme: reloa
 
 ---
 
-## Use case 5: what "good" looks like, and being honest (40 s)
+## Use case 6: daily results (1 min 15 s)
 
-- Check `culturekings.com.au`, a big brand. Most checks pass. **Say:** "That's what good looks like, and the tool says so rather than inventing problems."
-- Optionally check `toyworld.com.au` to show a store with several Fix items.
+Press **Daily results** in the Demo bar (key 4), or **See daily results** on the dashboard.
+
+- **Say first:** "These are sample figures, labelled on the page, for a store making about A$100,000 a year. Connected to a real store, this page reads each day's visits, orders and revenue from Shopify."
+- The four tiles: conversion rate, orders and revenue for the 14 days since the changes went live, against the 14 days before, and today so far.
+- Hover over the conversion chart: each day as a dot, the 7-day average as a line, and the dashed line where the changes went live. **Say:** "Day to day it jumps around, because a small store gets a few orders a day. The 7-day average is what to watch."
+- Point at **Every day** (the table) and **What went live**. **Say:** "A 5% lift on A$100,000 a year is about A$5,000 more in sales, with no extra ad spend, and the owner can watch it day by day."
+
+If time is short, cut use case 1's "Looking good" and use case 2's returns-bar edit before cutting any of this.
+
+Optional, 20 s, if there's time: check `culturekings.com.au`, a big brand where most checks pass. **Say:** "That's what good looks like, and the tool says so rather than inventing problems."
 
 ---
 
 ## Close (30 s)
 
-**Show:** the dashboard's "Live on your store" card.
+**Show:** the Daily results page.
 
-**Say:** "QuickLift turns published usability research into changes a small store can see on its own page and approve in one click. For a store doing A$100k a year, a 5% lift is about A$5,000 more in sales with no extra ad spend. Our proof-of-value slides show the range, from cautious to hopeful. The live demo, the code and the prompts we used are all linked in the deck."
+**Say:** "QuickLift turns published usability research into changes a small store can see on its own page, approve in one click, and then watch day by day. For a store doing A$100k a year, a 5% lift is about A$5,000 more in sales with no extra ad spend. Our proof-of-value slides show the range, from cautious to hopeful. The live demo, the code and the prompts we used are all linked in the deck."
 
 ---
 

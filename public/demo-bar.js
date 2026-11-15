@@ -1,7 +1,7 @@
 // The demo bar: a slim strip above every page with one tab per step of the
-// demo (home, dashboard, preview), so the presenter can jump between them
+// demo (home, dashboard, preview, daily results), so the presenter can jump between them
 // without typing addresses. It keeps the store being shown, from the address
-// or the last store checked. Keys 1, 2 and 3 switch tabs too (not while
+// or the last store checked. Keys 1 to 4 switch tabs too (not while
 // typing). × hides it for the rest of the visit, for screenshots.
 //
 // Not part of the product: an owner would never see it.
@@ -32,6 +32,7 @@
     { key: "1", label: "Home page", href: "./", on: here === "/" || here === "/index" },
     { key: "2", label: "Owner’s dashboard", href: `dashboard${q}`, on: here === "/dashboard" },
     { key: "3", label: "Preview and approve", href: `preview${q}`, on: here === "/preview" },
+    { key: "4", label: "Daily results", href: `results${q}`, on: here === "/results" },
   ];
 
   const style = document.createElement("style");

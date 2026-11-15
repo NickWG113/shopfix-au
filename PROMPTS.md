@@ -141,3 +141,7 @@ The preview became a review: the page **Now** beside the page **With your change
 > what is next. can you audti to make sure it is what we what. what use cases are we shoiwing
 
 Walking through every use case in the video script on the live demo turned up six problems, all fixed: the store's page scrolled out of view while switching on fixes further down the column (it now stays in view); the agent's refusal of fake reviews only flashed up for a few seconds (it now stays under the request); Approve and publish was a dead end online (it's now acted out, with Undo and the dashboard's "live on your store" count); the dashboard showed two sets of suggested requests; findings with no ready-made fix were squashed into a narrow column; and the dashboard sat to one side on wide screens.
+
+> yeah i want to display giving an dea and implementing it, an ai developer and then the daily tracking of stats
+
+Three additions for the video. When the agent makes a change, it is now shown working like a developer ("The agent at work": the page it read, the theme classes it found, and its CSS and JavaScript typing out before the change goes on the page). Switching on one of its ideas shows the same thing, so an idea becomes a change on screen. And a new Daily results page shows conversion rate, orders and revenue day by day, before and after the changes went live. Its figures are sample data for a A$100k-a-year store, and the page says so.

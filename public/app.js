@@ -78,6 +78,7 @@ async function checkStore(domain) {
     $("#domain").value = store.domain;
     $("#intro").hidden = true;
     $("#tab-dashboard").href = `dashboard?store=${encodeURIComponent(store.domain)}`;
+    $("#tab-results").href = `results?store=${encodeURIComponent(store.domain)}`;
     try {
       localStorage.setItem("ql:lastStore", store.domain);
     } catch {
@@ -201,6 +202,74 @@ $("#ai-form").addEventListener("submit", (e) => {
   askAgent($("#ai-request").value.trim());
 });
 
+// The agent at work, shown the way a developer works: a log of what it
+// did, then the code it wrote, typed out before the change goes on the
+// page. Every line says what really happened: the page it read, the
+// request it worked on, the selectors in the code it sent back.
+function devLog() {
+  const box = $("#ai-dev");
+  const log = $("#ai-log");
+  const code = $("#ai-code");
+  box.hidden = false;
+  log.innerHTML = "";
+  code.hidden = true;
+  code.textContent = "";
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  let last = null;
+  const settle = (how) => last?.classList.replace("doing", how);
+  return {
+    step(text, detail = "") {
+      settle("done");
+      last = document.createElement("li");
+      last.className = "doing";
+      last.innerHTML = esc(text) + (detail ? ` <code>${esc(detail)}</code>` : "");
+      log.append(last);
+    },
+    end(ok = true) {
+      settle(ok ? "done" : "stopped");
+      last = null;
+    },
+    // About a second however long the code is, so a big change doesn't
+    // hold the owner up and a small one is still readable.
+    type(text) {
+      code.hidden = false;
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        code.textContent = text;
+        return Promise.resolve();
+      }
+      // Paced by the clock, not by animation frames, which stop while the
+      // tab is in the background and would leave the change half-typed.
+      const start = performance.now();
+      const ms = 1100;
+      return new Promise((done) => {
+        (function tick() {
+          const at = Math.min(text.length, Math.ceil((text.length * (performance.now() - start)) / ms));
+          code.textContent = text.slice(0, at);
+          code.scrollTop = code.scrollHeight;
+          if (at < text.length) setTimeout(tick, 16);
+          else done();
+        })();
+      });
+    },
+  };
+}
+
+// The first few selectors the CSS targets, to name what the agent changed.
+function targetsOf(css) {
+  const found = new Set();
+  const clean = String(css || "").replace(/\/\*[\s\S]*?\*\//g, "");
+  for (const m of clean.matchAll(/(?:^|[{}])\s*([^{}@;]+?)\s*\{/g)) {
+    for (const sel of m[1].split(",")) {
+      const s = sel.trim().replace(/\s+/g, " ");
+      if (s && !/^(\d|from$|to$)/.test(s)) found.add(s.length > 42 ? `${s.slice(0, 40)}…` : s);
+    }
+  }
+  return [...found].slice(0, 3);
+}
+
+const lineCount = (s) => (s?.trim() ? s.trim().split("\n").length : 0);
+
 async function askAgent(request) {
   if (!request || !state.store) return false;
   let added = null;
@@ -208,6 +277,9 @@ async function askAgent(request) {
   btn.disabled = true;
   btn.textContent = "Working on it…";
   $("#ai-msg").hidden = true;
+  const dev = devLog();
+  dev.step("Reading the page", state.path);
+  const writing = setTimeout(() => dev.step("Working out the change for this store’s theme"), 600);
   try {
     const change = await api("api/ai-change", {
       domain: state.store.domain,
@@ -215,7 +287,10 @@ async function askAgent(request) {
       request,
       existing: state.custom.map((c) => c.summary),
     });
+    clearTimeout(writing);
     if (!change.css && !change.js) {
+      dev.step("Checked the request against its rules");
+      dev.end(false);
       // Why the agent said no (fake reviews, made-up claims) is the point
       // here, so it stays under the request rather than in a passing toast.
       const msg = $("#ai-msg");
@@ -223,16 +298,25 @@ async function askAgent(request) {
       msg.hidden = false;
       return;
     }
+    const targets = targetsOf(change.css);
+    if (targets.length) dev.step("Found what to change", targets.join("   "));
+    const css = lineCount(change.css);
+    const js = lineCount(change.js);
+    dev.step(
+      `Writing ${[css && `${css} line${css === 1 ? "" : "s"} of CSS`, js && `${js} line${js === 1 ? "" : "s"} of JavaScript`].filter(Boolean).join(" and ")}`,
+    );
+    await dev.type([change.css && `/* CSS */\n${change.css.trim()}`, change.js && `// JavaScript\n${change.js.trim()}`].filter(Boolean).join("\n\n"));
     state.custom.push(change);
     added = change;
     $("#ai-request").value = "";
     renderChanges();
-    // The summary of what the agent did sits in the change list, further
-    // down the panel; bring it into view so the owner reads it.
-    $("#changes-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
     applyChanges();
+    dev.step("Done: it’s on the page under “With your changes”, and listed under Your decision");
+    dev.end();
     toast(change.summary);
   } catch (err) {
+    clearTimeout(writing);
+    dev.end(false);
     toast(err.message, true);
   } finally {
     btn.disabled = false;

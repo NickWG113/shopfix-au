@@ -15,6 +15,10 @@ explains how. To check any store with the real agent, run it locally (below).
   recoloured and cut down to Shopify only. Its form opens the dashboard.
 - `/dashboard?store=…` — the owner's view: what to fix first, the agent, and
   what QuickLift read. Every button that changes something opens the preview.
+- `/results?store=…` — daily results: conversion rate, orders and revenue
+  day by day since the changes went live, with a chart, a table and today so
+  far. **Sample data**, labelled on the page (a store making about A$100k a
+  year); connected to a store it would read these from Shopify's analytics.
 - `/preview?store=…` — the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"
@@ -22,7 +26,7 @@ explains how. To check any store with the real agent, run it locally (below).
   the page on screen, each one click away. `&fix=afterpay` opens with a fix switched on;
   `&ask=…&page=product` hands a request straight to the agent.
 
-A dark "Demo" bar above every page switches between the three (keys 1, 2, 3)
+A dark "Demo" bar above every page switches between the four (keys 1–4)
 and keeps the store. It's for presenting, not part of the product; × hides it.
 
 The example-shop photos in `public/images/home/` are CC0 from StockSnap:
@@ -80,6 +84,12 @@ npm test
 
 4. **Publish (optional)** — for a store you own, write the changes into the
    live theme, and undo them again. See below.
+
+When the agent makes a change, **The agent at work** shows it working like a
+developer: the page it read, the theme's own classes it found to change, and
+the CSS and JavaScript typed out as it writes them, before the change goes
+on the page. A refusal (fake reviews, made-up claims) stops there with the
+reason.
 
 The preview is laid out as a review: the store's page **Now** beside the page
 **With your changes**, scrolled together, and a right-hand column with **Your

@@ -135,6 +135,20 @@ button:disabled { opacity: .55; cursor: progress; }
 .ai-msg { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fdf0ea; color: #8a2d0a; font-size: 13.5px; line-height: 1.5; }
 .ai-msg b { display: block; margin-bottom: 2px; }
 
+/* The agent at work: a log, then its code typing out in a dark editor. */
+.ai-dev { margin-top: 14px; padding: 12px; border: 1px solid var(--line, #e4e4ee); border-radius: 12px; background: #fafaff; }
+.ai-dev-head { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-dark, #2a2194); }
+.ai-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.4; }
+.ai-log li { position: relative; padding-left: 24px; }
+.ai-log li::before { position: absolute; left: 0; top: 1px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+.ai-log li.done::before { content: "✓"; background: #e7f4ee; color: #0f7b52; }
+.ai-log li.stopped::before { content: "!"; background: #fdf0ea; color: #c2410c; }
+.ai-log li.doing::before { content: ""; border: 2px solid #d9d5f7; border-top-color: #3b2fc9; width: 12px; height: 12px; animation: ai-spin .8s linear infinite; }
+.ai-log code { display: inline-block; margin-top: 2px; font-size: 12px; color: #2a2194; background: #efedfc; padding: 1px 6px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
+.ai-code { margin: 10px 0 0; max-height: 200px; overflow: auto; padding: 10px 12px; border-radius: 8px; background: #14122b; color: #d9d6ff; font: 11.5px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+@keyframes ai-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ai-log li.doing::before { animation: none; } }
+
 .notice {
   display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 14px 16px;
   border: 1px solid #cfe9dc; border-radius: var(--r-box); background: #eef8f2; color: #134e36; font-size: 14px; line-height: 1.45;

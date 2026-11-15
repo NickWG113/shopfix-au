@@ -15,6 +15,7 @@
     <nav class="ql-tabs" aria-label="Pages">
       <a href="#" class="on" data-link="dashboard">Dashboard</a>
       <a href="#" data-link="preview">Preview and approve</a>
+      <a href="#" data-link="results">Daily results</a>
     </nav>
     <span class="ql-store-pill" id="store-pill" hidden></span>
   </header>
@@ -27,6 +28,7 @@
         <a href="#fix">What to fix</a>
         <a href="#agent">Ask the agent</a>
         <a href="#live">Live on your store</a>
+        <a href="#" data-link="results">Daily results</a>
       </nav>
     </aside>
 
@@ -111,7 +113,10 @@
             <section class="db-card" id="live">
               <div class="db-card-head"><h2>Live on your store</h2></div>
               <p id="live-msg" class="db-muted">Nothing is live yet. A change goes live only when you approve it.</p>
-              <a class="ql-btn ql-btn--ghost" href="#" data-link="preview">Open preview and approve</a>
+              <div class="db-live-actions">
+                <a class="ql-btn ql-btn--ghost" href="#" data-link="preview">Open preview and approve</a>
+                <a class="ql-btn ql-btn--ghost" href="#" data-link="results">See daily results</a>
+              </div>
             </section>
 
             <section class="db-card">
