@@ -215,3 +215,84 @@
 @media (max-width: 520px) {
   .rs-tiles { grid-template-columns: 1fr; }
 }
+
+/* Change history: newest first, numbered to match the chart's markers. */
+.rs-hist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rs-hist-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 0;
+  border-top: 1px solid var(--ql-line);
+}
+
+.rs-hist-item:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.rs-hist-n {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--ql-brand);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rs-hist-item--undone .rs-hist-n {
+  background: #b9b8c6;
+}
+
+.rs-hist-title {
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--ql-ink);
+}
+
+.rs-hist-item--undone .rs-hist-title {
+  color: var(--ql-muted);
+  text-decoration: line-through;
+}
+
+.rs-hist-meta {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--ql-muted);
+}
+
+.rs-hist-status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--ql-ok-tint);
+  color: var(--ql-ok);
+  white-space: nowrap;
+}
+
+.rs-hist-item--undone .rs-hist-status {
+  background: #f0f0ec;
+  color: var(--ql-muted);
+}
+
+.rs-hist-note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+}
+
+/* The same numbers on the chart, in a row under the bars. */
+.rs-ev circle { fill: #ffffff; stroke: var(--ql-brand); stroke-width: 2; }
+.rs-ev text { fill: var(--ql-brand-dark); font: 700 12px var(--ql-sans); pointer-events: none; }
+.rs-ev--undone circle { stroke: #9a99a8; }
+.rs-ev--undone text { fill: #6a6977; }

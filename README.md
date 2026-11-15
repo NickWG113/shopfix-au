@@ -20,7 +20,9 @@ approve**.
 
 - `/dashboard?store=…` — step 1, the one page an owner checks. At the top,
   **How your store is doing**: revenue since the changes went live, in a
-  sentence, three numbers and one chart, with every day folded away.
+  sentence, three numbers, one chart and a **Change history** (each change,
+  where it came from, live or undone, numbered to match markers on the
+  chart), with every day folded away.
   **Sample data**, labelled on the page (a store making about A$100k a year);
   connected to a store it would read these from Shopify's analytics. Below,
   **Suggested improvements**: one sentence on what the check found, each

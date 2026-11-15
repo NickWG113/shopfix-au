@@ -104,8 +104,9 @@ function totals(rows) {
 // Plain SVG, one series each, with a crosshair and a tooltip on hover.
 
 const W = 900;
-const H = 260;
-const PAD = { top: 26, right: 16, bottom: 30, left: 52 };
+const H = 290;
+// Room at the bottom for the change markers, between the bars and the dates.
+const PAD = { top: 26, right: 16, bottom: 58, left: 52 };
 
 function niceMax(v) {
   const step = 10 ** Math.floor(Math.log10(v || 1));
@@ -167,7 +168,29 @@ function chart(el, { days, liveIndex, value, max, ticks, fmt, marks, tip }) {
   el.addEventListener("pointerleave", hide);
 }
 
-function revChart(days, liveIndex) {
+// ---------- change history (sample) ----------
+// What changed on the store and when, so a dip or a rise on the chart can
+// be read against it. Past entries are SAMPLE, like the figures: days are
+// counted from the sample's go-live day. What the owner really approved in
+// this browser goes on top, dated today.
+const SAMPLE_HISTORY = [
+  { day: -6, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", note: "Undone two days later" },
+  { day: 0, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live" },
+  { day: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live" },
+  { day: 5, title: "Bolder product title on phones", source: "Asked the agent", status: "live" },
+];
+
+function historyFor(days, live) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const past = SAMPLE_HISTORY.map((h) => ({ ...h, i: LIVE_AFTER + h.day, date: days[LIVE_AFTER + h.day].date, sample: true }));
+  const yours = live.map((title) => ({ title, source: "You approved it", status: "live", date: today, i: null, sample: false }));
+  // Numbered oldest first, as they're marked on the chart.
+  past.forEach((h, n) => (h.n = n + 1));
+  return { past, yours };
+}
+
+function revChart(days, liveIndex, events = []) {
   const el = $("#chart-rev");
   el.dataset.label = "Daily revenue in Australian dollars, before and after the changes went live";
   chart(el, {
@@ -192,9 +215,23 @@ function revChart(days, liveIndex) {
             : "";
           return path ? `<path class="rs-bar ${d.after ? "rs-bar--after" : "rs-bar--before"}" d="${path}"/>` : "";
         })
-        .join("");
+        .join("") +
+        // Each change in the history, numbered, on the day it happened.
+        // Two on the same day sit side by side.
+        events
+          .map((ev) => {
+            const same = events.filter((o) => o.i === ev.i);
+            const k = same.indexOf(ev);
+            const cx = f.x(ev.i) + (k - (same.length - 1) / 2) * 22;
+            const cy = f.y(0) + 17;
+            return `<g class="rs-ev rs-ev--${ev.status}"><circle cx="${cx}" cy="${cy}" r="10"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${ev.n}</text></g>`;
+          })
+          .join("");
     },
-    tip: (d) => `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders`,
+    tip: (d, i) => {
+      const here = events.filter((ev) => ev.i === i);
+      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}`).join("");
+    },
   });
 }
 
@@ -226,7 +263,8 @@ export function renderResults(store, live) {
   $("#t-today").textContent = `${today.orders} order${today.orders === 1 ? "" : "s"}`;
   $("#d-today").textContent = `${money(today.revenue)} from ${today.visits} visits`;
 
-  revChart(days, LIVE_AFTER);
+  const history = historyFor(days, live);
+  revChart(days, LIVE_AFTER, history.past);
 
   $("#day-rows").innerHTML = [today, ...days.slice().reverse()]
     .map(
@@ -236,8 +274,15 @@ export function renderResults(store, live) {
     )
     .join("");
 
-  // Only what the owner really approved; the sample never claims more.
-  $("#live-list").innerHTML = live.length
-    ? live.map((l) => `<li><span>${esc(l)}</span><span class="db-muted">Live</span></li>`).join("")
-    : `<li class="db-muted">Nothing approved yet. The chart shows what this looks like once changes are live.</li>`;
+  // Newest first: what the owner approved today, then the sample's past.
+  const row = (h) => `
+    <li class="rs-hist-item rs-hist-item--${h.status}">
+      <span class="rs-hist-n">${h.n ?? "✓"}</span>
+      <div>
+        <div class="rs-hist-title">${esc(h.title)}</div>
+        <div class="rs-hist-meta">${h.sample ? esc(shortDate(h.date)) : "Today"} · ${esc(h.source)}${h.note ? ` · ${esc(h.note)}` : ""}</div>
+      </div>
+      <span class="rs-hist-status">${h.status === "live" ? "Live" : "Undone"}</span>
+    </li>`;
+  $("#history").innerHTML = [...history.yours, ...history.past.slice().reverse()].map(row).join("");
 }

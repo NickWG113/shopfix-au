@@ -171,3 +171,7 @@ That idea's change waited for the store's product recommendations, which never l
 > like its a bit sexual
 
 The dashboard is now the one page: **How your store is doing** (the results, sample data) at the top, **Suggested improvements** below, and an approved fix shows as "✓ Fixed, live". The flow is two steps, Dashboard → Preview and approve, and the old Results link forwards to the dashboard. Frank Body was taken out of the online demo entirely; Toyworld, a family toy shop, is the demo store now. The sample results were evened out so they show the 5% lift the proof of value assumes, not a lucky 12%.
+
+> [screenshot of the dashboard's results] maybe here we can see like the history of changes etc. and you can mock some ideas
+
+"Live on your store" became a **Change history**: each change with its date, where it came from (asked the agent, one of the agent's ideas, a ready-made fix) and whether it's live or was undone, numbered to match markers under the revenue chart. Past entries are sample data, labelled on the card; what the owner approves goes on top, dated today.
