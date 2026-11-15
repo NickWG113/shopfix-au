@@ -185,3 +185,7 @@ Each change now has a verdict from the week after it went live against the week 
 > also make the graph more acccurately reflect
 
 The history is back beside the chart, one line per change (number, change, verdict), and clicking a change opens its details. The sample figures are now built from the history: each change lifts or cuts sales from the day it went live (the loser only while it was live), with the random noise cancelling out between changes. A black line over the bars shows the average day between changes, weekends evened out, so the dip and the steps line up with the numbered markers. The total still comes to about the 5% the proof of value assumes.
+
+> average day bar looks bad. i just mean making daily sales more pronounced
+
+The average-day line is gone. The changes now show in the daily bars themselves: bigger effects (the loser −25% while live, the winners +10% and +6%), a gentler weekly rhythm and less day-to-day noise. The sample's headline is now about +17%, a good case; the video script has the presenter say the proof of value plans on a cautious 5%.

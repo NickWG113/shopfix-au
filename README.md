@@ -24,8 +24,9 @@ approve**.
   (each change with a verdict, **Winner**, **Neutral**, **Loser**, or **Too
   early to tell** for one made today; click one for when, where from and
   what it did; numbered and coloured to match markers on the chart). The
-  sample figures are built from the history, so the chart's line of the
-  average day dips with the loser and steps up with each winner.
+  sample figures are built from the history, so the daily bars drop while
+  the loser was live and step up with each winner (a good case: about +17%,
+  where the proof of value plans on 5%).
   **Sample data**, labelled on the page (a store making about A$100k a year);
   connected to a store it would read these from Shopify's analytics. Below,
   **Suggested improvements**: one sentence on what the check found, each

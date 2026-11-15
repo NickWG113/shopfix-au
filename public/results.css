@@ -378,6 +378,3 @@
   .rs-hist-chev::before { transition: none; }
 }
 
-/* The average day between changes (weekends evened out), over the bars. */
-.rs-step { fill: none; stroke: var(--ql-ink); stroke-width: 2.5; stroke-linejoin: round; }
-.rs-key--step { width: 18px; height: 0; border-top: 2.5px solid var(--ql-ink); }
