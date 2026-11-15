@@ -21,7 +21,13 @@ const SKIP = new Set(["login.html"]);
 await fs.rm(out, { recursive: true, force: true });
 await fs.cp(path.join(root, "public"), out, { recursive: true, filter: (src) => !SKIP.has(path.basename(src)) });
 await fs.copyFile(path.join(root, "lib", "fixes.js"), path.join(out, "fixes.js"));
-await fs.copyFile(path.join(root, "pages", "static-api.js"), path.join(out, "static-api.js"));
+// One version per build: the commit GitHub is building, or the time here.
+// Every page's own files are linked with it (below), and static-api.js adds
+// it to what it loads, so a browser holding files from an older build
+// fetches the new ones rather than mixing the two.
+const VERSION = (process.env.GITHUB_SHA || Date.now().toString(36)).slice(0, 10);
+const api = await fs.readFile(path.join(root, "pages", "static-api.js"), "utf8");
+await fs.writeFile(path.join(out, "static-api.js"), api.replace('"__BUILD__"', JSON.stringify(VERSION)));
 await fs.copyFile(path.join(root, "pages", "mock-agent.js"), path.join(out, "mock-agent.js"));
 await fs.cp(path.join(root, "recording"), path.join(out, "recording"), { recursive: true });
 // GitHub Pages would otherwise run Jekyll, which skips some files.
@@ -34,7 +40,8 @@ for (const name of await fs.readdir(out)) {
   const file = path.join(out, name);
   const html = await fs.readFile(file, "utf8");
   if (!/<head>/i.test(html)) throw new Error(`${name} has no <head> to add the replay to`);
-  await fs.writeFile(file, html.replace(/<head>/i, `<head>\n  <script src="static-api.js"></script>`));
+  const stamped = html.replace(/((?:href|src)=")([\w-]+\.(?:css|js))"/g, `$1$2?v=${VERSION}"`);
+  await fs.writeFile(file, stamped.replace(/<head>/i, `<head>\n  <script src="static-api.js?v=${VERSION}"></script>`));
   pages++;
 }
 

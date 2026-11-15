@@ -16,7 +16,11 @@
   "use strict";
 
   const realFetch = window.fetch.bind(window);
-  const here = (p) => new URL(p, document.baseURI).href;
+  // Each build stamps its own version here (scripts/build-pages.js), and
+  // every file the demo loads carries it, so a browser can't mix files
+  // cached from an older build with this one.
+  const VERSION = "__BUILD__";
+  const here = (p) => new URL(VERSION === "__BUILD__" ? p : `${p}${p.includes("?") ? "&" : "?"}v=${VERSION}`, document.baseURI).href;
   const modules = Promise.all([import(here("fixes.js")), import(here("recording-keys.js")), import(here("mock-agent.js"))]);
   const cache = new Map();
   const REPO = "https://github.com/NickWG113/shopfix-au";

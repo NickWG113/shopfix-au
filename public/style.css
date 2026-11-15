@@ -240,3 +240,8 @@ button:disabled { opacity: .55; cursor: progress; }
   .frames.phone .pane-now { display: none; }
   .frames.phone .pane { width: 100%; max-width: 390px; }
 }
+
+/* The hidden attribute loses to any display rule above (the placeholder
+   is display:grid, frames are display:block), which left "Your page will
+   appear here." drawn over the store's page. */
+[hidden] { display: none !important; }
