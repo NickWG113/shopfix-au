@@ -52,10 +52,15 @@ const PROBLEM = {
   sticky: "Add to cart scrolls out of reach on phones",
 };
 
-// Checks with no automatic fix, and what the owner can do instead.
+// Ideas with no ready-made fix still get a preview: the agent makes an
+// honest change for them (never fake reviews), shown on a product page.
+const AGENT_FIX = {
+  reviews: "Add a small line under the Add to cart button saying: Bought this? Tell other shoppers what you think and leave a review",
+  photos: "Add a small line under the price saying: Size and what is in the box: [your details]. Want more photos? Just ask us",
+};
+
+// Ideas only the owner can do, in Shopify's settings: no preview possible.
 const NO_FIX = {
-  reviews: "ask your recent customers for a review. There's no automatic fix, because reviews have to be real.",
-  photos: "add photos in Shopify: more angles, and one of the product in use.",
   aud: "turn on AUD for Australian visitors in Shopify Markets.",
   password: "remove the password in Online Store › Preferences.",
 };
@@ -142,18 +147,20 @@ function render(checks, config, live = []) {
   const unknown = checks.filter((c) => c.status === "unknown" && c.id !== "password");
   const ok = checks.filter((c) => c.status === "pass");
 
+  // Only ideas the owner hasn't tried: one they've approved is in the
+  // change history now, not here.
   liveFixes = new Set(fails.filter((c) => c.fix && live.includes(config.presets[c.fix]?.label)).map((c) => c.fix));
-  const fixed = fails.filter((c) => liveFixes.has(c.fix)).length;
+  const ideas = fails.filter((c) => !liveFixes.has(c.fix));
 
-  // The whole check in one sentence, instead of three number tiles.
-  const things = (n) => `${n} thing${n === 1 ? "" : "s"}`;
-  $("#summary").textContent = fails.length
-    ? `We found ${things(fails.length)} to fix${fixed ? `, and ${fixed} ${fixed === 1 ? "is" : "are"} fixed now` : ""}. ${ok.length} ${ok.length === 1 ? "is" : "are"} already looking good.`
-    : `Nothing to fix from our checks: ${ok.length} ${ok.length === 1 ? "thing is" : "things are"} looking good.`;
+  // The whole list in one sentence.
+  const lookGood = `${ok.length} ${ok.length === 1 ? "thing already looks" : "things already look"} good.`;
+  $("#summary").textContent = ideas.length
+    ? `${ideas.length} idea${ideas.length === 1 ? "" : "s"} to try, most important first. ${lookGood}`
+    : `You've tried every idea from our check. ${lookGood}`;
 
-  $("#findings").innerHTML = fails.length
-    ? fails.map(findingRow).join("")
-    : `<li><div class="db-f-title">Nothing to fix from our checks.</div><div class="db-f-detail">Try asking the agent for a change of your own.</div></li>`;
+  $("#findings").innerHTML = ideas.length
+    ? ideas.map(findingRow).join("")
+    : `<li><div class="db-f-title">Nothing left from our check.</div><div class="db-f-detail">Ask the agent for any other change.</div></li>`;
 
   $("#unknown-wrap").hidden = unknown.length === 0;
   $("#unknown").innerHTML = unknown.map((c) => quietRow(c, "unknown", "Can’t tell")).join("");
@@ -193,12 +200,12 @@ function render(checks, config, live = []) {
 
 function findingRow(c) {
   const sev = PRIORITY[c.id] ?? "medium";
-  // No ready-made fix: what the owner can do goes under the detail, full
-  // width, rather than squeezing the row into two narrow columns.
-  const action = c.fix && liveFixes.has(c.fix)
-    ? `<div class="db-f-action"><span class="db-fixed">✓ Fixed, live</span></div>`
-    : c.fix
-    ? `<div class="db-f-action"><a class="ql-btn" href="${esc(previewUrl({ fix: c.fix }))}">Preview the fix</a></div>`
+  // Every idea that can be shown on the page gets a preview: a ready-made
+  // fix, or an honest change the agent makes. Only settings-only ones
+  // (prices in AUD, the password page) say what to do instead.
+  const preview = c.fix ? previewUrl({ fix: c.fix }) : AGENT_FIX[c.id] ? previewUrl({ ask: AGENT_FIX[c.id], page: "product" }) : null;
+  const action = preview
+    ? `<div class="db-f-action"><a class="ql-btn" href="${esc(preview)}">Preview the fix</a></div>`
     : NO_FIX[c.id]
       ? `<div class="db-f-note">${esc(NO_FIX[c.id])}</div>`
       : "";

@@ -193,3 +193,9 @@ The average-day line is gone. The changes now show in the daily bars themselves:
 > [screenshot of the undone change] dont have strikethrough
 
 The undone change is no longer struck through; it keeps its grey text, its Loser verdict and "Undone" in its details.
+
+> [screenshots of the agent's suggested requests and the suggested improvements] this should be thinks that someone like would want to nromally change like copy of their websit etec.
+>
+> also., the left side here And these suggested improvements should literally only be things that like are ideas and that they haven't done yet. So the fact that you say fix live should not be there. It's just like, these are ideas that you can try. And then we should have preview the fix on every single one of those. Does that make sense?
+
+The simulated agent learned to change wording ("Change the Add to cart button to say Add to bag", "Change the announcement bar at the top to say …"), and the suggested requests are now everyday changes, mostly wording. Suggested improvements list only ideas not tried yet (an approved one moves to the change history), each with Preview the fix: a ready-made fix, or an honest change by the agent, such as a line inviting real customers to leave a review.

@@ -29,8 +29,8 @@ Before recording:
 
 - The step bar at the top: **1 Dashboard → 2 Preview and approve**. **Say:** "Two steps. The dashboard is the one page an owner checks: how the store is doing, and what to improve next."
 - **How your store is doing** at the top. **Say:** "Nothing is live yet, so this is a sample, and it says so. We'll come back to it once a change is live."
-- Scroll to **Suggested improvements**: "We found 4 things to fix. 3 are already looking good." Each problem is named plainly, most important first: delivery cost isn't clear up front, no customer reviews, nothing says it's Australian, too few photos.
-- **Say:** "It reads only public pages: the home page, the product feed and one product page. No login or app install is needed. Where there's no automatic fix, like reviews, it says what the owner can do instead. It never adds fake reviews."
+- Scroll to **Suggested improvements**: "4 ideas to try, most important first. 3 things already look good." Each idea is named plainly: delivery cost isn't clear up front, no customer reviews, nothing says it's Australian, too few photos. Every one has **Preview the fix**.
+- **Say:** "It reads only public pages: the home page, the product feed and one product page. No login or app install is needed. Even reviews get an honest fix: a line inviting real customers to leave one. It never adds fake reviews."
 - Open **Already looking good** to show what passed.
 
 ---
@@ -59,7 +59,7 @@ The agentic feature, part one. Take your time.
 
 The agentic feature, part two: the owner asks for something in their own words, and the agent does a developer's job.
 
-- Open the **Ask the agent** tab and press the chip **Green button + "Ships from Sydney"** (or type: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."*).
+- Open the **Ask the agent** tab and type: *"Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days."* Then press the chip **Button says "Add to bag"** to show an everyday wording change.
 - Point at **The agent at work** as it goes. **Say:** "It reads the page, finds what to change in the store's own theme, these class names here, and writes the CSS and JavaScript. You're watching it write the code."
 - The page scrolls to the green Add To Cart button and the new line. **Say:** "No developer, no ticket, no waiting a week. And it works to rules: it never invents reviews, discounts, countdown timers or claims about the business."
 - Prove the rule: press the chip **Fake 5-star reviews (it'll refuse)**. The log stops with a **!** and the reason, in red. **Say:** "It refuses, and explains why: fake reviews break Australian Consumer Law."
@@ -86,7 +86,7 @@ Press **See the results on your dashboard →** under the Approve button.
 - Read the first sentence aloud: revenue up since the changes went live. The sample is a good case, built so each change is easy to see; say so: "This sample is a good case. Our proof of value plans on a cautious 5%."
 - The three tiles: revenue for the 14 days since, the share of visits that bought, and today so far.
 - Hover over the revenue chart: lighter bars before, violet after, and the dashed line where the changes went live. **Say:** "Compare weeks, not days: a small store's daily figures jump around."
-- Point at **Change history** beside the chart: every change with its verdict, **Winner**, **Neutral** or **Loser**. Click one to open when it went live, where it came from and what it did. The numbers and colours match the markers under the chart: the bars drop while the loser was live and step up with each winner. **Say:** "The owner sees what changed, when, and whether it helped. The rounder button was a loser, so it was undone. The one approved today says too early to tell: a day of sales proves nothing." Then scroll down: the delivery item now says **✓ Fixed, live**, and the next suggestions are right below. **Say:** "One page: how it's going, and what to do next. A 5% lift on A$100,000 a year is about A$5,000 more in sales, with no extra ad spend."
+- Point at **Change history** beside the chart: every change with its verdict, **Winner**, **Neutral** or **Loser**. Click one to open when it went live, where it came from and what it did. The numbers and colours match the markers under the chart: the bars drop while the loser was live and step up with each winner. **Say:** "The owner sees what changed, when, and whether it helped. The rounder button was a loser, so it was undone. The one approved today says too early to tell: a day of sales proves nothing." Then scroll down: the delivery idea has gone from the list, because it's done, and the next ideas are right below. **Say:** "One page: how it's going, and what to do next. A 5% lift on A$100,000 a year is about A$5,000 more in sales, with no extra ad spend."
 
 If time is short, cut use case 1's "Already looking good" and use case 2's wording edit before cutting any of this.
 

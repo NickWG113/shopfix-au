@@ -12,6 +12,11 @@
 // Used by static-api.js wherever no answer was recorded for a request.
 
 const TARGETS = {
+  announcement: {
+    name: "announcement bar",
+    words: /announcement|top bar|bar at the top|banner at the top/,
+    sel: [".announcement-bar__message", ".announcement-bar p", ".AnnouncementBar__Content", ".announcement__message", ".topbar__center .topbar__menu-item a", ".announcement-bar"],
+  },
   cart: {
     name: "Add to cart button",
     words: /add to cart|add-to-cart|cart button|buy button|buy now|checkout button|\bbutton\b/,
@@ -68,6 +73,7 @@ const INVENTS = /\b(add|show|put|insert|create|make up|write|include)\b.{0,40}\b
 
 function pickTarget(text, pagePath) {
   const onHome = !pagePath || pagePath === "/";
+  if (TARGETS.announcement.words.test(text)) return "announcement";
   if (TARGETS.cardPrice.words.test(text)) return "cardPrice";
   if (onHome && /\bprices?\b/.test(text)) return "cardPrice";
   if (TARGETS.cart.words.test(text)) return "cart";
@@ -105,6 +111,16 @@ export function mockChange(request, pagePath = "/") {
       warning:
         "I can't add reviews, ratings, timers, stock counts or discounts that aren't real: shoppers would be misled, and Australian Consumer Law treats fake reviews and false urgency as misleading. If you have real reviews, a reviews app can show them here.",
     };
+  }
+
+  // Rewording: "Change the Add to cart button to say Add to bag". The
+  // owner's own words go in place of what's there, on the button or the
+  // announcement bar.
+  const retext = request.match(/\b(?:to say|to read|so it says|so it reads)\s*:?\s*["“'‘]?(.{2,100}?)["”'’]?[.!]?$/i);
+  if (retext) {
+    const newWords = retext[1].trim();
+    const where = pickTarget(text.replace(newWords.toLowerCase(), ""), pagePath);
+    if (where === "cart" || where === "announcement") return reword(where, newWords);
   }
 
   const words = lineOfText(request);
@@ -208,8 +224,31 @@ export function mockChange(request, pagePath = "/") {
     warning: placeholder
       ? "Replace the words in [brackets] with your own details before you publish."
       : words
-        ? "Check this wording is true for your store before you publish. Only you know your delivery times and policies."
+        ? "Check this wording is right for your store before you publish. Only you know your own delivery times, policies and offers."
         : "",
+  };
+}
+
+/** Puts the owner's words in place of the button's or the bar's own text. */
+function reword(target, newWords) {
+  const sel = JSON.stringify(selectorList(target));
+  const textJs = JSON.stringify(newWords);
+  // The button may also appear as a sticky copy, so every match changes;
+  // the announcement bar only once. The first piece of text is replaced and
+  // any others emptied, so icons and spinners inside stay.
+  const each = target === "cart" ? `document.querySelectorAll(${sel}).forEach(` : `[document.querySelector(${sel})].filter(Boolean).forEach(`;
+  return {
+    summary: `The ${TARGETS[target].name} now says "${newWords}".`,
+    css: "",
+    js: js([
+      `${each}function(el){`,
+      `  if(el.getAttribute('data-shopfix-ai')==='text')return;`,
+      `  var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null),n,first=null;`,
+      `  while((n=w.nextNode())){if(n.nodeValue.trim()){if(!first)first=n;else n.nodeValue='';}}`,
+      `  if(first){first.nodeValue=${textJs};el.setAttribute('data-shopfix-ai','text');}`,
+      `});`,
+    ]),
+    warning: target === "announcement" ? "Check this wording is true for your store before you publish. Only you know your delivery offers." : "",
   };
 }
 
@@ -224,7 +263,7 @@ export function mockIdeas(pagePath = "/") {
     return [
       { title: "Make product names easier to scan", why: "Shoppers skim the cards on a phone, and bolder names help them spot what they came for.", request: "Make the product names on the cards bolder" },
       { title: "Bigger prices on the cards", why: "Shoppers decide whether to tap a product partly on price, so it should be easy to read.", request: "Make the prices on the cards larger and bolder" },
-      { title: "Say when delivery is free", why: "Delivery cost is one of the first things shoppers want to know, before they reach checkout.", request: "Add a line at the top of the page saying Free delivery on orders over [your threshold]" },
+      { title: "Use the top bar for delivery", why: "Delivery cost is one of the first things shoppers want to know, before they reach checkout.", request: "Change the announcement bar at the top to say Free delivery on orders over [your threshold]" },
       { title: "Say where you ship from", why: "Knowing an order ships locally reassures first-time shoppers.", request: "Add a line at the top of the page saying Ships from [your city] in 1–2 business days" },
       { title: "Darker product names", why: "Higher contrast makes text easier to read outdoors on a phone.", request: "Make the product names on the cards black and bolder" },
       { title: "Make card prices stand out", why: "A clear price helps shoppers compare products at a glance.", request: "Make the prices on the cards bigger and navy" },
@@ -236,6 +275,6 @@ export function mockIdeas(pagePath = "/") {
     { title: "Mention returns by the button", why: "A clear returns promise near the button removes a common reason to wait.", request: "Add a small line under the Add to cart button saying Free returns within [your returns window]" },
     { title: "Make the price easier to see", why: "Shoppers look for the price first, so it should stand out from the text around it.", request: "Make the price larger and bolder" },
     { title: "Bolder product title on phones", why: "On a small screen a strong title confirms the shopper is on the right product.", request: "Make the product title larger and bolder on phones" },
-    { title: "Rounder, friendlier button", why: "A clearly shaped button looks tappable, which helps on touch screens.", request: "Make the Add to cart button rounded" },
+    { title: "Friendlier button wording", why: "Words that match how your shoppers talk make the next step feel natural.", request: "Change the Add to cart button to say Add to bag" },
   ];
 }

@@ -10,15 +10,17 @@ export const DEMO_STORES = [
 ];
 
 /**
- * Requests recorded on every page beside the agent's own ideas: the
- * dashboard's suggestion chips, the request in the demo video, and one the
- * agent should refuse, to show the no-invented-facts rule working.
+ * The suggested requests by the agent box: everyday changes an owner makes,
+ * mostly wording, and one the agent should refuse, to show the
+ * no-invented-facts rule working. (A store with an agent.json has answers
+ * recorded for these too.)
  */
 export const EXTRA_REQUESTS = [
+  "Change the Add to cart button to say Add to bag",
+  "Change the announcement bar at the top to say Free shipping on orders over $99",
+  "Add a small line under the price saying: Ships from Sydney in 1–2 business days",
+  "Add a small line under the Add to cart button saying: Free returns within 30 days",
   "Make the Add to cart button bigger and bright green",
-  "Add a small line under the price saying: Ships from [your city] in 1–2 business days",
-  "Make the product title larger and bolder on phones",
-  "Make the Add to cart button bright green, and add a small line under it saying Ships from Sydney in 1–2 business days",
   "Add five 5-star customer reviews under the price",
 ];
 

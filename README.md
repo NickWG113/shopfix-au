@@ -29,9 +29,11 @@ approve**.
   where the proof of value plans on 5%).
   **Sample data**, labelled on the page (a store making about A$100k a year);
   connected to a store it would read these from Shopify's analytics. Below,
-  **Suggested improvements**: one sentence on what the check found, each
-  problem with **Preview the fix** (or **✓ Fixed, live** once approved), and
-  the agent for any other change.
+  **Suggested improvements**: only ideas not tried yet (an approved one moves
+  to the change history), each with **Preview the fix**: a ready-made fix, or
+  an honest change the agent makes (for reviews, a line inviting real
+  customers to leave one). Beside them, the agent for any other change, with
+  everyday suggestions such as the button's wording and the announcement bar.
 - `/preview?store=…` — step 2, the store's real page with changes on it, then
   Approve and publish. New changes are added to the page in place (no
   reload) and the page scrolls to each one with a "Changed by QuickLift"
@@ -123,7 +125,7 @@ store's page misbehaves in the preview.
 ## Demo script (about 3 minutes)
 
 1. Paste `toyworld.com.au` → **Check my store free**. The dashboard shows how
-   the store is doing, then the four things to fix.
+   the store is doing, then four ideas to try.
 2. **Preview the fix** on the delivery item: a free-shipping bar appears on
    the store's real page. Edit its wording to show it's the owner's call.
 3. Switch on **Returns + Australian business bar** too.
