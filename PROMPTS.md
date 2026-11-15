@@ -133,3 +133,11 @@ This chat ran on a different computer, so only its opening prompt is recorded he
 So the online copy is fully mocked: saved store pages, the fixes running in the browser, and a mocked agent that writes simple changes from the request's wording (`pages/mock-agent.js`), with no API calls.
 
 What came out of it: the mocked online demo on GitHub Pages (`pages/static-api.js`, `pages/mock-agent.js`, `scripts/record-demo.js`, `scripts/build-pages.js`, `docs/github-pages.md`), a shared sign-in for when the full app is hosted (`lib/auth.js`), the proof-of-value working (`docs/proof-of-value.md`), and the demo video script (`docs/demo-video-script.md`).
+
+> lets make this ui better. … i mean the preview change ui etc. rn it looks really confusing
+
+The preview became a review: the page **Now** beside the page **With your changes**, and one column for the decision, the agent, the fixes and the ideas.
+
+> what is next. can you audti to make sure it is what we what. what use cases are we shoiwing
+
+Walking through every use case in the video script on the live demo turned up six problems, all fixed: the store's page scrolled out of view while switching on fixes further down the column (it now stays in view); the agent's refusal of fake reviews only flashed up for a few seconds (it now stays under the request); Approve and publish was a dead end online (it's now acted out, with Undo and the dashboard's "live on your store" count); the dashboard showed two sets of suggested requests; findings with no ready-made fix were squashed into a narrow column; and the dashboard sat to one side on wide screens.

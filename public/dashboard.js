@@ -37,10 +37,10 @@ const RANK = { high: 0, medium: 1 };
 
 // Checks with no automatic fix, and what the owner can do instead.
 const NO_FIX = {
-  reviews: "No automatic fix: reviews have to come from real customers.",
-  photos: "Add photos in Shopify: more angles, and one of the product in use.",
-  aud: "Turn on AUD for Australian visitors in Shopify Markets.",
-  password: "Remove the password in Online Store › Preferences.",
+  reviews: "ask your recent customers for a review. There's no automatic fix, because reviews have to be real.",
+  photos: "add photos in Shopify: more angles, and one of the product in use.",
+  aud: "turn on AUD for Australian visitors in Shopify Markets.",
+  password: "remove the password in Online Store › Preferences.",
 };
 
 const params = new URLSearchParams(location.search);
@@ -90,7 +90,7 @@ async function load() {
       // Storage blocked: the home page just won't offer a way back here.
     }
     const config = await api("api/config");
-    render(result.checks, config);
+    render(result.checks, config, result.live || 0);
   } catch (err) {
     $("#error-msg").textContent = err.message;
     $("#error").hidden = false;
@@ -100,7 +100,7 @@ async function load() {
   }
 }
 
-function render(checks, config) {
+function render(checks, config, live = 0) {
   wireLinks();
   document.title = `${store.name} · QuickLift`;
   $("#store-name").textContent = store.name;
@@ -125,7 +125,7 @@ function render(checks, config) {
 
   $("#n-fix").textContent = fails.length;
   $("#n-ok").textContent = ok.length;
-  $("#n-live").textContent = "0";
+  $("#n-live").textContent = String(live);
 
   $("#findings").innerHTML = fails.length
     ? fails.map(findingRow).join("")
@@ -140,8 +140,9 @@ function render(checks, config) {
   // Publishing is set up for one store we hold a key for (server.js); for
   // any other store the dashboard says so rather than offering a button
   // that would refuse.
-  $("#live-msg").textContent =
-    config.publishStore && config.publishStore === store.shop
+  $("#live-msg").textContent = live
+    ? `${live} approved change${live === 1 ? " is" : "s are"} live on ${store.domain}. Undo takes them off again, from Preview and approve.`
+    : config.publishStore && config.publishStore === store.shop
       ? `Nothing is live yet. Approved changes go into ${config.publishStore}'s theme, and undo takes them off again.`
       : "Nothing is live yet. A change goes live only when you approve it, once this store is connected.";
 
@@ -172,14 +173,18 @@ function render(checks, config) {
 
 function findingRow(c) {
   const sev = PRIORITY[c.id] ?? "medium";
+  // No ready-made fix: what the owner can do goes under the detail, full
+  // width, rather than squeezing the row into two narrow columns.
   const action = c.fix
-    ? `<a class="ql-btn" href="${esc(previewUrl({ fix: c.fix }))}">Preview the fix</a>`
-    : `<span class="db-f-note">${esc(NO_FIX[c.id] || "")}</span>`;
+    ? `<div class="db-f-action"><a class="ql-btn" href="${esc(previewUrl({ fix: c.fix }))}">Preview the fix</a></div>`
+    : NO_FIX[c.id]
+      ? `<div class="db-f-note">${esc(NO_FIX[c.id])}</div>`
+      : "";
   return `
     <li>
       <div class="db-f-title"><span class="db-sev db-sev--${sev}">${sev === "high" ? "High" : "Medium"}</span>${esc(c.title)}</div>
       <div class="db-f-detail">${esc(c.detail)}</div>
-      <div class="db-f-action">${action}</div>
+      ${action}
     </li>`;
 }
 

@@ -67,6 +67,7 @@ body.ql-app {
 .db-main {
   padding: 28px 32px 64px;
   max-width: 1180px;
+  margin: 0 auto;
   box-sizing: border-box;
   width: 100%;
 }
@@ -298,10 +299,15 @@ body.ql-app {
 }
 
 .db-f-note {
-  max-width: 180px;
-  font-size: 13px;
-  color: var(--ql-muted);
-  text-align: right;
+  grid-column: 1 / -1;
+  font-size: 13.5px;
+  color: var(--ql-ink-2);
+  line-height: 1.5;
+}
+
+.db-f-note::before {
+  content: "What you can do: ";
+  font-weight: 600;
 }
 
 .db-sev {

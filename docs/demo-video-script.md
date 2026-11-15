@@ -8,7 +8,6 @@ Before recording:
 
 - Run each store through once, so pages load quickly on camera.
 - Use browser zoom at 110–125% so text is readable on a laptop screen. Hide bookmarks. Close other tabs.
-- Have the dev store open in a second tab if you're showing use case 4.
 - Press × on the dark Demo bar if you don't want it in shot. Keys 1, 2 and 3 still switch pages.
 
 ---
@@ -64,18 +63,22 @@ This is the most important part of the video. Take your time.
 
 ---
 
-## Use case 4: publish and undo on a real store (1 min)
+## Use case 4: approve, publish and undo (1 min)
 
-The online demo can't publish, so skip this unless you also record a short clip of the full app publishing to a dev store. Otherwise spend the time on use case 3, and just point at **Approve and publish** and say what it does.
+The online demo acts this out: nothing is written to the real store, but every step shows.
 
-- Press **Approve and publish**. Reload the dev store in the other tab and show the change live.
-- Press **Undo**, then reload. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits."
+- Point at **Your decision**: every change is listed, each with **Remove**. **Say:** "Nothing goes live until the owner approves it."
+- Press **Approve and publish**. The message says the changes are now live in one snippet in the store's theme.
+- Press **Owner's dashboard** in the Demo bar (or key 2). **Live on your store** now counts the changes.
+- Go back to **Preview and approve** (key 3), approve again, and press **Undo published changes**. **Say:** "All our code lives in one snippet, and Undo empties it. It never rewrites the owner's theme, so it can't wipe out their own edits."
+
+In the full app with a dev store connected, this writes to the real theme: reload the store in another tab to show it live, then Undo.
 
 ---
 
 ## Use case 5: what "good" looks like, and being honest (40 s)
 
-- Check a big brand such as `culturekings.com.au` or `peppermayo.com`. Most checks pass. **Say:** "That's what good looks like, and the tool says so rather than inventing problems."
+- Check `culturekings.com.au`, a big brand. Most checks pass. **Say:** "That's what good looks like, and the tool says so rather than inventing problems."
 - Optionally check `toyworld.com.au` to show a store with several Fix items.
 
 ---
@@ -84,7 +87,7 @@ The online demo can't publish, so skip this unless you also record a short clip 
 
 **Show:** the dashboard's "Live on your store" card.
 
-**Say:** "QuickLift turns published usability research into changes a small store can see on its own page and approve in one click. For a store doing A$100k a year, a 5% lift is about A$5,000 more in sales with no extra ad spend. Our proof-of-value slides show the range, from cautious to hopeful. The code, the prompts we used and the login are all in the deck."
+**Say:** "QuickLift turns published usability research into changes a small store can see on its own page and approve in one click. For a store doing A$100k a year, a 5% lift is about A$5,000 more in sales with no extra ad spend. Our proof-of-value slides show the range, from cautious to hopeful. The live demo, the code and the prompts we used are all linked in the deck."
 
 ---
 

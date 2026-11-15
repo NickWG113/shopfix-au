@@ -71,6 +71,9 @@ button:disabled { opacity: .55; cursor: progress; }
 .pill.warn { border-color: var(--fail); color: var(--fail); }
 
 .review-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 32px; align-items: start; }
+/* The page stays in view while the owner works down the right-hand column,
+   so switching on a fix or an idea far down the column still shows it. */
+@media (min-width: 1181px) { .stage { position: sticky; top: 12px; } }
 
 /* ---------- the two pages ---------- */
 
@@ -129,6 +132,8 @@ button:disabled { opacity: .55; cursor: progress; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-box); padding: 18px 20px; }
 .card h2 { margin: 0 0 12px; font: 700 18px/1.25 "Funnel Display", system-ui, sans-serif; letter-spacing: -0.01em; }
 .card-lede { margin: -6px 0 12px; }
+.ai-msg { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fdf0ea; color: #8a2d0a; font-size: 13.5px; line-height: 1.5; }
+.ai-msg b { display: block; margin-bottom: 2px; }
 
 .notice {
   display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 14px 16px;

@@ -11,7 +11,10 @@
 //   the change in the browser from what the request asks for. Where an
 //   answer was recorded once from the real agent (frankbody.com's ideas and
 //   suggested requests), that recorded answer is played back instead.
-// - Publish needs a store's admin token, so it only works in the full app.
+// - Publish is acted out: Approve and publish says what would go live and
+//   counts it on the dashboard (in this browser only), but nothing is
+//   written to the real store. Real publishing needs the full app and the
+//   store's admin token.
 (function () {
   "use strict";
 
@@ -78,6 +81,7 @@
       return {
         ai: true,
         publishStore: null,
+        demoPublish: true,
         presets: Object.fromEntries(
           Object.entries(PRESETS).map(([id, p]) => [id, { label: p.label, describe: p.describe, defaultText: p.defaultText }]),
         ),
@@ -88,7 +92,7 @@
       const domain = await recordedStore(body.domain);
       const data = await getJson(`recording/${domain}/check.json`);
       if (!data) throw new Shown(`The recording for ${domain} is missing.`);
-      return { store: data.store, checks: data.checks };
+      return { store: data.store, checks: data.checks, live: liveCount(domain) };
     },
 
     async preview(body) {
@@ -147,13 +151,43 @@
       return { ...(recorded || mockChange(request, body.path || "/")), request };
     },
 
-    async publish() {
-      throw new Shown("Publishing writes into a real store's theme, so it needs the full app running with that store's token. This online copy can't publish.");
+    async publish(body) {
+      const domain = await recordedStore(body.domain);
+      const n = (body.presets?.length || 0) + (body.custom?.length || 0);
+      if (!n) throw new Shown("There's nothing to publish yet.");
+      setLive(domain, n);
+      return {
+        store: domain,
+        demo: true,
+        note:
+          `Approved: ${n} change${n === 1 ? " is" : "s are"} now live on ${domain}, in one snippet in its theme. ` +
+          `(This online demo acts it out. The real store isn't touched.)`,
+      };
     },
-    async undo() {
-      throw new Shown("Nothing was published from this online copy.");
+    async undo(body) {
+      const domain = await recordedStore(body.domain);
+      setLive(domain, 0);
+      return { store: domain, demo: true, note: `Undone: the snippet on ${domain} is empty again, and the store is back to how it was.` };
     },
   };
+
+  // What the demo has "published", per store, so the dashboard's "live on
+  // your store" can count it. This browser only; nothing leaves it.
+  function liveCount(domain) {
+    try {
+      return Number(localStorage.getItem(`ql:demo-live:${domain}`)) || 0;
+    } catch {
+      return 0;
+    }
+  }
+  function setLive(domain, n) {
+    try {
+      if (n) localStorage.setItem(`ql:demo-live:${domain}`, String(n));
+      else localStorage.removeItem(`ql:demo-live:${domain}`);
+    } catch {
+      // Storage blocked: the dashboard just shows 0.
+    }
+  }
 
   window.fetch = function (input, init) {
     const url = new URL(typeof input === "string" ? input : input.url, document.baseURI);
@@ -214,9 +248,24 @@
   }
 
   async function replayChips() {
-    const form = document.getElementById("ai-form") || document.getElementById("ask-form");
-    if (!form) return;
     const { EXTRA_REQUESTS } = (await modules)[1];
+    // The dashboard has its own chips, which fill in the request: swap in
+    // the requests the demo is ready for rather than adding a second set.
+    const own = document.getElementById("chips");
+    if (own) {
+      own.replaceChildren(
+        ...EXTRA_REQUESTS.map((r) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.dataset.ask = r;
+          b.textContent = r;
+          return b;
+        }),
+      );
+      return;
+    }
+    const form = document.getElementById("ai-form");
+    if (!form) return;
     const box = document.createElement("div");
     box.className = "ql-replay";
     box.innerHTML = `<p>Try one of these, or type your own:</p>`;
@@ -231,7 +280,7 @@
       });
       box.appendChild(b);
     }
-    form.after(box);
+    (document.getElementById("ai-msg") || form).after(box);
   }
 
   function ready() {

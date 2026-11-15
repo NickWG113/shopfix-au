@@ -207,6 +207,7 @@ async function askAgent(request) {
   const btn = $("#ai-btn");
   btn.disabled = true;
   btn.textContent = "Working on it…";
+  $("#ai-msg").hidden = true;
   try {
     const change = await api("api/ai-change", {
       domain: state.store.domain,
@@ -215,7 +216,11 @@ async function askAgent(request) {
       existing: state.custom.map((c) => c.summary),
     });
     if (!change.css && !change.js) {
-      toast(change.warning || "No change was made.", true);
+      // Why the agent said no (fake reviews, made-up claims) is the point
+      // here, so it stays under the request rather than in a passing toast.
+      const msg = $("#ai-msg");
+      msg.innerHTML = `<b>The agent didn’t make this change</b>${esc(change.warning || "It couldn’t find a way to do this on this page.")}`;
+      msg.hidden = false;
       return;
     }
     state.custom.push(change);
@@ -349,10 +354,11 @@ function renderChanges() {
   // flow. It can only publish to the one store this server holds a key for;
   // on any other store it says what connecting would do instead.
   const pub = state.config.publishStore;
-  const canPublish = Boolean(pub && state.store?.shop === pub);
+  const canPublish = Boolean(pub && state.store?.shop === pub) || Boolean(state.config.demoPublish);
   $("#publish-box").hidden = !state.store;
   $("#publish-store").textContent = canPublish ? pub : "your store";
-  $("#undo-btn").hidden = !canPublish;
+  // In the online demo, Undo appears once something has been "published".
+  $("#undo-btn").hidden = state.config.demoPublish ? !state.demoLive : !canPublish;
   $("#publish-btn").disabled = items.length === 0;
 
   $("#code").textContent =
@@ -389,18 +395,23 @@ $("#discard-btn").addEventListener("click", () => {
 
 $("#publish-btn").addEventListener("click", async () => {
   const pub = state.config.publishStore;
-  if (!(pub && state.store?.shop === pub)) {
+  // The online demo (pages/static-api.js) acts out publishing without
+  // touching the real store, so it skips the "are you sure".
+  const demo = Boolean(state.config.demoPublish);
+  if (!demo && !(pub && state.store?.shop === pub)) {
     $("#publish-msg").textContent =
       "Publishing needs this store connected to QuickLift. Once it is, these changes go into its theme in one snippet, and undo takes them off.";
     return;
   }
-  if (!confirm(`Publish these changes to the live theme on ${state.config.publishStore}? Shoppers will see them straight away.`)) return;
+  if (!demo && !confirm(`Publish these changes to the live theme on ${state.config.publishStore}? Shoppers will see them straight away.`)) return;
   const btn = $("#publish-btn");
   btn.disabled = true;
   try {
-    const r = await api("api/publish", { shop: state.store.shop, presets: activePresets(), custom: state.custom });
-    $("#publish-msg").textContent = `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
-    toast("Published. Reload the real store to see it.");
+    const r = await api("api/publish", { shop: state.store.shop, domain: state.store.domain, presets: activePresets(), custom: state.custom });
+    $("#publish-msg").textContent = r.note || `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
+    state.demoLive = demo;
+    $("#undo-btn").hidden = false;
+    toast(demo ? "Approved and published." : "Published. Reload the real store to see it.");
   } catch (err) {
     toast(err.message, true);
   } finally {
@@ -410,8 +421,12 @@ $("#publish-btn").addEventListener("click", async () => {
 
 $("#undo-btn").addEventListener("click", async () => {
   try {
-    const r = await api("api/undo", {});
-    $("#publish-msg").textContent = `Removed from ${r.store}. The theme is back to how it was.`;
+    const r = await api("api/undo", { domain: state.store?.domain });
+    $("#publish-msg").textContent = r.note || `Removed from ${r.store}. The theme is back to how it was.`;
+    if (state.config.demoPublish) {
+      state.demoLive = false;
+      $("#undo-btn").hidden = true;
+    }
     toast("Published changes removed.");
   } catch (err) {
     toast(err.message, true);
