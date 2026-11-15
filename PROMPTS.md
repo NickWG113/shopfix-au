@@ -157,3 +157,7 @@ Every page now follows one idea: the flow is three steps, and each page says whi
 > give me the ability to swap tabs at the top thanks
 
 The dark tab bar is back across the top of every page, home included: Home, What to fix, Preview and approve, Results, keeping the store (keys 1–4 too, × hides it).
+
+> [screenshot of the two phone previews] dont make this scroll together it feels weird
+
+"Now" and "With your changes" each scroll on their own now; "Now" no longer follows the other page.

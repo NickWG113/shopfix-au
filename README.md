@@ -103,7 +103,7 @@ on the page. A refusal (fake reviews, made-up claims) stops there with the
 reason.
 
 The preview is laid out as a review: the store's page **Now** beside the page
-**With your changes**, scrolled together, and a right-hand column with two
+**With your changes**, each scrolling on its own, and a right-hand column with two
 cards: **Your changes** (one line each, then Approve and publish or Discard
 all) and **Make a change**, with three tabs: **Ask the agent**, **Fixes** and
 **Ideas**. **Phone** shows both versions side by side; **Computer** shows

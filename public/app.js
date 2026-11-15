@@ -578,7 +578,7 @@ async function refreshPreview({ focus = false } = {}) {
 // "Now": the same page with nothing changed, beside the one with the
 // changes. It only reloads when the page itself does (another page, another
 // store, theme scripts on or off), never when a change is switched on, so
-// it stays still while the other side changes.
+// it stays still while the other side changes. Each side scrolls on its own.
 const frameNow = $("#frame-now");
 let nowKey = null;
 async function loadNow() {
@@ -588,7 +588,6 @@ async function loadNow() {
   try {
     const { html } = await api("api/preview", { domain: state.store.domain, path: state.path, original: true, scripts: state.scripts });
     if (nowKey !== key) return;
-    frameNow.onload = () => frameNow.contentWindow?.postMessage({ shopfix: "scroll", y: state.scrollY }, "*");
     frameNow.srcdoc = html;
   } catch {
     // The page with the changes says what went wrong; no second message.
@@ -690,9 +689,10 @@ window.addEventListener("message", (e) => {
     return;
   }
   if (m.shopfix === "scrolled") {
+    // Remembered so the page with the changes keeps its place when it
+    // reloads. "Now" scrolls on its own: following along felt odd (Nick,
+    // 15 Nov).
     state.scrollY = m.y;
-    // Keep "Now" at the same place, so the two can be compared at a glance.
-    frameNow.contentWindow?.postMessage({ shopfix: "scroll", y: m.y }, "*");
   } else if (m.shopfix === "navigate") {
     if (m.host !== state.store.domain) return toast("That link leaves the store, so the preview doesn't follow it.");
     state.path = m.path;
