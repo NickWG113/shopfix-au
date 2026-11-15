@@ -296,3 +296,55 @@
 .rs-ev text { fill: var(--ql-brand-dark); font: 700 12px var(--ql-sans); pointer-events: none; }
 .rs-ev--undone circle { stroke: #9a99a8; }
 .rs-ev--undone text { fill: #6a6977; }
+
+/* Verdicts: winner, neutral, loser, too early to tell. Always a word, never
+   colour alone. */
+.rs-hist-effect {
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: var(--ql-ink-2);
+}
+
+.rs-verdict {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rs-verdict--winner { background: var(--ql-ok-tint); color: var(--ql-ok); }
+.rs-verdict--neutral { background: #f0f0ec; color: #5b5d57; }
+.rs-verdict--loser { background: #fdeceb; color: #b42318; }
+.rs-verdict--early { background: transparent; color: var(--ql-muted); border: 1px dashed #c9c8d6; font-weight: 600; }
+
+.rs-hist-item--winner .rs-hist-n { background: var(--ql-ok); }
+.rs-hist-item--neutral .rs-hist-n { background: #8d8c99; }
+.rs-hist-item--loser .rs-hist-n { background: #b42318; }
+
+.rs-ev--winner circle { stroke: var(--ql-ok); }
+.rs-ev--winner text { fill: var(--ql-ok); }
+.rs-ev--neutral circle { stroke: #8d8c99; }
+.rs-ev--neutral text { fill: #5b5d57; }
+.rs-ev--loser circle { stroke: #b42318; }
+.rs-ev--loser text { fill: #b42318; }
+
+/* One change per line on a wide screen: number, what and when, effect,
+   verdict. Stacks on a phone. */
+.rs-hist-item {
+  grid-template-columns: auto minmax(0, 1.2fr) minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.rs-hist-effect {
+  margin-top: 0;
+}
+
+@media (max-width: 760px) {
+  .rs-hist-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .rs-hist-effect {
+    grid-column: 2 / 4;
+  }
+}

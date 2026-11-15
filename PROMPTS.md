@@ -175,3 +175,7 @@ The dashboard is now the one page: **How your store is doing** (the results, sam
 > [screenshot of the dashboard's results] maybe here we can see like the history of changes etc. and you can mock some ideas
 
 "Live on your store" became a **Change history**: each change with its date, where it came from (asked the agent, one of the agent's ideas, a ready-made fix) and whether it's live or was undone, numbered to match markers under the revenue chart. Past entries are sample data, labelled on the card; what the owner approves goes on top, dated today.
+
+> [screenshot of the change history] lets also say if a test was a winner, neutra or a loser.
+
+Each change now has a verdict from the week after it went live against the week before: **Winner**, **Neutral** or **Loser** (the undone one), with the effect in words, and **Too early to tell** for a change approved today. The chart's markers take the same colours, and the history moved under the chart as a wide list, one change per line.

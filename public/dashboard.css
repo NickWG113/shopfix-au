@@ -628,3 +628,9 @@ p.db-meta {
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* The chart full width, the change history under it as a wide list. */
+.db-section .rs-grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+}

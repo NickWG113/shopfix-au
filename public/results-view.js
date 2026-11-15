@@ -173,18 +173,34 @@ function chart(el, { days, liveIndex, value, max, ticks, fmt, marks, tip }) {
 // be read against it. Past entries are SAMPLE, like the figures: days are
 // counted from the sample's go-live day. What the owner really approved in
 // this browser goes on top, dated today.
+//
+// Each has a verdict from the week after it went live, against the week
+// before: a winner (revenue up), neutral (no clear change) or a loser
+// (revenue down; that's the one that was undone). A change made today is
+// "too early to tell": one day of a small store's sales proves nothing.
 const SAMPLE_HISTORY = [
-  { day: -6, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", note: "Undone two days later" },
-  { day: 0, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live" },
-  { day: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live" },
-  { day: 5, title: "Bolder product title on phones", source: "Asked the agent", status: "live" },
+  { day: -6, title: "Rounder Add to cart button", source: "Asked the agent", status: "undone", verdict: "loser", effect: "Revenue down 4% while it was live. Undone two days later." },
+  { day: 0, title: "Bigger, brighter Add to cart", source: "Asked the agent", status: "live", verdict: "winner", effect: "Revenue up 6% the week after." },
+  { day: 0, title: "Product names easier to scan on the home page", source: "Agent’s idea", status: "live", verdict: "neutral", effect: "No clear change the week after." },
+  { day: 5, title: "Bolder product title on phones", source: "Asked the agent", status: "live", verdict: "winner", effect: "Revenue up 3% the week after." },
 ];
+
+const VERDICT = { winner: "Winner", neutral: "Neutral", loser: "Loser", early: "Too early to tell" };
 
 function historyFor(days, live) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const past = SAMPLE_HISTORY.map((h) => ({ ...h, i: LIVE_AFTER + h.day, date: days[LIVE_AFTER + h.day].date, sample: true }));
-  const yours = live.map((title) => ({ title, source: "You approved it", status: "live", date: today, i: null, sample: false }));
+  const yours = live.map((title) => ({
+    title,
+    source: "You approved it",
+    status: "live",
+    verdict: "early",
+    effect: "Give it a week before judging it.",
+    date: today,
+    i: null,
+    sample: false,
+  }));
   // Numbered oldest first, as they're marked on the chart.
   past.forEach((h, n) => (h.n = n + 1));
   return { past, yours };
@@ -224,13 +240,13 @@ function revChart(days, liveIndex, events = []) {
             const k = same.indexOf(ev);
             const cx = f.x(ev.i) + (k - (same.length - 1) / 2) * 22;
             const cy = f.y(0) + 17;
-            return `<g class="rs-ev rs-ev--${ev.status}"><circle cx="${cx}" cy="${cy}" r="10"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${ev.n}</text></g>`;
+            return `<g class="rs-ev rs-ev--${ev.verdict}"><circle cx="${cx}" cy="${cy}" r="10"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${ev.n}</text></g>`;
           })
           .join("");
     },
     tip: (d, i) => {
       const here = events.filter((ev) => ev.i === i);
-      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}`).join("");
+      return `<b>${dayName(d.date)}</b>${money(d.revenue)} from ${d.orders} orders` + here.map((ev) => `<br>${ev.n}. ${esc(ev.title)}: ${VERDICT[ev.verdict].toLowerCase()}`).join("");
     },
   });
 }
@@ -276,13 +292,14 @@ export function renderResults(store, live) {
 
   // Newest first: what the owner approved today, then the sample's past.
   const row = (h) => `
-    <li class="rs-hist-item rs-hist-item--${h.status}">
+    <li class="rs-hist-item rs-hist-item--${h.status} rs-hist-item--${h.verdict}">
       <span class="rs-hist-n">${h.n ?? "✓"}</span>
       <div>
         <div class="rs-hist-title">${esc(h.title)}</div>
-        <div class="rs-hist-meta">${h.sample ? esc(shortDate(h.date)) : "Today"} · ${esc(h.source)}${h.note ? ` · ${esc(h.note)}` : ""}</div>
+        <div class="rs-hist-meta">${h.sample ? esc(shortDate(h.date)) : "Today"} · ${esc(h.source)} · ${h.status === "live" ? "Live" : "Undone"}</div>
       </div>
-      <span class="rs-hist-status">${h.status === "live" ? "Live" : "Undone"}</span>
+      <div class="rs-hist-effect">${esc(h.effect)}</div>
+      <span class="rs-verdict rs-verdict--${h.verdict}">${VERDICT[h.verdict]}</span>
     </li>`;
   $("#history").innerHTML = [...history.yours, ...history.past.slice().reverse()].map(row).join("");
 }
