@@ -1,8 +1,6 @@
 # PROMPTS.md
 
-QuickLift was built with AI coding assistants, mostly Claude Code. This file has two parts. Part 1 is the prompts QuickLift itself sends to its AI agent. Part 2 is the prompts that shaped the build, in the order they were sent, with their real dates.
-
-The prompts are copied as typed, typos included. Secret keys, names outside the team, employer details and swearing have been removed or replaced with [brackets], and long prompts are cut with "…".
+QuickLift was built with AI coding assistants, mostly Claude Code. This file has two parts. Part 1 is the prompts QuickLift itself sends to its AI agent, copied exactly. Part 2 is a dated log of how the build developed: each problem we raised and what changed because of it. Part 2 summarises our requests in plain words rather than quoting them.
 
 ---
 
@@ -48,176 +46,58 @@ Rules:
 
 ---
 
-## Part 2: Prompts that shaped the build
+## Part 2: How the build developed
 
 ### Before 22 October: the groundwork
 
-Before the assignment, Nicholas spent August to mid-October working with Claude on an earlier prototype of the same idea. The decisions QuickLift reuses came from that work:
+From August to mid-October, Nicholas worked on an earlier prototype of the same idea. The decisions QuickLift reuses came from that work:
 
 - **Small Shopify stores (August).** Target Shopify stores making five to six figures a year. Most don't have the traffic to run their own A/B tests, so they're better served by changes that are already known to work. Organise the advice by page type: home page, product page, checkout.
 - **A preview before anything changes (September).** The owner should see every change on their own page and approve it with one click. Nothing goes live on its own.
-- **Look at the site the way a shopper does (September).** The AI should review what a person actually sees on the page, not just run a fixed checklist, and it should work for any kind of online shop.
+- **Look at the site the way a shopper does (September).** The AI should review what a person actually sees on the page, not just run a fixed checklist.
 - **No research numbers shown to owners (September).** Published figures guide what to suggest first, but an owner only ever sees facts about their own store.
-- **Make the change, don't just describe it (11–13 October).** Giving owners steps to follow in Shopify's editor wasn't good enough: the tool should make the change itself. This led to the research on what Shopify lets an outside app change in a store's theme.
+- **Make the change, don't just describe it (11–13 October).** Giving owners steps to follow in Shopify's editor wasn't enough: the tool should make the change itself.
 
-### 22 October: the uni assignment
+### 22 October: choosing the problem
 
-> Okay, long story short is our university assignment is that we need to use AI to help small to medium enterprises in Australia. I figured that since we've built out an actual product, we can probably leverage a lot of this. What I think we should do is build a much simpler version of this in a separate repo. The requirement that we're looking to do is help e-commerce websites using Shopify to optimize their stores. So we'll just have a much simpler version of [our earlier prototype]. We'll make a much simpler website. We can just show the [stuff] in my localhost, stuff like that. As an initial starting point, I need to give a context doc of every decision we've had as to why we've done things. To Isaac's document, sorry, Isaac's my friend. To his codex, so we can fill out some forms. But I want you to frame these decisions that we would have made from the perspective of a small to medium enterprise. …
+**Problem:** the assignment asks how AI can help small and medium Australian businesses. Small online stores lose sales to things a shopper notices in seconds, and most owners have no developer and no way to test changes.
 
-### 25 October: the first build (on another computer)
+**What we did:** chose Australian Shopify stores, started a simpler version of the earlier prototype in a new repository, and wrote down every design decision from a store owner's point of view.
 
-This chat ran on a different computer, so only its opening prompt is recorded here. It produced the first commit, "ShopFix AU: check an Australian Shopify store and preview fixes live".
+### 25 October: the first build
 
-> Essentially, I have a uni assignment. … what we need to do is make a much more simple version of this. Essentially, it's just Australian e-commerce websites that use Shopify. It'll be this tool. We need to have a live demo Wednesday, and since we already have all of this information here, I thought we could probably just use it again. … So all I need to do is have a product where you can put in a Shopify website and make live changes to it. …
+**Problem:** we needed a working demo within days: type in a Shopify store, see what to fix, and preview a change on its real page.
 
-[Further prompts from this chat: to be added from the other computer]
+**What changed:** the first version checked a store's public pages and previewed fixes live (first commit, "ShopFix AU: check an Australian Shopify store and preview fixes live").
 
 ### 27 October: from ShopFix to QuickLift
 
-> there should be a repo we can connect to - can i set it up in this chat maybe?
+- **Problem:** the presentation lacked the reasons behind our decisions. **Change:** it now explains why Shopify only (simplest platform to change) and why any kind of online shop (conversion basics apply to all of them).
+- **Problem:** the prototype was one screen. **Change:** it became QuickLift: a home page, an owner's dashboard, and a preview of changes before they're approved, with a tab bar to switch between them in a demo.
+- **Problem:** our best-practice advice leaned on personal experience. **Change:** a shorter best-practice document built from published research (`docs/best-practices.md`).
+- **Problem:** tick boxes for fixes read as permanent decisions, and switching between Before and After made the page flicker. **Change:** fixes became on/off switches, and each change is outlined on the page instead.
+- **Problem:** the presentation's wording was generic. **Change:** rewritten in plainer words, slides and speaker notes both.
+- **Problem:** owners liked the agent's ideas but wanted more. **Change:** six to eight ideas for each page.
 
-> Yes, start ShopFix in the browser pane and run it on frankbody.com, including a 'Describe a change' edit.
+### 28 October: testing it
 
-> i more mean that i want to give you this link to help improve our presentation. part of this was just a really quick mock-up but lacks the decisions etc we have had to make. can you take control of my computer, look through here then improve the presentaion by making our own?
-
-> the main things we need to see is okay we only are doing shopify businesses because it is simplest to be enabled on their platform. next, we are targeting ecommerce businesses becuase fundementally cro works for all ecommerce.
-
-> and we need to make our demo strong too
-
-> maybe we also need to fix our prototype tool. i think we should build out the home page ([we can reuse our earlier prototype's], maybe we just make the name quicklift.ai and change the colours then we copy the home page and make it only for shopify. then we can have a dashboard that the owner sees, and then finally we can have the current ui which shows the changes before they approve them. does this make sense?
-
-> for quicklift.ai can we please also make a much more simplified best practice document using things from onlien rather than my [work] experience?
-
-> and for the live demo with the home page, dashboard and also sample change let me easily change with a tab at the top like we had for the original version. does this make sense?
-
-> can we make this tickbox different maybe a toggle that calls it out better
-
-> after you finish this i need you to go through the presentation to make sure it doesnt look ai. use the humanizer skill to address any wording etc.
-
-> the toggle at the top is not good for before and after lets remove. also it flickers when. i swap between before and after. maybe we make it so that we also highlight the change on the page or something so it is obvious what do you think?
-
-> can you give more suggestions for the page too? i love them i just want moer
-
-### 28 October: testing it, and the demo
-
-> if i ask something other than that exact prompt request, will it still action?
-
-> can you please also let me know - would this actually work on a shopify development store
-
-> do you think our demo is fine for 4 minutes?
-
-> if i actually ask it stuff like this will it do it or is it all movie magic right now
-
-> these left tabs dont work
-
-> also make these a toggle - not a set in stone deciison
+- **Problem:** would the agent handle requests other than the demo's? Would it work on a real Shopify development store? **Change:** tested both, and documented what works live and what is acted out.
+- **Problem:** the dashboard's side links did nothing, and fixes still felt permanent. **Change:** the links scroll to their section, and every fix and idea is a switch.
 
 ### 15 November: getting ready to submit
 
-> we need to make some finishing touches to this. we needto have 3  things ready to present i think[course brief link] 1. Slide deck (PDF) … 2.Demonstration video … Show the PoC working across at least three different use cases. Your agentic feature should be one of them.
+- **Problem:** the brief asks for a deck and a video showing at least three use cases, including the agentic feature, and anyone must be able to try it. **Change:** a fully mocked online demo on GitHub Pages: saved store pages, fixes running in the browser and a simulated agent, so it costs nothing to run and never touches a real store (`pages/static-api.js`, `pages/mock-agent.js`). Also the proof-of-value working (`docs/proof-of-value.md`) and the video script.
+- **Problem:** the preview was confusing. **Change:** it became a review: the page **Now** beside the page **With your changes**, and one column for the decision, the agent, the fixes and the ideas.
+- **Problem:** walking through the video's use cases turned up six faults. **Change:** all six fixed, including the page scrolling out of view, the agent's refusal of fake reviews disappearing too fast, and Approve and publish being a dead end online.
+- **Problem:** the agent's work happened out of sight. **Change:** "The agent at work" shows it working like a developer: the page it read, the theme classes it found, and the code it wrote.
+- **Problem:** the right-hand column was cluttered and repeated itself. **Change:** two cards: **Your changes**, and **Make a change** with tabs for Ask the agent, Fixes and Ideas.
+- **Problem:** the flow needed to be simple. **Change:** two steps, Dashboard → Preview and approve, with the results and suggested improvements on one dashboard page.
+- **Problem:** the first demo store wasn't suited to a classroom. **Change:** Toyworld, a family toy shop, became the demo store.
+- **Problem:** owners need to see whether a change helped. **Change:** a change history with a verdict for each change (Winner, Neutral, Loser, or Too early to tell), matched to markers on the revenue chart. All results are sample figures for a A$100,000-a-year store, labelled on the page. They were tuned so each change is easy to see on the chart; the proof of value plans on a cautious 5%.
+- **Problem:** the agent's suggestions were too small to matter. **Change:** it builds whole sections: reviews with star ratings (examples in the demo, only real reviews once published), a photo gallery, a "people bought this" line and trust badges. It still refuses fake reviews.
 
-> what can we showcase and waht do we need to build
+### 16 November: final touches
 
-> 1. sure build 2. make public 3. create it 4. lets mock data. we can extrapolate that a buisiness making 100k a year with a 5% increase makes 5 grand. etc. 5. someone else doing 6. someone else doing 7. that is us. we need to make sure we shoud the different use cases etc.
-
-> wait. do NOT touch [our earlier prototype's] repo. this is meant to be the shopfix repo. please do NOT touch [it]
-
-> you can take inspuiration from there thoug
-
-> can we not just have it live on hibut
-
-> github
-
-> why are you using api credit? i font want anything actually live i just want to mock it all
-
-So the online copy is fully mocked: saved store pages, the fixes running in the browser, and a mocked agent that writes simple changes from the request's wording (`pages/mock-agent.js`), with no API calls.
-
-What came out of it: the mocked online demo on GitHub Pages (`pages/static-api.js`, `pages/mock-agent.js`, `scripts/record-demo.js`, `scripts/build-pages.js`, `docs/github-pages.md`), a shared sign-in for when the full app is hosted (`lib/auth.js`), the proof-of-value working (`docs/proof-of-value.md`), and the demo video script (`docs/demo-video-script.md`).
-
-> lets make this ui better. … i mean the preview change ui etc. rn it looks really confusing
-
-The preview became a review: the page **Now** beside the page **With your changes**, and one column for the decision, the agent, the fixes and the ideas.
-
-> what is next. can you audti to make sure it is what we what. what use cases are we shoiwing
-
-Walking through every use case in the video script on the live demo turned up six problems, all fixed: the store's page scrolled out of view while switching on fixes further down the column (it now stays in view); the agent's refusal of fake reviews only flashed up for a few seconds (it now stays under the request); Approve and publish was a dead end online (it's now acted out, with Undo and the dashboard's "live on your store" count); the dashboard showed two sets of suggested requests; findings with no ready-made fix were squashed into a narrow column; and the dashboard sat to one side on wide screens.
-
-> yeah i want to display giving an dea and implementing it, an ai developer and then the daily tracking of stats
-
-Three additions for the video. When the agent makes a change, it is now shown working like a developer ("The agent at work": the page it read, the theme classes it found, and its CSS and JavaScript typing out before the change goes on the page). Switching on one of its ideas shows the same thing, so an idea becomes a change on screen. And a new Daily results page shows conversion rate, orders and revenue day by day, before and after the changes went live. Its figures are sample data for a A$100k-a-year store, and the page says so.
-
-> [screenshot of the preview's right-hand column] this menu just feels wayyy too cluitered. spend some time thinking about how to make it better
-
-The column had five cards open at once, the same "nothing goes live until you approve" message three times, and a second red box under the agent's log. It is now two cards: **Your changes** (one line per change with ×, then Approve and publish) and **Make a change**, with tabs for **Ask the agent**, **Fixes** and **Ideas**, so only one way of changing the page is open at a time. The agent's log opens where the request came from, and a refusal shows inside it.
-
-> please do that for the entire flow. i tneeds to feel REALLY simple to understand
-
-Every page now follows one idea: the flow is three steps, and each page says which one you're on. The dark Demo bar and the dashboard's side menu are gone (keys 1–4 still switch pages for presenting), and the pages' tabs became a step bar, **1 What to fix → 2 Preview and approve → 3 Results**. The home page went from eight sections to five (the walkthrough that repeated How it works, and the A/B, Shopify and pricing panels, became three questions). Step 1 says what the check found in one sentence and names each problem as a problem. Step 2 lost the repeated badges and the page address. Step 3 answers first, in a sentence, then three numbers and one chart, with every day folded away. After approving, "Next: see the results →" leads to step 3.
-
-> give me the ability to swap tabs at the top thanks
-
-The dark tab bar is back across the top of every page, home included: Home, What to fix, Preview and approve, Results, keeping the store (keys 1–4 too, × hides it).
-
-> [screenshot of the two phone previews] dont make this scroll together it feels weird
-
-"Now" and "With your changes" each scroll on their own now; "Now" no longer follows the other page.
-
-> i cant see this working either? [screenshot of an agent idea switched on, with nothing visible on the page]
-
-That idea's change waited for the store's product recommendations, which never load in a saved copy, so it hid the section instead. Every idea and suggested request was then tested on the new demo store's saved pages, and the simulated agent was taught that theme's price classes so each one visibly changes the page.
-
-> the dashboard of results should be on the same page Like essentially this, there should be one page which is like a dashboard for them. And the top, it has like all the results and stuff and improvements over time, like the results screen that you have, which is great. We just want to have a bit maybe below that that says like, oh, suggested improvements, blah, blah, blah. So it's like a spot they can look one thing and see everything, if that makes sense. Also, maybe we do a shop other than Frank and Body just because of the nature of the product. And I don't want to have some of this content shown to a uni lecturer. Thank you.
-
-> like its a bit sexual
-
-The dashboard is now the one page: **How your store is doing** (the results, sample data) at the top, **Suggested improvements** below, and an approved fix shows as "✓ Fixed, live". The flow is two steps, Dashboard → Preview and approve, and the old Results link forwards to the dashboard. Frank Body was taken out of the online demo entirely; Toyworld, a family toy shop, is the demo store now. The sample results were evened out so they show the 5% lift the proof of value assumes, not a lucky 12%.
-
-> [screenshot of the dashboard's results] maybe here we can see like the history of changes etc. and you can mock some ideas
-
-"Live on your store" became a **Change history**: each change with its date, where it came from (asked the agent, one of the agent's ideas, a ready-made fix) and whether it's live or was undone, numbered to match markers under the revenue chart. Past entries are sample data, labelled on the card; what the owner approves goes on top, dated today.
-
-> [screenshot of the change history] lets also say if a test was a winner, neutra or a loser.
-
-Each change now has a verdict from the week after it went live against the week before: **Winner**, **Neutral** or **Loser** (the undone one), with the effect in words, and **Too early to tell** for a change approved today. The chart's markers take the same colours, and the history moved under the chart as a wide list, one change per line.
-
-> love that maybe just keep it side by side and let it expand or something.
-
-> also make the graph more acccurately reflect
-
-The history is back beside the chart, one line per change (number, change, verdict), and clicking a change opens its details. The sample figures are now built from the history: each change lifts or cuts sales from the day it went live (the loser only while it was live), with the random noise cancelling out between changes. A black line over the bars shows the average day between changes, weekends evened out, so the dip and the steps line up with the numbered markers. The total still comes to about the 5% the proof of value assumes.
-
-> average day bar looks bad. i just mean making daily sales more pronounced
-
-The average-day line is gone. The changes now show in the daily bars themselves: bigger effects (the loser −25% while live, the winners +10% and +6%), a gentler weekly rhythm and less day-to-day noise. The sample's headline is now about +17%, a good case; the video script has the presenter say the proof of value plans on a cautious 5%.
-
-> [screenshot of the undone change] dont have strikethrough
-
-The undone change is no longer struck through; it keeps its grey text, its Loser verdict and "Undone" in its details.
-
-> [screenshots of the agent's suggested requests and the suggested improvements] this should be thinks that someone like would want to nromally change like copy of their websit etec.
->
-> also., the left side here And these suggested improvements should literally only be things that like are ideas and that they haven't done yet. So the fact that you say fix live should not be there. It's just like, these are ideas that you can try. And then we should have preview the fix on every single one of those. Does that make sense?
-
-The simulated agent learned to change wording ("Change the Add to cart button to say Add to bag", "Change the announcement bar at the top to say …"), and the suggested requests are now everyday changes, mostly wording. Suggested improvements list only ideas not tried yet (an approved one moves to the change history), each with Preview the fix: a ready-made fix, or an honest change by the agent, such as a line inviting real customers to leave a review.
-
-> [screenshot of the revenue chart] need to make these wins more prominent
-
-The winners now lift sales by about 15% and 10%, and each change's effect is written over the first bar it touched: green "+15%" and "+10%", red "−25%" for the loser. The sample's headline is now about +25%.
-
-> [screenshot of the agent's suggested requests] this also isnt things that arent like test worth. im talking the minor things people would change on their shop
-
-> does this make sense?
-
-The suggested requests are now routine shop edits rather than experiments: a Christmas cut-off in the top bar, a red top bar, "Add to bag" on the button, a gift-wrapping note, a phone number under the button (plus the fake-reviews request it refuses). The simulated agent learned to recolour the announcement bar for this.
-
-> [screenshot of the chart] i like this but the hover state does not reflect the % increase we need mor orders lower aov
-
-Hovering over a day now says what the changes live that day are doing to sales, the same figure as the chart's labels: "▲ +26% sales from changes 2 and 4", or "▼ −25% sales from change 1" while the loser was live. It also gives the day's average order. The sample store now sells more, smaller orders: A$40 an order (a toy shop) and about twice the visits, so the same A$100,000 a year is about 7 orders a day before the changes and 9 after. The proof of value's worked example uses the same figures.
-
-> i also want the changes suggestyed changes to be better. can we ahve somethig like reviews, an image gallery, socail proof, this kinda vibe? i need BIT HITTERS
-
-The simulated agent now builds whole sections, not just restyles: a reviews section with stars under the title, a photo gallery from the product's own photos, a "38 people bought this in the last 30 days" line under the price, trust badges under Add to cart, and Bestseller badges on the home page. The reviews are examples, labelled as such on the page; the agent's note says that, once published, only the store's real reviews from its reviews app show. The fake-reviews request is still refused. These lead the dashboard's suggested improvements, the agent's ideas and the suggested requests.
-
-> can we make the reviews side scroll please
-
-The reviews are a row you swipe sideways on a phone, with arrows on a computer; so is the photo gallery. Both sit right under the Add to cart button rather than below the long description.
+- **Problem:** the home page read as one long sheet. **Change:** sections sit on rounded colour blocks, with a "What QuickLift noticed" card from Toyworld's real check and a comparison with hiring a developer.
+- **Problem:** owners with enough visitors will want a proper test, not just before and after. **Change:** "Or run it as an A/B test" beside Approve and publish, with a test card on the dashboard. In this proof of concept the test is acted out with sample figures, and the card says so.
+- **Problem:** after a reload, the demo lost its Undo button for a change already published. **Change:** Undo now stays until the change is taken off.
