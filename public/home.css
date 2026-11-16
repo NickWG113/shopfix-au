@@ -2397,3 +2397,104 @@ body.ql-page {
 .ql-afterpay b {
   color: #151515;
 }
+
+/* ---- Bands (16 Nov): sections sit on rounded colour blocks, so the page
+   reads as a run of distinct chapters instead of one long sheet. ---- */
+
+.rp-kicker--pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid var(--rp-line);
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.rp-band {
+  margin-top: 96px;
+  padding: 72px 56px;
+  border-radius: 32px;
+}
+.rp-band + .rp-band { margin-top: 16px; }
+.rp-band.rp-section { padding-top: 72px; }
+
+.rp-band--white { background: #ffffff; border: 1px solid var(--rp-line-2); }
+.rp-band--tint { background: #ecebfb; }
+
+.rp-band--dark { background: #241d84; color: #ffffff; }
+.rp-band--dark h2,
+.rp-band--dark h3 { color: #ffffff; }
+.rp-band--dark .rp-kicker {
+  color: #c9c4ff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.rp-band--dark .rp-sub { color: #dedbff; }
+.rp-hl { color: #c9c4ff; }
+.rp-band:not(.rp-band--dark) .rp-hl { color: var(--rp-brand); }
+
+.rp-tags {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.rp-tags li {
+  padding: 6px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.rp-band--dark .rp-panel { color: var(--rp-ink); box-shadow: 0 24px 48px rgba(10, 6, 60, 0.35); }
+.rp-panel--tilt { transform: rotate(1.5deg); }
+.rp-caption--light { color: #c9c4ff; margin-top: 18px; }
+
+.rp-table-wrap {
+  margin-top: 40px;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 8px 20px;
+}
+.rp-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  color: var(--rp-ink);
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: left;
+}
+.rp-table th,
+.rp-table td { padding: 16px 14px; border-bottom: 1px solid var(--rp-line-2); vertical-align: top; }
+.rp-table tbody tr:last-child > * { border-bottom: 0; }
+.rp-table thead th { font-size: 13px; font-weight: 600; color: var(--rp-muted); }
+.rp-table tbody th { font-weight: 600; width: 22%; color: var(--rp-ink); }
+.rp-table td { color: var(--rp-muted); }
+.rp-table td:last-child,
+.rp-table thead th:last-child { background: #f1effd; color: var(--rp-ink); }
+.rp-table thead th:last-child { color: var(--rp-brand-dark); }
+
+/* Floating pill menu */
+.ql-header { background: transparent; border-bottom: 0; backdrop-filter: none; padding: 12px 16px 0; }
+.ql-header-in {
+  max-width: 1100px;
+  padding: 10px 12px 10px 22px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1px solid #e4e4ee;
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(23, 25, 22, 0.06);
+}
+
+@media (max-width: 720px) {
+  .rp-band { margin-top: 64px; padding: 48px 22px; border-radius: 24px; }
+  .rp-band.rp-section { padding-top: 48px; }
+  .rp-panel--tilt { transform: none; }
+}
