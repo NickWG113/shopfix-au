@@ -61,8 +61,10 @@ async function checkStore(domain) {
   btn.disabled = true;
   btn.textContent = "Checking…";
   try {
-    const { store, checks } = await api("api/check", { domain });
+    const { store, checks, live } = await api("api/check", { domain });
     state.store = store;
+    // In the online demo, something already published (before a reload) keeps its Undo button.
+    state.demoLive = Boolean(state.config.demoPublish && live);
     state.checks = checks;
     state.path = "/";
     state.custom = [];
@@ -476,6 +478,7 @@ function renderChanges() {
   // In the online demo, Undo appears once something has been "published".
   $("#undo-btn").hidden = state.config.demoPublish ? !state.demoLive : !canPublish;
   $("#publish-btn").disabled = items.length === 0;
+  $("#ab-btn").disabled = items.length === 0;
 
   $("#code").textContent =
     [
@@ -528,6 +531,8 @@ $("#publish-btn").addEventListener("click", async () => {
     const r = await api("api/publish", { shop: state.store.shop, domain: state.store.domain, presets: activePresets(), custom: state.custom });
     $("#publish-msg").textContent = r.note || `Live on ${r.store} (theme "${r.theme}") at ${new Date().toLocaleTimeString("en-AU")}.`;
     $("#publish-msg").classList.add("live");
+    $("#to-results").textContent = "See the results on your dashboard →";
+    $("#to-results").href = `dashboard?store=${encodeURIComponent(state.store.domain)}#results`;
     $("#to-results").hidden = false;
     state.demoLive = demo;
     $("#undo-btn").hidden = false;
@@ -537,6 +542,27 @@ $("#publish-btn").addEventListener("click", async () => {
   } finally {
     btn.disabled = false;
   }
+});
+
+// shortcut: the A/B test is acted out in this browser only (the dashboard shows
+// sample figures for it); a real split needs the store connected and its traffic.
+$("#ab-btn").addEventListener("click", () => {
+  const domain = state.store?.domain;
+  const changes = [...document.querySelectorAll("#changes li span")].map((s) => s.firstChild?.textContent || s.textContent);
+  if (!domain || !changes.length) return;
+  try {
+    localStorage.setItem(`ql:abtest:${domain}`, JSON.stringify({ changes, started: Date.now() }));
+  } catch {
+    // Storage blocked: the dashboard just won't show the test.
+  }
+  $("#publish-msg").textContent =
+    "A/B test started. Half your shoppers see these changes and half see your page as it is now. QuickLift compares their sales and tells you which one wins.";
+  $("#publish-msg").classList.add("live");
+  const link = $("#to-results");
+  link.textContent = "See the test on your dashboard →";
+  link.href = `dashboard?store=${encodeURIComponent(domain)}#abtest`;
+  link.hidden = false;
+  toast("A/B test started.");
 });
 
 $("#undo-btn").addEventListener("click", async () => {

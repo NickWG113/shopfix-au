@@ -84,6 +84,20 @@
               <p class="db-muted rs-hist-note">Click a change for its details. Each is judged on sales while it was live against the days before. Past changes are sample data.</p>
             </div>
           </div>
+
+          <div class="db-card ab-card" id="abtest" hidden>
+            <div class="ab-head">
+              <h3 class="rs-h">A/B test <span class="ab-status" id="ab-status"></span></h3>
+              <button type="button" class="ab-stop" id="ab-stop">Stop the test</button>
+            </div>
+            <p class="db-muted" id="ab-what"></p>
+            <div class="ab-sides">
+              <div class="ab-side"><span class="ab-label">A · Your page now</span><b id="ab-a-conv"></b><span class="db-muted" id="ab-a-n"></span></div>
+              <div class="ab-side ab-side--b"><span class="ab-label">B · With the changes</span><b id="ab-b-conv"></b><span class="db-muted" id="ab-b-n"></span></div>
+            </div>
+            <div class="ab-bar" aria-hidden="true"><i id="ab-progress"></i></div>
+            <p class="db-muted" id="ab-verdict"></p>
+          </div>
         </section>
 
         <section class="db-section" id="improve">

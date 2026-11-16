@@ -214,6 +214,7 @@ function render(checks, config, live = []) {
 
   // How the store is doing, at the top of the page.
   renderResults(store, live);
+  renderAbTest(store.domain);
 
   if (!config.ai) {
     $("#ask-form").querySelector("button").disabled = true;
@@ -301,3 +302,40 @@ $("#chips").addEventListener("click", (e) => {
 
 wireLinks();
 load();
+
+// An A/B test started from the preview (app.js). shortcut: acted out with
+// sample figures in this browser; a real split needs the store connected.
+function renderAbTest(domain) {
+  let test = null;
+  try {
+    test = JSON.parse(localStorage.getItem(`ql:abtest:${domain}`) || "null");
+  } catch {
+    // Storage blocked or bad data: no test to show.
+  }
+  const card = $("#abtest");
+  card.hidden = !test?.changes?.length;
+  if (card.hidden) return;
+  const DAYS = 14;
+  const day = Math.min(DAYS, Math.max(1, Math.ceil((Date.now() - test.started) / 864e5)));
+  const a = 212 * day, b = 207 * day;
+  $("#ab-status").textContent = `Running · day ${day} of ${DAYS}`;
+  $("#ab-what").textContent = `Testing: ${test.changes.join(", ")}. Half your shoppers see B, half see A. Sample figures.`;
+  $("#ab-a-conv").textContent = "1.9% bought";
+  $("#ab-b-conv").textContent = "2.3% bought";
+  $("#ab-a-n").textContent = `${a.toLocaleString("en-AU")} visits`;
+  $("#ab-b-n").textContent = `${b.toLocaleString("en-AU")} visits`;
+  $("#ab-progress").style.width = `${(day / DAYS) * 100}%`;
+  $("#ab-verdict").textContent =
+    day < DAYS
+      ? "Too early to call. B is ahead, but QuickLift waits until enough shoppers have seen both before it names a winner."
+      : "B won: more of the shoppers who saw the changes bought. Keep B to put it live for everyone.";
+  $("#ab-stop").onclick = () => {
+    try {
+      localStorage.removeItem(`ql:abtest:${domain}`);
+    } catch {
+      // Nothing stored to remove.
+    }
+    card.hidden = true;
+  };
+  if (location.hash === "#abtest") card.scrollIntoView({ block: "center" });
+}
